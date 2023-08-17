@@ -1,4 +1,4 @@
-import MonacoEditor from './components/MonacoEditor'
+import Home from './pages/Home'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 
 function App() {
@@ -7,7 +7,7 @@ function App() {
     <>
       <BrowserRouter className="bg-[#22272e]">
         <Routes>
-          <Route path='/' element={<MonacoEditor/>}/>
+          <Route path='/' element={<Home/>}/>
         </Routes>
       </BrowserRouter>
     </>

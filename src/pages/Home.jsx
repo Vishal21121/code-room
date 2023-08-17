@@ -1,16 +1,18 @@
 import React, { useEffect, useRef, useState } from 'react'
 import toast, { Toaster } from 'react-hot-toast';
 import Editor, { loader } from '@monaco-editor/react';
-import { PenTool, Play, X } from 'react-feather';
 import { useNavigate } from 'react-router-dom';
 import "monaco-themes/themes/Monokai Bright.json";
-import Sidebar from './Sidebar';
+import Sidebar from '../components/Sidebar';
+import Terminal from '../components/Terminal';
+import Whiteboard from '../components/Whiteboard';
 
 
-const MonacoEditor = () => {
+const Home = () => {
     const navigate = useNavigate()
     const [code, setCode] = useState("")
     const [output, setOutput] = useState("")
+    const [whiteboard, setWhiteboard] = useState(false)
 
     const editorRef = useRef(null);
     const handleSubmit = async (e) => {
@@ -45,10 +47,10 @@ const MonacoEditor = () => {
     const handleEditorDidMount = (editor) => {
         editorRef.current = editor
         import('monaco-themes/themes/Dracula.json')
-        .then(data => {
-          monaco.editor.defineTheme('dracula', data);
-        })
-        .then(_ => monaco.editor.setTheme('dracula'))
+            .then(data => {
+                monaco.editor.defineTheme('dracula', data);
+            })
+            .then(_ => monaco.editor.setTheme('dracula'))
     }
 
     const getContent = () => {
@@ -61,11 +63,11 @@ const MonacoEditor = () => {
         markers.forEach((marker) => console.log('onValidate:', marker.message));
     }
 
-    const closeTerminal = (e) => {
-        e.preventDefault()
-        let classList = document.getElementById("terminal").classList
-        classList.add("invisible")
+    // switches between editor and whiteboard
+    const switcher = () => {
+        setWhiteboard(prev => !prev)
     }
+
 
     useEffect(() => {
         document.addEventListener("keydown", toggleTerminal)
@@ -97,37 +99,32 @@ const MonacoEditor = () => {
                         reverseOrder={false}
                     />
                     <div className='flex h-[100%]'>
-                        <Sidebar/>
+                        <Sidebar changeMode={switcher} />
                         <div className='flex flex-col box-border w-3/4 '>
                             <div className="flex justify-center flex-col">
-                                <Editor
-                                    height="100vh"
-                                    defaultLanguage="javascript"
-                                    defaultValue="// Enter code"
-                                    onValidate={handleEditorValidation}
-                                    onMount={handleEditorDidMount}
-                                    onChange={getContent}
-                                    options={
-                                        {
-                                            "wordWrap": true,
-                                            "codeLens": true,
-                                            "dragAndDrop": false,
-                                            "mouseWheelZoom": true
+                                {
+                                    whiteboard ? <Whiteboard/> : <Editor
+                                        height="100vh"
+                                        defaultLanguage="javascript"
+                                        defaultValue="// Enter code"
+                                        onValidate={handleEditorValidation}
+                                        onMount={handleEditorDidMount}
+                                        onChange={getContent}
+                                        options={
+                                            {
+                                                "wordWrap": true,
+                                                "codeLens": true,
+                                                "dragAndDrop": false,
+                                                "mouseWheelZoom": true
+                                            }
                                         }
-                                    }
-                                />
+                                    />
+                                }
                             </div>
                         </div>
                     </div>
                 </div>
-                <div className='box-border bg-[#2a2f38] p-4 relative bottom-72 flex flex-col w-[75%] ml-[25%] z-10 h-[40vh]' id='terminal'>
-                    <div className='flex '>
-                        <button className='text-white mx-4 focus:underline focus:underline-offset-8'>Problem</button>
-                        <button className='text-white mx-4 underline underline-offset-8 focus:underline focus:underline-offset-8' id='termEl'>Terminal</button>
-                        <X className='text-white absolute right-10 cursor-pointer' onClick={closeTerminal} />
-                    </div>
-                    <div className='text-gray-300 mt-4 mx-4'>{output}</div>
-                </div>
+                <Terminal />
             </div>
 
             {/* output */}
@@ -136,4 +133,4 @@ const MonacoEditor = () => {
     )
 }
 
-export default MonacoEditor
+export default Home
