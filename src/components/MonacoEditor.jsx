@@ -4,6 +4,7 @@ import Editor, { loader } from '@monaco-editor/react';
 import { PenTool, Play, X } from 'react-feather';
 import { useNavigate } from 'react-router-dom';
 import "monaco-themes/themes/Monokai Bright.json";
+import Sidebar from './Sidebar';
 
 
 const MonacoEditor = () => {
@@ -96,9 +97,7 @@ const MonacoEditor = () => {
                         reverseOrder={false}
                     />
                     <div className='flex h-[100%]'>
-                        <div className='w-1/4 bg-[#21252b] text-center'>
-                            <p className='text-white'>content</p>
-                        </div>
+                        <Sidebar/>
                         <div className='flex flex-col box-border w-3/4 '>
                             <div className="flex justify-center flex-col">
                                 <Editor

@@ -1,4 +1,3 @@
-import './App.css'
 import MonacoEditor from './components/MonacoEditor'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 
