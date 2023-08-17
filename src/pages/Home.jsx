@@ -1,20 +1,17 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import toast, { Toaster } from 'react-hot-toast';
-import Editor, { loader } from '@monaco-editor/react';
 import { useNavigate } from 'react-router-dom';
-import "monaco-themes/themes/Monokai Bright.json";
 import Sidebar from '../components/Sidebar';
 import Terminal from '../components/Terminal';
 import Whiteboard from '../components/Whiteboard';
+import CodeEditor from '../components/CodeEditor';
 
 
 const Home = () => {
     const navigate = useNavigate()
-    const [code, setCode] = useState("")
     const [output, setOutput] = useState("")
     const [whiteboard, setWhiteboard] = useState(false)
 
-    const editorRef = useRef(null);
     const handleSubmit = async (e) => {
         if (!code) {
             return
@@ -44,24 +41,6 @@ const Home = () => {
         }
     }
 
-    const handleEditorDidMount = (editor) => {
-        editorRef.current = editor
-        import('monaco-themes/themes/Dracula.json')
-            .then(data => {
-                monaco.editor.defineTheme('dracula', data);
-            })
-            .then(_ => monaco.editor.setTheme('dracula'))
-    }
-
-    const getContent = () => {
-        console.log(editorRef.current.getValue());
-        setCode(editorRef.current.getValue())
-    }
-
-    function handleEditorValidation(markers) {
-        // model markers
-        markers.forEach((marker) => console.log('onValidate:', marker.message));
-    }
 
     // switches between editor and whiteboard
     const switcher = () => {
@@ -103,22 +82,7 @@ const Home = () => {
                         <div className='flex flex-col box-border w-3/4 '>
                             <div className="flex justify-center flex-col">
                                 {
-                                    whiteboard ? <Whiteboard/> : <Editor
-                                        height="100vh"
-                                        defaultLanguage="javascript"
-                                        defaultValue="// Enter code"
-                                        onValidate={handleEditorValidation}
-                                        onMount={handleEditorDidMount}
-                                        onChange={getContent}
-                                        options={
-                                            {
-                                                "wordWrap": true,
-                                                "codeLens": true,
-                                                "dragAndDrop": false,
-                                                "mouseWheelZoom": true
-                                            }
-                                        }
-                                    />
+                                    whiteboard ? <Whiteboard /> : <CodeEditor />
                                 }
                             </div>
                         </div>
