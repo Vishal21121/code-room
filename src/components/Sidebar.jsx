@@ -3,10 +3,14 @@ import { CheckCircle, Cpu, Edit, File, FilePlus } from 'react-feather';
 import Files from './Files';
 
 
-const Sidebar = ({changeMode}) => {
+const Sidebar = ({changeMode,fileNameGet}) => {
     const [filename, setFilename] = useState("")
     const [files, setFiles] = useState([])
     const [createFile, setCreateFile] = useState(false);
+
+    const fileClicked = (fileVal)=>{
+        fileNameGet(fileVal)
+    }
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -38,7 +42,7 @@ const Sidebar = ({changeMode}) => {
                 </div>
 
                 <div className='p-4 flex gap-4 flex-col '>
-                    <Files files={files} />
+                    <Files files={files} fileClicked={fileClicked} />
                 </div>
                 <div className='p-2'>
                     {

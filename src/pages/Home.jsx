@@ -11,6 +11,7 @@ const Home = () => {
     const navigate = useNavigate()
     const [output, setOutput] = useState("")
     const [whiteboard, setWhiteboard] = useState(false)
+    const [currentFile, setCurrentFile] = useState("")
 
     const handleSubmit = async (e) => {
         if (!code) {
@@ -67,6 +68,10 @@ const Home = () => {
         }
     }
 
+    const fileClicked = (fileVal)=>{
+        setCurrentFile(fileVal)
+    }
+
 
     return (
         <>
@@ -78,11 +83,11 @@ const Home = () => {
                         reverseOrder={false}
                     />
                     <div className='flex h-[100%]'>
-                        <Sidebar changeMode={switcher} />
+                        <Sidebar changeMode={switcher} fileNameGet={fileClicked} />
                         <div className='flex flex-col box-border w-3/4 '>
                             <div className="flex justify-center flex-col">
                                 {
-                                    whiteboard ? <Whiteboard /> : <CodeEditor />
+                                    whiteboard ? <Whiteboard /> : <CodeEditor fileClicked={currentFile} />
                                 }
                             </div>
                         </div>

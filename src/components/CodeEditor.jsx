@@ -1,14 +1,22 @@
 import React, { useState, useRef, useEffect } from 'react'
 import "monaco-themes/themes/Monokai Bright.json";
 import Editor, { loader } from '@monaco-editor/react';
-import files from "../utils/file"
 
 
-const CodeEditor = () => {
-    const [code, setCode] = useState("")
-    const [fileName, setFileName] = useState();
-
-    // const file = files[fileName];
+const CodeEditor = ({ fileClicked }) => {
+    // const [code, setCode] = useState([])
+    const [currentFile, setCurrentFile] = useState("")
+    const [fileDetails, setfileDetails] = useState([{
+        filename: "",
+        language: "",
+        value: ""
+    }])
+    const [currentFileDetails, setCurrentFileDetails] = useState({
+        filename:"",
+        language:"",
+        value:""
+    })
+    const [buttonArr, setButtonArr] = useState([])
     const editorRef = useRef(null);
 
     const handleEditorDidMount = (editor) => {
@@ -21,8 +29,18 @@ const CodeEditor = () => {
     }
 
     const getContent = () => {
+        let language
+        if (currentFile.split(".").includes("js")) {
+            language = "javascript"
+        } else if (currentFile.split(".").includes("css")) {
+            language = "css"
+        } else if (currentFile.split(".").includes("js")) {
+            language = "html"
+        }
         console.log(editorRef.current.getValue());
-        setCode(editorRef.current.getValue())
+        setfileDetails(prev => [...prev, {
+            filename: currentFile, language, value: editorRef.current.getValue()
+        }])
     }
 
     function handleEditorValidation(markers) {
@@ -30,26 +48,53 @@ const CodeEditor = () => {
         markers.forEach((marker) => console.log('onValidate:', marker.message));
     }
 
+    const currentFileContentSetter = (file)=>{
+        let language;
+        if (file.split(".").includes("js")) {
+            language = "javascript"
+        } else if (file.split(".").includes("css")) {
+            language = "css"
+        } else if (file.split(".").includes("html")) {
+            language = "html"
+        }
+        let fileVal = fileDetails.find(el => el.filename === file)
+        let codeVal = ""
+        if(fileVal){
+            codeVal = fileVal.value
+        }
+        console.log(codeVal);
+        setCurrentFileDetails({ filename: file, language, value: codeVal })
+    }
+
+    useEffect(() => {
+        currentFileContentSetter(fileClicked)
+        if (!buttonArr.includes(fileClicked)) {
+            setButtonArr([...buttonArr, fileClicked])
+            console.log(buttonArr);
+        }
+    }, [fileClicked])
+
+    const handleClickOnTab = (file)=>{
+        console.log(file);
+        setCurrentFile(file)
+        currentFileContentSetter(file)
+    }
+
 
     return (
         <div className='flex-col gap-4'>
             <div className='flex bg-[#21252b]'>
-                <button disabled={fileName === 'script.js'} className='py-2 px-6 border-b bg-[#21252b] text-white' onClick={() => setFileName('script.js')}>
-                    script.js
-                </button>
-                <button disabled={fileName === 'style.css'} className='py-2 px-6 bg-[#21252b] text-white' onClick={() => setFileName('style.css')}>
-                    style.css
-                </button>
-                <button disabled={fileName === 'index.html'} className='py-2 px-6 bg-[#21252b] text-white' onClick={() => setFileName('index.html')}>
-                    index.html
-                </button>
+                {
+                    buttonArr?.map((el) => (
+                        el ? (<button onClick={(e) => handleClickOnTab(e.currentTarget.innerText)} className={`py-2 px-6 ${el===currentFileDetails.filename ? "border-b border-l border-r":''} border-[#44475a] bg-[#21252b] text-white`}>{el}</button>) : ""
+                    ))
+                }
             </div>
             <Editor
                 height="94vh"
-                // path={file.name}
-                // defaultLanguage={file.language}
-                defaultLanguage="Javascript"
-                // defaultValue={file.value}
+                path={currentFileDetails.filename}
+                defaultLanguage={currentFileDetails.language}
+                defaultValue={currentFileDetails.value}
                 onValidate={handleEditorValidation}
                 onMount={handleEditorDidMount}
                 onChange={getContent}
