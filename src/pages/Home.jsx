@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import toast, { Toaster } from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
 import Terminal from '../components/Terminal';
 import Whiteboard from '../components/Whiteboard';
 import CodeEditor from '../components/CodeEditor';
+import { initSocket } from '../util/socket';
 
 
 const Home = () => {
@@ -12,8 +13,10 @@ const Home = () => {
     const [output, setOutput] = useState("")
     const [whiteboard, setWhiteboard] = useState(false)
     const [currentFile, setCurrentFile] = useState("")
+    const socketRef = useRef(null);
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = async (e, code) => {
+        console.log("called", typeof code)
         if (!code) {
             return
         }
@@ -51,7 +54,21 @@ const Home = () => {
 
     useEffect(() => {
         document.addEventListener("keydown", toggleTerminal)
+        const init = async () => {
+            socketRef.current = await initSocket()
+            console.log(socketRef.current);
+            // socketRef.current.on("connect_error", (err) => handleErrors(err))
+            // socketRef.current.on("connect_failed", (err) => handleErrors(err))
+
+            function handleErrors(err) {
+                console.log("Socket error", err);
+                toast.error("Socket Connection failed try again later.");
+                reactNavigator("/")
+            }
+        }
+        init();
         return () => {
+            // socketRef.current.disconnect();
             document.removeEventListener("keydown", toggleTerminal)
         }
     }, [])
@@ -68,7 +85,7 @@ const Home = () => {
         }
     }
 
-    const fileClicked = (fileVal)=>{
+    const fileClicked = (fileVal) => {
         setCurrentFile(fileVal)
     }
 
@@ -87,7 +104,7 @@ const Home = () => {
                         <div className='flex flex-col box-border w-3/4 '>
                             <div className="flex justify-center flex-col">
                                 {
-                                    whiteboard ? <Whiteboard /> : <CodeEditor fileClicked={currentFile} />
+                                    whiteboard ? <Whiteboard /> : <CodeEditor fileClicked={currentFile} handleSubmit={handleSubmit} />
                                 }
                             </div>
                         </div>
