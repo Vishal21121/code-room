@@ -1,13 +1,10 @@
 import React from 'react'
 import { User, Mail, Lock } from "react-feather"
-import Lottie from "lottie-react"
-import animationData from "../assets/animation_1.json"
 
 const Login = () => {
     return (
         <div className='flex justify-around items-center '>
             <div className='w-1/2' >
-                <Lottie animationData={animationData} className='h-screen bg-[#223243]' />
             </div>
             <div className="flex justify-center items-center w-1/2 min-h-screen bg-[#223243]">
                 <div className="p-10 rounded-lg border-8 border-solid border-[#223243] shadow-3xl">

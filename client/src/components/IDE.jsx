@@ -1,14 +1,14 @@
 import React, { useEffect, useState, useRef } from 'react'
 import toast, { Toaster } from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
-import Sidebar from '../components/Sidebar';
-import Terminal from '../components/Terminal';
-import Whiteboard from '../components/Whiteboard';
-import CodeEditor from '../components/CodeEditor';
+import Sidebar from './Sidebar';
+import Terminal from './Terminal';
+import Whiteboard from './Whiteboard';
+import CodeEditor from './CodeEditor';
 import { initSocket } from '../util/socket';
 
 
-const Home = () => {
+const IDE = () => {
     const navigate = useNavigate()
     const [output, setOutput] = useState("")
     const [whiteboard, setWhiteboard] = useState(false)
@@ -92,16 +92,15 @@ const Home = () => {
 
     return (
         <>
-            <div className='h-screen overflow-hidden'>
+            <div className='h-screen overflow-hidden w-full'>
                 <div className="mx-auto bg-[#3A424D] h-[100vh] flex flex-col box-border">
-                    {/* <button onClick={handleSubmit} className='p-2 w-fit bg-orange-600 rounded-lg text-sm text-white font-semibold relative left-[60vw] z-10 mb-4 '>Submit</button> */}
                     <Toaster
                         position="top-right"
                         reverseOrder={false}
                     />
                     <div className='flex h-[100%]'>
                         <Sidebar changeMode={switcher} fileNameGet={fileClicked} />
-                        <div className='flex flex-col box-border w-3/4 '>
+                        <div className='flex flex-col box-border w-[80%] '>
                             <div className="flex justify-center flex-col">
                                 {
                                     whiteboard ? <Whiteboard /> : <CodeEditor fileClicked={currentFile} handleSubmit={handleSubmit} />
@@ -119,4 +118,4 @@ const Home = () => {
     )
 }
 
-export default Home
+export default IDE

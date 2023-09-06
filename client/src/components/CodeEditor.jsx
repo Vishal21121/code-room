@@ -1,9 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react'
 import "monaco-themes/themes/Monokai Bright.json";
 import Editor, { loader } from '@monaco-editor/react';
+import { Play } from 'react-feather';
 
 
-const CodeEditor = ({ fileClicked }) => {
+const CodeEditor = ({ fileClicked, handleSubmit }) => {
     // const [code, setCode] = useState([])
     const [currentFile, setCurrentFile] = useState("")
     const [fileDetails, setfileDetails] = useState([{
@@ -12,9 +13,9 @@ const CodeEditor = ({ fileClicked }) => {
         value: ""
     }])
     const [currentFileDetails, setCurrentFileDetails] = useState({
-        filename:"",
-        language:"",
-        value:""
+        filename: "",
+        language: "",
+        value: ""
     })
     const [buttonArr, setButtonArr] = useState([])
     const editorRef = useRef(null);
@@ -48,7 +49,7 @@ const CodeEditor = ({ fileClicked }) => {
         markers.forEach((marker) => console.log('onValidate:', marker.message));
     }
 
-    const currentFileContentSetter = (file)=>{
+    const currentFileContentSetter = (file) => {
         let language;
         if (file.split(".").includes("js")) {
             language = "javascript"
@@ -59,7 +60,7 @@ const CodeEditor = ({ fileClicked }) => {
         }
         let fileVal = fileDetails.find(el => el.filename === file)
         let codeVal = ""
-        if(fileVal){
+        if (fileVal) {
             codeVal = fileVal.value
         }
         console.log(codeVal);
@@ -74,7 +75,7 @@ const CodeEditor = ({ fileClicked }) => {
         }
     }, [fileClicked])
 
-    const handleClickOnTab = (file)=>{
+    const handleClickOnTab = (file) => {
         console.log(file);
         setCurrentFile(file)
         currentFileContentSetter(file)
@@ -82,16 +83,19 @@ const CodeEditor = ({ fileClicked }) => {
 
 
     return (
-        <div className='flex-col gap-4'>
-            <div className='flex bg-[#21252b]'>
+        <div className='flex-col'>
+            <div className='flex bg-[#161a2a] h-12'>
+                <Play className='absolute right-10 my-[11px] text-white cursor-pointer' onClick={(e) =>
+                    handleSubmit(e, currentFileDetails.value)
+                } />
                 {
                     buttonArr?.map((el) => (
-                        el ? (<button onClick={(e) => handleClickOnTab(e.currentTarget.innerText)} className={`py-2 px-6 ${el===currentFileDetails.filename ? "border-b border-l border-r":''} border-[#44475a] bg-[#21252b] text-white`}>{el}</button>) : ""
+                        el ? (<button onClick={(e) => handleClickOnTab(e.currentTarget.innerText)} className={`py-2 px-6 ${el === currentFileDetails.filename ? "border-b border-l border-r" : ''} border-[#44475a] bg-[#21252b] text-white`}>{el}</button>) : ""
                     ))
                 }
             </div>
             <Editor
-                height="94vh"
+                height="100vh"
                 path={currentFileDetails.filename}
                 defaultLanguage={currentFileDetails.language}
                 defaultValue={currentFileDetails.value}
