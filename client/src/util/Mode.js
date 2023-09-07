@@ -1,5 +1,4 @@
 const modes = {
-    PEOPLE: "people",
     "CODE-EDITOR": "code-editor",
     BOARD: "board",
     TODO: "todo",

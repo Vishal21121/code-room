@@ -52,26 +52,26 @@ const IDE = () => {
     }
 
 
-    useEffect(() => {
-        document.addEventListener("keydown", toggleTerminal)
-        const init = async () => {
-            socketRef.current = await initSocket()
-            console.log(socketRef.current);
-            // socketRef.current.on("connect_error", (err) => handleErrors(err))
-            // socketRef.current.on("connect_failed", (err) => handleErrors(err))
+    // useEffect(() => {
+    //     document.addEventListener("keydown", toggleTerminal)
+    //     const init = async () => {
+    //         socketRef.current = await initSocket()
+    //         console.log(socketRef.current);
+    //         // socketRef.current.on("connect_error", (err) => handleErrors(err))
+    //         // socketRef.current.on("connect_failed", (err) => handleErrors(err))
 
-            function handleErrors(err) {
-                console.log("Socket error", err);
-                toast.error("Socket Connection failed try again later.");
-                reactNavigator("/")
-            }
-        }
-        init();
-        return () => {
-            // socketRef.current.disconnect();
-            document.removeEventListener("keydown", toggleTerminal)
-        }
-    }, [])
+    //         function handleErrors(err) {
+    //             console.log("Socket error", err);
+    //             toast.error("Socket Connection failed try again later.");
+    //             reactNavigator("/")
+    //         }
+    //     }
+    //     init();
+    //     return () => {
+    //         // socketRef.current.disconnect();
+    //         document.removeEventListener("keydown", toggleTerminal)
+    //     }
+    // }, [])
 
     const toggleTerminal = (event) => {
         let classList = document.getElementById("terminal").classList

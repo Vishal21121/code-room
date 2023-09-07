@@ -4,17 +4,23 @@ import IDE from '../components/IDE'
 import modes from "../util/Mode"
 import Whiteboard from '../components/Whiteboard'
 import People from '../components/People'
+import { useSelector } from 'react-redux'
+import { Excalidraw } from "@excalidraw/excalidraw";
+
 
 const LandingPage = () => {
-    const [mode, setMode] = useState("people")
+    const mode = useSelector((state) => state.mode)
     return (
         <div className='flex w-screen'>
-            <Navbar setMode={setMode} mode={mode} />
+            <Navbar />
             {
                 mode === modes['CODE-EDITOR'] && <IDE />
             }
             {
                 mode === modes.PEOPLE && <People />
+            }
+            {
+                mode === modes.BOARD && <Whiteboard />
             }
         </div>
     )

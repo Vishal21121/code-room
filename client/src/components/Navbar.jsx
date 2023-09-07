@@ -3,28 +3,30 @@ import { RiBracesLine, RiPencilFill } from "react-icons/ri";
 import { HiUsers, HiCheckBadge } from "react-icons/hi2";
 import { SiDependabot } from "react-icons/si";
 import modes from '../util/Mode';
+import { useDispatch } from 'react-redux';
+import { setMode } from '../features/editor/modeSlice';
+import { useSelector } from 'react-redux';
 
 
-
-
-const Navbar = ({ setMode, mode }) => {
-
+const Navbar = () => {
+    const dispatch = useDispatch()
+    const mode = useSelector((state) => state.mode)
     return (
         <div className='px-4 py-14 h-screen bg-[#1d262f] w-[5%] flex flex-col gap-10'>
             <div className='rounded-full bg-[#0d65d9] mx-auto p-2'>
-                <HiUsers onClick={() => setMode(modes.PEOPLE)} size={28} className={`${mode === "people" ? "text-white" : "text-gray-900"} hover:text-white cursor-pointer`} />
+                <HiUsers onClick={() => dispatch(setMode(modes.PEOPLE))} size={28} className={`${mode === "people" ? "text-white" : "text-gray-900"} hover:text-white cursor-pointer`} />
             </div>
             <div className='rounded-full bg-[#0d65d9] mx-auto p-2'>
-                <RiBracesLine onClick={() => setMode(modes['CODE-EDITOR'])} size={28} className={`${mode === "code-editor" ? "text-white" : "text-gray-900"} hover:text-white cursor-pointer`} />
+                <RiBracesLine onClick={() => dispatch(setMode(modes['CODE-EDITOR']))} size={28} className={`${mode === "code-editor" ? "text-white" : "text-gray-900"} hover:text-white cursor-pointer`} />
             </div>
             <div className='rounded-full bg-[#0d65d9] mx-auto p-2'>
-                <RiPencilFill onClick={() => setMode(modes.BOARD)} size={28} className={`${mode === "board" ? "text-white" : "text-gray-900"} hover:text-white cursor-pointer`} />
+                <RiPencilFill onClick={() => dispatch(setMode(modes.BOARD))} size={28} className={`${mode === "board" ? "text-white" : "text-gray-900"} hover:text-white cursor-pointer`} />
             </div>
             <div className='rounded-full bg-[#0d65d9] mx-auto p-2'>
-                <HiCheckBadge onClick={() => setMode(modes.TODO)} size={28} className={`${mode === "todo" ? "text-white" : "text-gray-900"} hover:text-white cursor-pointer`} />
+                <HiCheckBadge onClick={() => dispatch(setMode(modes.TODO))} size={28} className={`${mode === "todo" ? "text-white" : "text-gray-900"} hover:text-white cursor-pointer`} />
             </div>
             <div className='rounded-full bg-[#0d65d9] mx-auto p-2'>
-                <SiDependabot onClick={() => setMode(modes.BOT)} size={28} className={`${mode === "bot" ? "text-white" : "text-gray-900"} hover:text-white cursor-pointer`} />
+                <SiDependabot onClick={() => dispatch(setMode(modes.BOT))} size={28} className={`${mode === "bot" ? "text-white" : "text-gray-900"} hover:text-white cursor-pointer`} />
             </div>
             {/* <div className='rounded-full bg-blue-600 mx-auto p-2'>
                 <FaRobot onClick={() => setMode("file")} size={28} className='text-gray-900 hover:text-white cursor-pointer' />

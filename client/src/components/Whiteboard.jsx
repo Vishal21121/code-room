@@ -3,7 +3,7 @@ import { Excalidraw } from "@excalidraw/excalidraw";
 
 const Whiteboard = () => {
     return (
-        <div className='h-screen'>
+        <div className='h-screen w-screen'>
             <Excalidraw />
         </div>
     )
