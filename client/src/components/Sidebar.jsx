@@ -5,16 +5,14 @@ import ChatBot from './ChatBot';
 import Todo from './Todo';
 
 
-const Sidebar = ({ changeMode, fileNameGet }) => {
+const Sidebar = () => {
     const [filename, setFilename] = useState("")
     const [files, setFiles] = useState([])
     const [createFile, setCreateFile] = useState(false);
 
 
-    const fileClicked = (fileVal) => {
-        fileNameGet(fileVal)
-    }
 
+    //  nothing to do
     const handleSubmit = (e) => {
         e.preventDefault();
         if (e.code === "Enter") {
@@ -24,6 +22,7 @@ const Sidebar = ({ changeMode, fileNameGet }) => {
         }
     }
 
+    // nothing to do
     const handleFileClick = () => {
         setCreateFile(prev => !prev)
     }
@@ -39,7 +38,11 @@ const Sidebar = ({ changeMode, fileNameGet }) => {
                     {
                         createFile ? <input type="text" autoFocus value={filename} onKeyUp={handleSubmit} onChange={e => setFilename(e.target.value)} className='p-2 w-full rounded-lg bg-transparent text-white border  placeholder:bg-white' /> : ""
                     }
-
+                </div>
+                <div>
+                    <div className='p-4 flex gap-4 flex-col '>
+                        <Files files={files} />
+                    </div>
                 </div>
             </div>
         </div>

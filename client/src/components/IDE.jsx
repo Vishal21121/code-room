@@ -12,7 +12,7 @@ const IDE = () => {
     const navigate = useNavigate()
     const [output, setOutput] = useState("")
     const [whiteboard, setWhiteboard] = useState(false)
-    const [currentFile, setCurrentFile] = useState("")
+    // shift this state in store
     const socketRef = useRef(null);
 
     const handleSubmit = async (e, code) => {
@@ -85,9 +85,6 @@ const IDE = () => {
         }
     }
 
-    const fileClicked = (fileVal) => {
-        setCurrentFile(fileVal)
-    }
 
 
     return (
@@ -99,11 +96,11 @@ const IDE = () => {
                         reverseOrder={false}
                     />
                     <div className='flex h-[100%]'>
-                        <Sidebar changeMode={switcher} fileNameGet={fileClicked} />
+                        <Sidebar changeMode={switcher} />
                         <div className='flex flex-col box-border w-[80%] '>
                             <div className="flex justify-center flex-col">
                                 {
-                                    whiteboard ? <Whiteboard /> : <CodeEditor fileClicked={currentFile} handleSubmit={handleSubmit} />
+                                    whiteboard ? <Whiteboard /> : <CodeEditor handleSubmit={handleSubmit} />
                                 }
                             </div>
                         </div>

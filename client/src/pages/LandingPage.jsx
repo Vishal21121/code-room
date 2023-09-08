@@ -5,11 +5,10 @@ import modes from "../util/Mode"
 import Whiteboard from '../components/Whiteboard'
 import People from '../components/People'
 import { useSelector } from 'react-redux'
-import { Excalidraw } from "@excalidraw/excalidraw";
 
 
 const LandingPage = () => {
-    const mode = useSelector((state) => state.mode)
+    const mode = useSelector((state) => state.mode.mode)
     const [isPeople, setIsPeople] = useState(false)
     const peopleNav = () => {
         setIsPeople(prev => !prev)

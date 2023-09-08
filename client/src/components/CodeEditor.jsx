@@ -2,10 +2,11 @@ import React, { useState, useRef, useEffect } from 'react'
 import "monaco-themes/themes/Monokai Bright.json";
 import Editor, { loader } from '@monaco-editor/react';
 import { Play } from 'react-feather';
+import { useSelector } from 'react-redux';
 
 
-const CodeEditor = ({ fileClicked, handleSubmit }) => {
-    // const [code, setCode] = useState([])
+const CodeEditor = ({ handleSubmit }) => {
+    const fileClicked = useSelector((state) => state.currentFile.file)
     const [currentFile, setCurrentFile] = useState("")
     const [fileDetails, setfileDetails] = useState([{
         filename: "",
@@ -29,6 +30,7 @@ const CodeEditor = ({ fileClicked, handleSubmit }) => {
             .then(_ => monaco.editor.setTheme('dracula'))
     }
 
+    // later create an api to get the language based on the file extension
     const getContent = () => {
         let language
         if (currentFile.split(".").includes("js")) {
@@ -50,6 +52,9 @@ const CodeEditor = ({ fileClicked, handleSubmit }) => {
     }
 
     const currentFileContentSetter = (file) => {
+        if (!file) {
+            return
+        }
         let language;
         if (file.split(".").includes("js")) {
             language = "javascript"
