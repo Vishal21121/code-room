@@ -4,18 +4,20 @@ import { HiUsers, HiCheckBadge } from "react-icons/hi2";
 import { SiDependabot } from "react-icons/si";
 import modes from '../util/Mode';
 import { useDispatch } from 'react-redux';
-import { setMode } from '../features/editor/modeSlice';
+import { setMode } from '../features/mode/modeSlice';
 import { useSelector } from 'react-redux';
+import People from './People';
 
 
-const Navbar = () => {
+const Navbar = ({ peopleNav }) => {
     const dispatch = useDispatch()
     const mode = useSelector((state) => state.mode)
     return (
-        <div className='px-4 py-14 h-screen bg-[#1d262f] w-[5%] flex flex-col gap-10'>
+        <div className='px-4 py-14 h-screen bg-[#1d262f] w-[5%] flex flex-col gap-10 z-30'>
             <div className='rounded-full bg-[#0d65d9] mx-auto p-2'>
-                <HiUsers onClick={() => dispatch(setMode(modes.PEOPLE))} size={28} className={`${mode === "people" ? "text-white" : "text-gray-900"} hover:text-white cursor-pointer`} />
+                <HiUsers onClick={peopleNav} size={28} className={`${mode === "people" ? "text-white" : "text-gray-900"} peer hover:text-white cursor-pointer`} />
             </div>
+
             <div className='rounded-full bg-[#0d65d9] mx-auto p-2'>
                 <RiBracesLine onClick={() => dispatch(setMode(modes['CODE-EDITOR']))} size={28} className={`${mode === "code-editor" ? "text-white" : "text-gray-900"} hover:text-white cursor-pointer`} />
             </div>

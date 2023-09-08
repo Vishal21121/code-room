@@ -10,18 +10,22 @@ import { Excalidraw } from "@excalidraw/excalidraw";
 
 const LandingPage = () => {
     const mode = useSelector((state) => state.mode)
+    const [isPeople, setIsPeople] = useState(false)
+    const peopleNav = () => {
+        setIsPeople(prev => !prev)
+    }
     return (
         <div className='flex w-screen'>
-            <Navbar />
-            {
-                mode === modes['CODE-EDITOR'] && <IDE />
-            }
-            {
-                mode === modes.PEOPLE && <People />
-            }
-            {
-                mode === modes.BOARD && <Whiteboard />
-            }
+            <Navbar peopleNav={peopleNav} />
+            <People isPeople={isPeople} />
+            <div className='w-[95%]'>
+                {
+                    mode === modes['CODE-EDITOR'] && <IDE />
+                }
+                {
+                    mode === modes.BOARD && <Whiteboard />
+                }
+            </div>
         </div>
     )
 }
