@@ -13,6 +13,7 @@ const CodeEditor = ({ handleSubmit }) => {
         language: "",
         value: ""
     }])
+
     const [currentFileDetails, setCurrentFileDetails] = useState({
         filename: "",
         language: "",
@@ -40,10 +41,11 @@ const CodeEditor = ({ handleSubmit }) => {
         } else if (currentFile.split(".").includes("js")) {
             language = "html"
         }
-        console.log(editorRef.current.getValue());
+        // console.log(editorRef.current.getValue());
         setfileDetails(prev => [...prev, {
             filename: currentFile, language, value: editorRef.current.getValue()
         }])
+        console.log(fileDetails);
     }
 
     function handleEditorValidation(markers) {
@@ -90,9 +92,7 @@ const CodeEditor = ({ handleSubmit }) => {
     return (
         <div className='flex-col'>
             <div className='flex bg-[#161a2a] h-12'>
-                <Play className='absolute right-10 my-[11px] text-white cursor-pointer' onClick={(e) =>
-                    handleSubmit(e, currentFileDetails.value)
-                } />
+                <Play className='absolute right-10 my-[11px] text-white cursor-pointer' onClick={async (e) => { await handleSubmit(e, editorRef.current.getValue()) }} />
                 {
                     buttonArr?.map((el) => (
                         el ? (<button onClick={(e) => handleClickOnTab(e.currentTarget.innerText)} className={`py-2 px-6 ${el === currentFileDetails.filename ? "border-b border-l border-r" : ''} border-[#44475a] bg-[#21252b] text-white`}>{el}</button>) : ""

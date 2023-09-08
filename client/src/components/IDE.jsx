@@ -11,12 +11,11 @@ import { initSocket } from '../util/socket';
 const IDE = () => {
     const navigate = useNavigate()
     const [output, setOutput] = useState("")
-    const [whiteboard, setWhiteboard] = useState(false)
     // shift this state in store
     const socketRef = useRef(null);
 
     const handleSubmit = async (e, code) => {
-        console.log("called", typeof code)
+        console.log("called", code)
         if (!code) {
             return
         }
@@ -45,34 +44,6 @@ const IDE = () => {
         }
     }
 
-
-    // switches between editor and whiteboard
-    const switcher = () => {
-        setWhiteboard(prev => !prev)
-    }
-
-
-    // useEffect(() => {
-    //     document.addEventListener("keydown", toggleTerminal)
-    //     const init = async () => {
-    //         socketRef.current = await initSocket()
-    //         console.log(socketRef.current);
-    //         // socketRef.current.on("connect_error", (err) => handleErrors(err))
-    //         // socketRef.current.on("connect_failed", (err) => handleErrors(err))
-
-    //         function handleErrors(err) {
-    //             console.log("Socket error", err);
-    //             toast.error("Socket Connection failed try again later.");
-    //             reactNavigator("/")
-    //         }
-    //     }
-    //     init();
-    //     return () => {
-    //         // socketRef.current.disconnect();
-    //         document.removeEventListener("keydown", toggleTerminal)
-    //     }
-    // }, [])
-
     const toggleTerminal = (event) => {
         let classList = document.getElementById("terminal").classList
         if (event.altKey && event.key == 'o') {
@@ -85,6 +56,26 @@ const IDE = () => {
         }
     }
 
+    useEffect(() => {
+        document.addEventListener("keydown", toggleTerminal)
+        // const init = async () => {
+        //     socketRef.current = await initSocket()
+        //     console.log(socketRef.current);
+        //     // socketRef.current.on("connect_error", (err) => handleErrors(err))
+        //     // socketRef.current.on("connect_failed", (err) => handleErrors(err))
+
+        //     function handleErrors(err) {
+        //         console.log("Socket error", err);
+        //         toast.error("Socket Connection failed try again later.");
+        //         reactNavigator("/")
+        //     }
+        // }
+        // init();
+        return () => {
+            // socketRef.current.disconnect();
+            document.removeEventListener("keydown", toggleTerminal)
+        }
+    }, [])
 
 
     return (
@@ -96,17 +87,15 @@ const IDE = () => {
                         reverseOrder={false}
                     />
                     <div className='flex h-[100%]'>
-                        <Sidebar changeMode={switcher} />
+                        <Sidebar />
                         <div className='flex flex-col box-border w-[80%] '>
                             <div className="flex justify-center flex-col">
-                                {
-                                    whiteboard ? <Whiteboard /> : <CodeEditor handleSubmit={handleSubmit} />
-                                }
+                                <CodeEditor handleSubmit={handleSubmit} />
                             </div>
                         </div>
                     </div>
                 </div>
-                <Terminal />
+                <Terminal output={output} />
             </div>
 
             {/* output */}

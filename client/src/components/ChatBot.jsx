@@ -1,36 +1,31 @@
 import React from 'react'
-import { Search } from 'react-feather'
-import { useState } from 'react';
+import { MdSend } from "react-icons/md";
+import UserMessage from './UserMessage';
+import BotMessage from './BotMessage';
 
 
 const ChatBot = () => {
 
-    const [length, setLength] = useState(0)
-    const [messageArr, setMessageArr] = useState([{ 'role': 'system', 'content': 'you are a code assistant who only answers coding questions and does not replies to prompt outside of coding topic' }])
-
-    const addMessage = (data, type) => {
-        if (type == 'user') {
-            setMessageArr(prev => ({ ...prev, 'role': type, 'content': data }))
-        } else if (type == "assistant") {
-            setMessageArr(prev => ({ ...prev, 'role': type, 'content': data }))
-        }
-    }
-
-
-    const handleSubmit = (e) => {
-        e.preventDefault()
-        if (e.target.code === 'Enter') {
-            console.log("Hello");
-        }
-    }
-
     return (
-        <div>
-            <div className='absolute bottom-10 left-28 flex bg-[#282a36] w-[250px] p-2 rounded-lg'>
-                <input type="text" className='w-48 text-white outline-none p-2 bg-[#282a36] rounded-lg  mr-2 focus:border' placeholder='Enter your query' onKeyUp={handleSubmit} />
-                <Search className='text-white my-auto cursor-pointer' size={18} />
+        <div className='bg-[#080b19] w-full h-screen'>
+            <div className='h-[84%] overflow-auto'>
+                {/* user */}
+                <UserMessage />
+                <BotMessage />
+                <UserMessage />
+                <BotMessage />
+                <UserMessage />
+                <BotMessage />
+                <UserMessage />
+                <BotMessage />
+
+            </div>
+            <div className='fixed bottom-0 left-[25%] flex bg-[#282a36] w-[50%] mx-auto p-2 rounded-lg mb-10 z-10'>
+                <input type="text" className='w-full text-white outline-none p-2 bg-[#282a36] rounded-lg mr-2 z-30' placeholder='Enter your query' />
+                <MdSend className='text-gray-500 my-auto cursor-pointer mr-4 hover:text-white' size={24} />
             </div>
         </div>
+
     )
 }
 

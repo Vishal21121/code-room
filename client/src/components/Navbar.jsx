@@ -11,7 +11,7 @@ import People from './People';
 
 const Navbar = ({ peopleNav }) => {
     const dispatch = useDispatch()
-    const mode = useSelector((state) => state.mode)
+    const mode = useSelector((state) => state.mode.mode)
     return (
         <div className='px-4 py-14 h-screen bg-[#1d262f] w-[5%] flex flex-col gap-10 z-30'>
             <div className='rounded-full bg-[#0d65d9] mx-auto p-2'>
