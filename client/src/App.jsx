@@ -1,7 +1,8 @@
 import Home from './components/IDE'
 import LandingPage from './pages/LandingPage'
-import Login from './pages/Login'
+import Signup from './components/Signup'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import Login from './components/Login'
 
 function App() {
 
@@ -10,6 +11,7 @@ function App() {
       <BrowserRouter className="bg-[#22272e]">
         <Routes>
           <Route path='/' element={<LandingPage />} />
+          <Route path='/signup' element={<Signup />} />
           <Route path='/login' element={<Login />} />
         </Routes>
       </BrowserRouter>

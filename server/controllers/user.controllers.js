@@ -1,5 +1,4 @@
 import { User } from "../models/user.models.js"
-import bcrypt from "bcrypt"
 
 
 const generateAccessAndRefreshTokens = async (userid) => {
@@ -38,7 +37,7 @@ export const registerUser = async (req, res) => {
                 status: "failure",
                 data: {
                     statusCode: 409,
-                    message: "User with email or username already exists",
+                    message: "User with this username or email already exists",
                 }
             })
         }
@@ -62,13 +61,18 @@ export const registerUser = async (req, res) => {
             }
         })
     } catch (error) {
-        console.log(error.message);
+        return res.status(500).json({
+            success: "failure",
+            data: {
+                statusCode: 500,
+                message: "Internal server error"
+            }
+        })
     }
 
 
 }
 
-// TODO: Add login controller
 
 export const loginUser = async (req, res) => {
     const { email, password } = req.body
@@ -124,7 +128,7 @@ export const loginUser = async (req, res) => {
             success: "failure",
             data: {
                 statusCode: 500,
-                message: "Something went wrong while generating the access token"
+                message: "Internal server error"
             }
         })
     }
