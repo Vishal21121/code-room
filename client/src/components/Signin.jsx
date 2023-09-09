@@ -3,7 +3,7 @@ import { User, Mail, Lock } from "react-feather"
 import { Link } from 'react-router-dom'
 import toast from 'react-hot-toast'
 
-const Signup = () => {
+const Signin = () => {
     const [userDetails, setUserDetails] = useState({
         username: "",
         email: "",
@@ -43,7 +43,6 @@ const Signup = () => {
                 }
                 return
             }
-            console.log("data", data.data.statusCode);
             toast.success("User created successfully")
         } catch (error) {
             console.log(error.message);
@@ -59,7 +58,7 @@ const Signup = () => {
         <div className="flex justify-center items-center min-h-screen bg-[#223243]">
             <div className="p-10 rounded-lg border-8 border-solid border-[#223243] shadow-3xl">
                 <div className="flex justify-center items-center flex-col gap-4">
-                    <h2 className="text-gray-300 text-xl font-semibold tracking-widest">Sign up</h2>
+                    <h2 className="text-gray-300 text-xl font-semibold tracking-widest">Sign in</h2>
                     <div className="relative w-[300px]">
                         <input
                             type="text"
@@ -110,4 +109,4 @@ const Signup = () => {
     )
 }
 
-export default Signup
+export default Signin
