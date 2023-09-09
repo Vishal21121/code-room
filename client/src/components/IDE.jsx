@@ -1,9 +1,8 @@
 import React, { useEffect, useState, useRef } from 'react'
-import toast, { Toaster } from 'react-hot-toast';
+import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 import Sidebar from './Sidebar';
 import Terminal from './Terminal';
-import Whiteboard from './Whiteboard';
 import CodeEditor from './CodeEditor';
 import { initSocket } from '../util/socket';
 
@@ -82,10 +81,6 @@ const IDE = () => {
         <>
             <div className='h-screen overflow-hidden w-full'>
                 <div className="mx-auto bg-[#3A424D] h-[100vh] flex flex-col box-border">
-                    <Toaster
-                        position="top-right"
-                        reverseOrder={false}
-                    />
                     <div className='flex h-[100%]'>
                         <Sidebar />
                         <div className='flex flex-col box-border w-[80%] '>

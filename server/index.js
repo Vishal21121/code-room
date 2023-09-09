@@ -4,6 +4,7 @@ import dotenv from "dotenv"
 import userRouter from "./routes/user.routes.js"
 import { Server } from "socket.io"
 import http from "http"
+import cors from "cors"
 
 const app = express()
 const server = http.createServer(app);
@@ -15,7 +16,7 @@ dotenv.config({
 
 connectToMongoDb()
 
-
+app.use(cors())
 app.use(express.json())
 
 app.use("/api/v1/users", userRouter)
