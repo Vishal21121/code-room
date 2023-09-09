@@ -1,9 +1,10 @@
 import React, { useState } from 'react'
 import { User, Mail, Lock } from "react-feather"
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import toast from 'react-hot-toast'
 
 const Signin = () => {
+    const navigate = useNavigate()
     const [userDetails, setUserDetails] = useState({
         username: "",
         email: "",
@@ -44,6 +45,7 @@ const Signin = () => {
                 return
             }
             toast.success("User created successfully")
+            navigate("/login")
         } catch (error) {
             console.log(error.message);
         }

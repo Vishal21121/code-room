@@ -14,7 +14,7 @@ function App() {
           reverseOrder={false}
         />
         <Routes>
-          <Route path='/' element={<LandingPage />} />
+          <Route path='/:roomId' element={<LandingPage />} />
           <Route path='/signin' element={<Signin />} />
           <Route path='/login' element={<Login />} />
         </Routes>

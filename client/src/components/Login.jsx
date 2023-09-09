@@ -2,13 +2,18 @@ import React, { useState } from 'react'
 import { Mail, Lock } from "react-feather"
 import { Link } from 'react-router-dom'
 import toast from 'react-hot-toast'
+import { useDispatch } from 'react-redux'
+import { setUserData } from '../features/authentication/userDataSlice'
+import { v4 as uuidv4 } from "uuid"
+import { useNavigate } from 'react-router-dom'
 
 const Login = () => {
+    const dispatch = useDispatch()
+    const navigate = useNavigate()
     const [userDetails, setUserDetails] = useState({
         email: "",
         password: ""
     })
-
     const loginUser = async () => {
         try {
             const response = await fetch("http://localhost:8080/api/v1/users/login", {
@@ -35,7 +40,10 @@ const Login = () => {
                 }
                 return
             }
+            dispatch(setUserData(data))
             toast.success("User logged in successfully")
+            const roomId = uuidv4()
+            navigate(`/:${roomId}`)
         } catch (error) {
             console.log(error.message)
         }
