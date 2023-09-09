@@ -7,11 +7,12 @@ const generateAccessAndRefreshTokens = async (userid) => {
         const user = await User.findById(userid)
         const accessToken = user.generateAccessToken()
         const refreshToken = user.generateRefreshToken()
-        console.log(refreshToken);
-        // setting the refersh token in the database
-        user.refreshToken = refreshToken
-        user.isLoggedIn = true
-        user.save({ validateBeforeSave: false })
+
+        // updating the refersh token and isLoggedIn in the database
+        await User.updateOne(
+            { _id: userid },
+            { $set: { refreshToken: refreshToken, isLoggedIn: true } }
+        )
         return {
             accessToken,
             refreshToken
@@ -92,33 +93,39 @@ export const loginUser = async (req, res) => {
                 status: "failure",
                 data: {
                     statusCode: 401,
-                    message: "Please enter correct password",
+                    message: "Please enter correct credentials",
                 }
             })
         }
-        // const { accessToken, refreshToken } = await generateAccessAndRefreshTokens(user._id)
+        const { accessToken, refreshToken } = await generateAccessAndRefreshTokens(user._id)
 
         // getting the details of the logged in user
         const loggedInUser = await User.findById(user._id).select(
             "-password -refreshToken"
         );
-        // const options = {
-        //     httpOnly: true,
-        //     sameSite: 'None',
-        //     secure: true,
-        //     maxAge: 2 * 24 * 60 * 60 * 1000
-        // }
+        const options = {
+            httpOnly: true,
+            sameSite: 'None',
+            secure: true,
+            maxAge: 2 * 24 * 60 * 60 * 1000
+        }
         return res.status(200)
-            // .cookie("refreshToken", refreshToken, options)
+            .cookie("refreshToken", refreshToken, options)
             .json({
                 status: "success",
                 data: {
                     message: "User logged in successfully",
-                    // accessToken,
+                    accessToken,
                     loggedInUser
                 }
             })
     } catch (error) {
-        console.log(error.message);
+        return res.status(500).json({
+            success: "failure",
+            data: {
+                statusCode: 500,
+                message: "Something went wrong while generating the access token"
+            }
+        })
     }
 }
