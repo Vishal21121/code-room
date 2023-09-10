@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom'
 import toast from 'react-hot-toast'
 import { useDispatch } from 'react-redux'
 import { setUserData } from '../features/authentication/userDataSlice'
-import { v4 as uuidv4 } from "uuid"
 import { useNavigate } from 'react-router-dom'
 
 const Login = () => {
@@ -42,8 +41,7 @@ const Login = () => {
             }
             dispatch(setUserData(data))
             toast.success("User logged in successfully")
-            const roomId = uuidv4()
-            navigate(`/:${roomId}`)
+            navigate("/room")
         } catch (error) {
             console.log(error.message)
         }

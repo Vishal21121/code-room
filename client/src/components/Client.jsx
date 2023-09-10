@@ -2,6 +2,7 @@ import React from 'react'
 import Avatar from 'react-avatar';
 
 const Client = ({ people }) => {
+    // console.log(people);
     return (
         <div className="flex">
             <div className='flex gap-2'>
