@@ -1,9 +1,12 @@
 import OpenAI from 'openai'
 import { encode } from 'gpt-3-encoder';
+import dotenv from "dotenv"
+
+dotenv.config()
 
 
 const openai = new OpenAI({
-    apiKey: "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"
+    apiKey: process.env.OPENAI_API_KEY
 });
 
 let messageArr = [{ 'role': 'system', 'content': 'you are a code assistant who only answers coding questions and does not replies to prompt outside of coding topic' }]
