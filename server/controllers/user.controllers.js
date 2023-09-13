@@ -126,7 +126,7 @@ export const loginUser = async (req, res) => {
             })
     } catch (error) {
         return res.status(500).json({
-            success: "failure",
+            status: "failure",
             data: {
                 statusCode: 500,
                 message: "Internal server error"
@@ -135,11 +135,11 @@ export const loginUser = async (req, res) => {
     }
 }
 
-const refreshAccessToken = async (req, res) => {
-    const incomingRefreshToken = req.cookies?.refreshToken
+export const refreshAccessToken = async (req, res) => {
+    const incomingRefreshToken = req.cookies.refreshToken
     if (!incomingRefreshToken) {
-        res.status(401).json({
-            success: false,
+        return res.status(401).json({
+            status: "failure",
             data: {
                 message: "Unauthorized request"
             }
@@ -149,7 +149,7 @@ const refreshAccessToken = async (req, res) => {
         const decodedToken = jwt.verify(incomingRefreshToken, process.env.REFRESH_TOKEN_SECRET)
         const user = await User.findById(decodedToken._id)
         if (!user) {
-            res.status(401).json({
+            return res.status(401).json({
                 success: false,
                 data: {
                     message: "Invalid refersh token"
@@ -157,7 +157,7 @@ const refreshAccessToken = async (req, res) => {
             })
         }
         if (incomingRefreshToken !== user.refreshToken) {
-            res.status(401).json({
+            return res.status(401).json({
                 success: false,
                 data: {
                     message: "Referesh token is expired or used"
@@ -176,7 +176,7 @@ const refreshAccessToken = async (req, res) => {
             .status(200)
             .cookie("refreshToken", newRefreshToken, options)
             .json({
-                success,
+                status: "success",
                 data: {
                     message: "Access token refereshed",
                     accessToken,
@@ -184,8 +184,9 @@ const refreshAccessToken = async (req, res) => {
             });
 
     } catch (error) {
-        res.status(401).json({
-            success: "failure",
+        console.log("helo");
+        return res.status(401).json({
+            status: "failure",
             data: {
                 message: error.message || "Invalid refresh token"
             }
