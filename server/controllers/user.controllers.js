@@ -1,4 +1,5 @@
 import { User } from "../models/user.models.js"
+import jwt from "jsonwebtoken"
 
 
 const generateAccessAndRefreshTokens = async (userid) => {
@@ -129,6 +130,64 @@ export const loginUser = async (req, res) => {
             data: {
                 statusCode: 500,
                 message: "Internal server error"
+            }
+        })
+    }
+}
+
+const refreshAccessToken = async (req, res) => {
+    const incomingRefreshToken = req.cookies?.refreshToken
+    if (!incomingRefreshToken) {
+        res.status(401).json({
+            success: false,
+            data: {
+                message: "Unauthorized request"
+            }
+        })
+    }
+    try {
+        const decodedToken = jwt.verify(incomingRefreshToken, process.env.REFRESH_TOKEN_SECRET)
+        const user = await User.findById(decodedToken._id)
+        if (!user) {
+            res.status(401).json({
+                success: false,
+                data: {
+                    message: "Invalid refersh token"
+                }
+            })
+        }
+        if (incomingRefreshToken !== user.refreshToken) {
+            res.status(401).json({
+                success: false,
+                data: {
+                    message: "Referesh token is expired or used"
+                }
+            })
+        }
+        const options = {
+            httpOnly: true,
+            sameSite: 'None',
+            secure: process.env.NODE_ENV === "production",
+            maxAge: 2 * 24 * 60 * 60 * 1000
+        }
+        const { accessToken, refreshToken: newRefreshToken } = await generateAccessAndRefreshTokens(user._id)
+
+        return res
+            .status(200)
+            .cookie("refreshToken", newRefreshToken, options)
+            .json({
+                success,
+                data: {
+                    message: "Access token refereshed",
+                    accessToken,
+                }
+            });
+
+    } catch (error) {
+        res.status(401).json({
+            success: "failure",
+            data: {
+                message: error.message || "Invalid refresh token"
             }
         })
     }

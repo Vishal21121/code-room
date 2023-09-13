@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Login from './components/Login'
 import { Toaster } from 'react-hot-toast'
 import Signin from './components/Signin'
+import RoomJoin from './components/RoomJoin'
 
 function App() {
 
@@ -17,6 +18,7 @@ function App() {
           <Route path='/:roomId' element={<LandingPage />} />
           <Route path='/signin' element={<Signin />} />
           <Route path='/login' element={<Login />} />
+          <Route path='/room' element={<RoomJoin />} />
         </Routes>
       </BrowserRouter>
     </>
