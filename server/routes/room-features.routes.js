@@ -4,6 +4,6 @@ import { verifyJWT } from "../middleware/auth.middlware.js"
 
 const router = express.Router()
 
-router.route("/chat-bot").post(chatBot)
+router.route("/chat-bot").post(verifyJWT, chatBot)
 
 export default router
