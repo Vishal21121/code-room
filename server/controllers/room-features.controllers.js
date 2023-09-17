@@ -38,7 +38,6 @@ export const chatBot = async (req, res) => {
             model: "gpt-3.5-turbo",
             messages: messageArr,
         });
-        console.log(completion);
         length = completion.usage.total_tokens;
         addMessage(completion.choices[0].message.content, "assistant")
         res.status(200).json({

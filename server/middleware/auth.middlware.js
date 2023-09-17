@@ -7,6 +7,7 @@ export const verifyJWT = async (req, res, next) => {
         res.status(401).json({
             success: false,
             data: {
+                statusCode: 401,
                 message: "Unauthorized request"
             }
         })
@@ -18,6 +19,7 @@ export const verifyJWT = async (req, res, next) => {
             res.status(401).json({
                 success: false,
                 data: {
+                    statusCode: 401,
                     message: "Invalid access token"
                 }
             })
@@ -28,6 +30,7 @@ export const verifyJWT = async (req, res, next) => {
         res.status(401).json({
             success: false,
             data: {
+                statusCode: 401,
                 message: error.message || "Invalid access token"
             }
         })

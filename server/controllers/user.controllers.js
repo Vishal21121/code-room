@@ -141,6 +141,7 @@ export const refreshAccessToken = async (req, res) => {
         return res.status(401).json({
             status: "failure",
             data: {
+                statusCode: 401,
                 message: "Unauthorized request"
             }
         })
@@ -152,6 +153,7 @@ export const refreshAccessToken = async (req, res) => {
             return res.status(401).json({
                 success: false,
                 data: {
+                    statusCode: 401,
                     message: "Invalid refersh token"
                 }
             })
@@ -160,6 +162,7 @@ export const refreshAccessToken = async (req, res) => {
             return res.status(401).json({
                 success: false,
                 data: {
+                    statusCode: 401,
                     message: "Referesh token is expired or used"
                 }
             })
@@ -178,6 +181,7 @@ export const refreshAccessToken = async (req, res) => {
             .json({
                 status: "success",
                 data: {
+                    statusCode: 200,
                     message: "Access token refereshed",
                     accessToken,
                 }

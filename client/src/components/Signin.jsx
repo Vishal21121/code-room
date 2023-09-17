@@ -103,7 +103,7 @@ const Signin = () => {
                     </div>
                     <div className="relative w-[300px] flex flex-col justify-center">
                         <input type="submit" value="Create Account" className="pt-2 pr-4 pb-2 pl-4 w-full rounded-3xl text-lg shadow-lg duration-500 outline-none border border-solid border-[#0000001a] bg-[#FF6C00] text-white py-[10px] px-2 font-medium cursor-pointer hover:shadow-4xl" onClick={handleSubmit} />
-                        <p className='w-full mt-4 ml-16 text-gray-400'>Already a member? <Link to="/login" className="hover:text-white">Log in</Link></p>
+                        <p className='w-full mt-4 ml-16 text-gray-400'>Already a member? <Link to="/" className="hover:text-white">Log in</Link></p>
                     </div>
                 </div>
             </div>

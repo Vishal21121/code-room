@@ -17,7 +17,7 @@ function App() {
         <Routes>
           <Route path='/:roomId' element={<LandingPage />} />
           <Route path='/signin' element={<Signin />} />
-          <Route path='/login' element={<Login />} />
+          <Route path='/' element={<Login />} />
           <Route path='/room' element={<RoomJoin />} />
         </Routes>
       </BrowserRouter>
