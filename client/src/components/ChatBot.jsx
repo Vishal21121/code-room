@@ -9,6 +9,7 @@ const ChatBot = () => {
     const [chat, setChat] = useState([])
     const accessToken = useSelector((state) => state.userData.userData.data.accessToken)
     const chatRef = useRef(null)
+    const textAreaRef = useRef(null);
 
     const handleUserSubmit = async () => {
         setChat((prev) => [...prev, { mode: "user", text: prompt }])
@@ -50,9 +51,26 @@ const ChatBot = () => {
     }
 
     const handleSubmit = async (e) => {
-        if (e.code === "Enter") {
+        if (e.key === 'Enter' && e.shiftKey) {
+            // Shift + Enter was pressed, insert newline
+            e.preventDefault();
+            const start = e.target.selectionStart;
+            const end = e.target.selectionEnd;
+            e.target.value = e.target.value.substring(0, start) + "\n" + e.target.value.substring(end);
+            // Move the cursor after the newline
+            e.target.selectionStart = e.target.selectionEnd = start + 1;
+        } else if (e.key === 'Enter') {
+            e.preventDefault();
             await handleUserSubmit()
         }
+    }
+
+    const handleChange = async (e) => {
+        setPrompt(e.target.value)
+        textAreaRef.current.style.height = 'auto';
+        // Change the height of the textarea based on scrollHeight
+        // But limit it to a maximum of 300px
+        textAreaRef.current.style.height = Math.min(textAreaRef.current.scrollHeight, 200) + 'px';
     }
 
 
@@ -66,10 +84,10 @@ const ChatBot = () => {
                 }
 
             </div>
-            <div className='flex justify-center'>
-                <div className='absolute bottom-0 flex bg-[#282a36] w-[50%] mx-auto p-2 rounded-lg mb-10 z-10  max-h-[20%] h-[8%] overflow-auto' >
-                    <input type="text" className='w-full text-white outline-none bg-[#282a36] rounded-lg mr-2 z-30 resize-none flex items-center' placeholder='Enter your query' onChange={(e) => setPrompt(e.target.value)} value={prompt} onKeyUp={handleSubmit} spellCheck="false" >
-                    </input>
+            <div className='flex justify-center max-h-[20%]'>
+                <div className='absolute bottom-0 flex bg-[#282a36] w-1/2 mx-auto p-2 rounded-lg mb-10 z-10 max-h-96 overflow-hidden border'>
+                    <textarea ref={textAreaRef} type="text" className='box-border w-11/12 h-10 text-white outline-none bg-[#282a36] rounded-lg mr-2 z-30 resize-none p-2 overflow-auto' placeholder='Enter your query' onChange={(e) => handleChange(e)} value={prompt} onKeyUp={handleSubmit} spellCheck="false" >
+                    </textarea>
                     <MdSend className='text-gray-500 my-auto cursor-pointer mr-4 hover:text-white' size={24} onClick={handleUserSubmit} />
                 </div>
             </div>
