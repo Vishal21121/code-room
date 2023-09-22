@@ -7,6 +7,7 @@ import { Server } from "socket.io"
 import http from "http"
 import cors from "cors"
 import cookieParser from "cookie-parser"
+import ACTIONS from "./util/Actions.js"
 
 const app = express()
 const server = http.createServer(app);
@@ -25,8 +26,48 @@ app.use(cookieParser())
 app.use("/api/v1/users", userRouter)
 app.use("/api/v1/room-features", roomFeaturesRouter)
 
+// !TODO: use database for this
+const userSocketMap = {};
+function getAllConnectedClients(roomId) {
+    // io.sockets.adapter.rooms.get(roomId) will return Map and here we are converting it to array 
+    return Array.from(io.sockets.adapter.rooms.get(roomId) || []).map(
+        (socketId) => {
+            return {
+                socketId,
+                username: userSocketMap[socketId],
+            };
+        }
+    );
+}
+
 io.on("connection", (socket) => {
-    console.log(socket.id);
+    // console.log(socket.id);
+    socket.on(ACTIONS.JOIN, ({ roomId, username }) => {
+        console.log(roomId, username);
+        userSocketMap[socket.id] = username;
+        socket.join(roomId);
+        const clients = getAllConnectedClients(roomId);
+        console.log({ clients });
+        clients.forEach(({ socketId }) => {
+            io.to(socketId).emit(ACTIONS.JOINED, {
+                clients,
+                username,
+                socketId: socket.id,
+            });
+        });
+    })
+
+    socket.on('disconnecting', () => {
+        const rooms = [...socket.rooms];
+        rooms.forEach((roomId) => {
+            socket.in(roomId).emit(ACTIONS.DISCONNECTED, {
+                socketId: socket.id,
+                username: userSocketMap[socket.id],
+            });
+        });
+        delete userSocketMap[socket.id];
+        socket.leave();
+    });
 })
 
 

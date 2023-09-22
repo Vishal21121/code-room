@@ -1,22 +1,72 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Navbar from '../components/Navbar'
 import IDE from '../components/IDE'
 import modes from "../util/Mode"
 import Whiteboard from '../components/Whiteboard'
 import People from '../components/People'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import ChatBot from '../components/ChatBot'
+import { useNavigate, useParams } from 'react-router-dom'
+import ACTIONS from '../util/Actions'
+import toast from 'react-hot-toast'
+import { initSocket } from '../util/socket'
+import { setSocket } from '../features/sockets/socketSlice'
 
 
 const LandingPage = () => {
     const mode = useSelector((state) => state.mode.mode)
+    const userData = useSelector((state) => state.userData.userData)
     const [isPeople, setIsPeople] = useState(false)
-    const peopleNav = () => {
-        setIsPeople(prev => !prev)
-    }
+    const navigate = useNavigate()
+    const { roomId } = useParams()
+    const dispatch = useDispatch()
+
+    useEffect(() => {
+        const socketio = initSocket()
+        dispatch(setSocket(socketio))
+        console.log({ socketio });
+        socketio.on('connect_error', (err) => handleErrors(err));
+        socketio.on('connect_failed', (err) => handleErrors(err));
+
+        function handleErrors(e) {
+            console.log('socket error', e);
+            toast.error('Socket connection failed, try again later.');
+            navigate('/');
+        }
+
+        socketio.emit(ACTIONS.JOIN, {
+            roomId,
+            username: userData.data.loggedInUser.username,
+        });
+
+        socketio.on(ACTIONS.JOINED, ({ clients, username, socketId }) => {
+            if (username !== userData.data.loggedInUser.username) {
+                toast.success(`${username} joined the room.`);
+                console.log(`${username} joined`);
+                // !TODO: update the people in the People section
+            }
+        })
+
+        socketio.on(
+            ACTIONS.DISCONNECTED,
+            ({ socketId, username }) => {
+                toast.success(`${username} left the room.`);
+                // setClients((prev) => {
+                //     return prev.filter(
+                //         (client) => client.socketId !== socketId
+                //     );
+                // });
+            }
+        );
+
+        return () => {
+            socketio?.disconnect();
+        };
+    }, [])
+
     return (
         <div className='flex bg-[#22272e]'>
-            <Navbar peopleNav={peopleNav} />
+            <Navbar peopleNav={People} />
             <People isPeople={isPeople} />
             <div className='w-[95%]'>
                 {
