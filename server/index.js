@@ -26,7 +26,7 @@ app.use(cookieParser())
 app.use("/api/v1/users", userRouter)
 app.use("/api/v1/room-features", roomFeaturesRouter)
 
-// !TODO: use database for this
+// TODO: use database for this
 const userSocketMap = {};
 function getAllConnectedClients(roomId) {
     // io.sockets.adapter.rooms.get(roomId) will return Map and here we are converting it to array 
@@ -55,6 +55,11 @@ io.on("connection", (socket) => {
                 socketId: socket.id,
             });
         });
+    })
+
+    socket.on(ACTIONS.BOARD_CHANGE, ({ roomId, elements }) => {
+        console.log({ elements });
+        socket.to(roomId).emit(ACTIONS.BOARD_CHANGE, { elements })
     })
 
     socket.on('disconnecting', () => {
