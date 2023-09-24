@@ -4,6 +4,7 @@ import fileReducer from "../features/editor/fileSlice"
 import userDataReducer from "../features/authentication/userDataSlice"
 import socketReducer from "../features/sockets/socketSlice"
 import clientReducer from "../features/clients/clientSlice"
+import accessReducer from "../features/accessPermission/accessSlice"
 
 export default combineReducers({
     mode: modeReducer,
@@ -11,4 +12,5 @@ export default combineReducers({
     userData: userDataReducer,
     socket: socketReducer,
     client: clientReducer,
+    access: accessReducer,
 })

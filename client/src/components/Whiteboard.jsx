@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import { Excalidraw } from "@excalidraw/excalidraw";
-import { useSelector } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import ACTIONS from '../util/Actions';
 import { useParams } from 'react-router-dom';
+import { setAccess } from '../features/accessPermission/accessSlice';
 
 const Whiteboard = () => {
     const [excalidrawApi, setExcalidrawApi] = useState(null)
@@ -11,17 +12,21 @@ const Whiteboard = () => {
     const [viewMode, setViewMode] = useState(true)
     const userData = useSelector((state) => state.userData.userData)
     const userName = userData.data.loggedInUser.username
-    console.log(userName);
+    const accessedUser = useSelector((state) => state.access.access)
+    const dispatch = useDispatch()
+    console.log(userName, accessedUser);
 
     // TODO: make a permission switcher in the People section so that onClicking the user logo permission can be trasnfered.
     const viewModeSetter = () => {
-        if (userName === "one") {
+        console.log("accessedUser", accessedUser);
+        if (userName === accessedUser) {
             setViewMode(false)
+        } else {
+            setViewMode(true)
         }
     }
 
     const handleChange = () => {
-        console.log("triggered");
         const elements = excalidrawApi?.getSceneElements()
         socketio.emit(ACTIONS.BOARD_CHANGE, { roomId, elements })
         if (elements.length > 0) {
@@ -45,15 +50,22 @@ const Whiteboard = () => {
                 console.log("updated");
             }
             socketio.on(ACTIONS.BOARD_CHANGE, ({ elements }) => {
-                if (userName != "one") {
+                if (userName != accessedUser) {
                     api.updateScene({ elements: elements });
                 }
+            })
+
+            socketio.on(ACTIONS.PERMISSION_CHANGE, ({ changedPermissionUser }) => {
+                console.log({ changedPermissionUser });
+                dispatch(setAccess(changedPermissionUser))
+                viewModeSetter()
             })
         });
         return () => {
             socketio.off(ACTIONS.BOARD_CHANGE)
+            socketio.off(ACTIONS.PERMISSION_CHANGE)
         }
-    }, [excalidrawApi])
+    }, [excalidrawApi, accessedUser])
     return (
         <div className='h-full w-full'>
             <Excalidraw

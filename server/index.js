@@ -58,8 +58,13 @@ io.on("connection", (socket) => {
     })
 
     socket.on(ACTIONS.BOARD_CHANGE, ({ roomId, elements }) => {
-        console.log({ elements });
+        // console.log({ elements });
         socket.to(roomId).emit(ACTIONS.BOARD_CHANGE, { elements })
+    })
+
+    socket.on(ACTIONS.PERMISSION_CHANGE, ({ roomId, changedPermissionUser }) => {
+        console.log({ changedPermissionUser });
+        socket.to(roomId).emit(ACTIONS.PERMISSION_CHANGE, { changedPermissionUser })
     })
 
     socket.on('disconnecting', () => {
