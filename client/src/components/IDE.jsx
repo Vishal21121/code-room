@@ -57,21 +57,7 @@ const IDE = () => {
 
     useEffect(() => {
         document.addEventListener("keydown", toggleTerminal)
-        // const init = async () => {
-        //     socketRef.current = await initSocket()
-        //     console.log(socketRef.current);
-        //     // socketRef.current.on("connect_error", (err) => handleErrors(err))
-        //     // socketRef.current.on("connect_failed", (err) => handleErrors(err))
-
-        //     function handleErrors(err) {
-        //         console.log("Socket error", err);
-        //         toast.error("Socket Connection failed try again later.");
-        //         reactNavigator("/")
-        //     }
-        // }
-        // init();
         return () => {
-            // socketRef.current.disconnect();
             document.removeEventListener("keydown", toggleTerminal)
         }
     }, [])
@@ -82,8 +68,7 @@ const IDE = () => {
             <div className='h-screen overflow-hidden w-full'>
                 <div className="mx-auto bg-[#3A424D] h-[100vh] flex flex-col box-border">
                     <div className='flex h-[100%]'>
-                        <Sidebar />
-                        <div className='flex flex-col box-border w-[80%] '>
+                        <div className='flex flex-col box-border w-[100%] '>
                             <div className="flex justify-center flex-col">
                                 <CodeEditor handleSubmit={handleSubmit} />
                             </div>
@@ -92,8 +77,6 @@ const IDE = () => {
                 </div>
                 <Terminal output={output} />
             </div>
-
-            {/* output */}
 
         </>
     )

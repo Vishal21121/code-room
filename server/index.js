@@ -8,6 +8,11 @@ import http from "http"
 import cors from "cors"
 import cookieParser from "cookie-parser"
 import ACTIONS from "./util/Actions.js"
+import path from "path"
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express()
 const server = http.createServer(app);
@@ -19,12 +24,21 @@ dotenv.config({
 
 connectToMongoDb()
 
-app.use(cors())
+const corsOptions = {
+    origin: '*',
+    optionsSuccessStatus: 200
+}
+
+app.use(cors(corsOptions))
+app.use(express.static(path.join(__dirname, '../client/dist')))
 app.use(express.json())
 app.use(cookieParser())
 
 app.use("/api/v1/users", userRouter)
 app.use("/api/v1/room-features", roomFeaturesRouter)
+app.use("/", (req, res) => {
+    res.sendFile(path.join(__dirname, "../client", 'dist', 'index.html'))
+})
 
 // TODO: use database for this
 const userSocketMap = {};
@@ -65,6 +79,10 @@ io.on("connection", (socket) => {
     socket.on(ACTIONS.PERMISSION_CHANGE, ({ roomId, changedPermissionUser }) => {
         console.log({ changedPermissionUser });
         socket.to(roomId).emit(ACTIONS.PERMISSION_CHANGE, { changedPermissionUser })
+    })
+
+    socket.on(ACTIONS.CODE_CHANGE, ({ code, roomId }) => {
+        socket.to(roomId).emit(ACTIONS.CODE_CHANGE, { code })
     })
 
     socket.on('disconnecting', () => {

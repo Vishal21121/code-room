@@ -3,7 +3,6 @@ const ACTIONS = {
     JOINED: 'joined',
     DISCONNECTED: 'disconnected',
     CODE_CHANGE: 'code-change',
-    SYNC_CODE: 'sync-code',
     LEAVE: 'leave',
     BOARD_CHANGE: 'board-change',
     PERMISSION_CHANGE: 'permission-change'

@@ -3,25 +3,15 @@ import "monaco-themes/themes/Monokai Bright.json";
 import Editor, { loader } from '@monaco-editor/react';
 import { Play } from 'react-feather';
 import { useSelector } from 'react-redux';
+import ACTIONS from '../util/Actions';
+import { useParams } from 'react-router-dom';
 
 
 const CodeEditor = ({ handleSubmit }) => {
-    const fileClicked = useSelector((state) => state.currentFile.file)
-    const [currentFile, setCurrentFile] = useState("")
-    const [fileDetails, setfileDetails] = useState([{
-        filename: "",
-        language: "",
-        value: ""
-    }])
-
-    const [currentFileDetails, setCurrentFileDetails] = useState({
-        filename: "",
-        language: "",
-        value: ""
-    })
-    const [buttonArr, setButtonArr] = useState([])
+    const socketio = useSelector((state) => state.socket.socket)
+    const { roomId } = useParams()
     const editorRef = useRef(null);
-
+    const [code, setCode] = useState("")
     const handleEditorDidMount = (editor) => {
         editorRef.current = editor
         import('monaco-themes/themes/Dracula.json')
@@ -31,82 +21,41 @@ const CodeEditor = ({ handleSubmit }) => {
             .then(_ => monaco.editor.setTheme('dracula'))
     }
 
-    // later create an api to get the language based on the file extension
-    const getContent = () => {
-        let language
-        if (currentFile.split(".").includes("js")) {
-            language = "javascript"
-        } else if (currentFile.split(".").includes("css")) {
-            language = "css"
-        } else if (currentFile.split(".").includes("js")) {
-            language = "html"
-        }
-        // console.log(editorRef.current.getValue());
-        setfileDetails(prev => [...prev, {
-            filename: currentFile, language, value: editorRef.current.getValue()
-        }])
-        console.log(fileDetails);
-    }
-
     function handleEditorValidation(markers) {
         // model markers
         markers.forEach((marker) => console.log('onValidate:', marker.message));
     }
 
-    const currentFileContentSetter = (file) => {
-        if (!file) {
-            return
-        }
-        let language;
-        if (file.split(".").includes("js")) {
-            language = "javascript"
-        } else if (file.split(".").includes("css")) {
-            language = "css"
-        } else if (file.split(".").includes("html")) {
-            language = "html"
-        }
-        let fileVal = fileDetails.find(el => el.filename === file)
-        let codeVal = ""
-        if (fileVal) {
-            codeVal = fileVal.value
-        }
-        console.log(codeVal);
-        setCurrentFileDetails({ filename: file, language, value: codeVal })
+    const handleChange = () => {
+        socketio.emit(ACTIONS.CODE_CHANGE, { code: editorRef.current.getValue(), roomId })
     }
 
     useEffect(() => {
-        currentFileContentSetter(fileClicked)
-        if (!buttonArr.includes(fileClicked)) {
-            setButtonArr([...buttonArr, fileClicked])
-            console.log(buttonArr);
+        console.log({ socketio });
+        if (socketio) {
+            socketio.on(ACTIONS.CODE_CHANGE, ({ code }) => {
+                // console.log(code);
+                console.log(editorRef.current);
+                setCode(code)
+            })
         }
-    }, [fileClicked])
-
-    const handleClickOnTab = (file) => {
-        console.log(file);
-        setCurrentFile(file)
-        currentFileContentSetter(file)
-    }
-
+        return () => {
+            socketio?.off(ACTIONS.CODE_CHANGE)
+        }
+    }, [socketio])
 
     return (
         <div className='flex-col'>
             <div className='flex bg-[#161a2a] h-12'>
                 <Play className='absolute right-10 my-[11px] text-white cursor-pointer' onClick={async (e) => { await handleSubmit(e, editorRef.current.getValue()) }} />
-                {
-                    buttonArr?.map((el) => (
-                        el ? (<button onClick={(e) => handleClickOnTab(e.currentTarget.innerText)} className={`py-2 px-6 ${el === currentFileDetails.filename ? "border-b border-l border-r" : ''} border-[#44475a] bg-[#21252b] text-white`}>{el}</button>) : ""
-                    ))
-                }
             </div>
             <Editor
                 height="100vh"
-                path={currentFileDetails.filename}
-                defaultLanguage={currentFileDetails.language}
-                defaultValue={currentFileDetails.value}
+                value={code}
+                defaultLanguage="javascript"
                 onValidate={handleEditorValidation}
                 onMount={handleEditorDidMount}
-                onChange={getContent}
+                onChange={handleChange}
                 options={
                     {
                         "wordWrap": true,

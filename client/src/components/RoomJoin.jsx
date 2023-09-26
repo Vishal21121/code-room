@@ -21,7 +21,7 @@ const RoomJoin = () => {
             return;
         }
         // we are passing the username to /editor/roomId route
-        navigate(`/${roomId}`)
+        navigate(`/room/:${roomId}`)
     }
 
     const handleInputEnter = (e) => {

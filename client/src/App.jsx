@@ -15,10 +15,10 @@ function App() {
           reverseOrder={false}
         />
         <Routes>
-          <Route path='/:roomId' element={<LandingPage />} />
+          <Route path='/room/:roomId' element={<LandingPage />} />
           <Route path='/signin' element={<Signin />} />
           <Route path='/' element={<Login />} />
-          <Route path='/room' element={<RoomJoin />} />
+          <Route path='/createroom' element={<RoomJoin />} />
         </Routes>
       </BrowserRouter>
     </>

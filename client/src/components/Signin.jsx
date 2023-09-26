@@ -45,7 +45,7 @@ const Signin = () => {
                 return
             }
             toast.success("User created successfully")
-            navigate("/login")
+            navigate("/")
         } catch (error) {
             console.log(error.message);
         }

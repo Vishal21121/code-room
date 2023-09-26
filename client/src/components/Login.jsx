@@ -41,7 +41,7 @@ const Login = () => {
             }
             dispatch(setUserData(data))
             toast.success("User logged in successfully")
-            navigate("/room")
+            navigate("/createroom")
         } catch (error) {
             console.log(error.message)
         }
