@@ -9,7 +9,7 @@ import { useSelector } from 'react-redux';
 import People from './People';
 
 
-const Navbar = ({ peopleNav }) => {
+const Navbar = ({ peopleNav, todoNav }) => {
     const dispatch = useDispatch()
     const mode = useSelector((state) => state.mode.mode)
     return (
@@ -24,8 +24,8 @@ const Navbar = ({ peopleNav }) => {
             <div className='rounded-full bg-[#0d65d9] mx-auto p-2'>
                 <RiPencilFill onClick={() => dispatch(setMode(modes.BOARD))} size={28} className={`${mode === "board" ? "text-white" : "text-gray-900"} hover:text-white cursor-pointer`} />
             </div>
-            <div className='rounded-full bg-[#0d65d9] mx-auto p-2'>
-                <HiCheckBadge onClick={() => dispatch(setMode(modes.TODO))} size={28} className={`${mode === "todo" ? "text-white" : "text-gray-900"} hover:text-white cursor-pointer`} />
+            <div className='rounded-full bg-[#0d65d9] mx-auto p-2' onClick={todoNav}>
+                <HiCheckBadge size={28} className={`${mode === "todo" ? "text-white" : "text-gray-900"} hover:text-white cursor-pointer`} />
             </div>
             <div className='rounded-full bg-[#0d65d9] mx-auto p-2'>
                 <SiDependabot onClick={() => dispatch(setMode(modes.BOT))} size={28} className={`${mode === "bot" ? "text-white" : "text-gray-900"} hover:text-white cursor-pointer`} />

@@ -12,18 +12,24 @@ import toast from 'react-hot-toast'
 import { initSocket } from '../util/socket'
 import { setSocket } from '../features/sockets/socketSlice'
 import { setClient, removeClient } from '../features/clients/clientSlice'
+import Todo from '../components/Todo'
 
 
 const LandingPage = () => {
     const mode = useSelector((state) => state.mode.mode)
     const userData = useSelector((state) => state.userData.userData)
     const [isPeople, setIsPeople] = useState(false)
+    const [isTodo, setIsTodo] = useState(false)
     const navigate = useNavigate()
     const { roomId } = useParams()
     const dispatch = useDispatch()
 
     const peopleNav = () => {
         setIsPeople(prev => !prev)
+    }
+
+    const todoNav = () => {
+        setIsTodo(prev => !prev)
     }
 
     useEffect(() => {
@@ -67,8 +73,9 @@ const LandingPage = () => {
 
     return (
         <div className='flex bg-[#22272e]'>
-            <Navbar peopleNav={peopleNav} />
+            <Navbar peopleNav={peopleNav} todoNav={todoNav} />
             <People isPeople={isPeople} />
+            <Todo isTodo={isTodo} />
             <div className='w-[95%]'>
                 {
                     mode === modes['CODE-EDITOR'] && <IDE />
@@ -80,6 +87,7 @@ const LandingPage = () => {
                     mode === modes.BOT && <ChatBot />
                 }
             </div>
+            <Todo />
         </div>
     )
 }

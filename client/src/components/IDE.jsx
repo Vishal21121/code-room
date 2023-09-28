@@ -37,9 +37,12 @@ const IDE = () => {
         if (data.run.stdout) {
             setOutput(data.run.stdout)
             toast.success("Code compiled successfully")
-        } else {
+        } else if (data.run.stderr) {
             setOutput(data.run.stderr)
             toast.error("error in the code")
+        } else {
+            toast.success("Code compiled")
+            setOutput("Nothing to print")
         }
     }
 
