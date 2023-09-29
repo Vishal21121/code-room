@@ -12,7 +12,7 @@ import toast from 'react-hot-toast'
 import { initSocket } from '../util/socket'
 import { setSocket } from '../features/sockets/socketSlice'
 import { setClient, removeClient } from '../features/clients/clientSlice'
-import Todo from '../components/Todo'
+import NotesForm from '../components/NotesForm'
 
 
 const LandingPage = () => {
@@ -75,7 +75,6 @@ const LandingPage = () => {
         <div className='flex bg-[#22272e]'>
             <Navbar peopleNav={peopleNav} todoNav={todoNav} />
             <People isPeople={isPeople} />
-            <Todo isTodo={isTodo} />
             <div className='w-[95%]'>
                 {
                     mode === modes['CODE-EDITOR'] && <IDE />
@@ -86,8 +85,10 @@ const LandingPage = () => {
                 {
                     mode === modes.BOT && <ChatBot />
                 }
+                {
+                    mode === modes.NOTES && <NotesForm />
+                }
             </div>
-            <Todo />
         </div>
     )
 }

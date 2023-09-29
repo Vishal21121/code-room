@@ -2,7 +2,8 @@ const modes = {
     PEOPLE: "people",
     "CODE-EDITOR": "code-editor",
     BOARD: "board",
-    BOT: "bot"
+    BOT: "bot",
+    NOTES: "notes"
 }
 
 export default modes

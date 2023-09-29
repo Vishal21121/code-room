@@ -15,7 +15,7 @@ const Terminal = ({ output }) => {
         <button className='text-white mx-4 underline underline-offset-8 focus:underline focus:underline-offset-8' id='termEl'>Terminal</button>
         <X className='text-white absolute right-10 cursor-pointer' onClick={closeTerminal} />
       </div>
-      <div className='text-gray-300 mt-4 mx-4'>{output}</div>
+      <pre className='text-gray-300 mt-4 mx-4'>{output}</pre>
     </div>
   )
 }

@@ -5,7 +5,6 @@ import userDataReducer from "../features/authentication/userDataSlice"
 import socketReducer from "../features/sockets/socketSlice"
 import clientReducer from "../features/clients/clientSlice"
 import accessReducer from "../features/accessPermission/accessSlice"
-import todoReducer from "../features/todo/todoSlice"
 
 export default combineReducers({
     mode: modeReducer,
@@ -14,5 +13,4 @@ export default combineReducers({
     socket: socketReducer,
     client: clientReducer,
     access: accessReducer,
-    todo: todoReducer
 })

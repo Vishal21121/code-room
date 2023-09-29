@@ -5,7 +5,6 @@ import { Play } from 'react-feather';
 import { useDispatch, useSelector } from 'react-redux';
 import ACTIONS from '../util/Actions';
 import { useParams } from 'react-router-dom';
-import { setTodo } from '../features/todo/todoSlice';
 
 
 const CodeEditor = ({ handleSubmit }) => {
@@ -13,7 +12,6 @@ const CodeEditor = ({ handleSubmit }) => {
     const { roomId } = useParams()
     const editorRef = useRef(null);
     const [code, setCode] = useState("")
-    const dispatch = useDispatch()
     const handleEditorDidMount = (editor) => {
         editorRef.current = editor
         import('monaco-themes/themes/Dracula.json')
@@ -29,13 +27,6 @@ const CodeEditor = ({ handleSubmit }) => {
     }
 
     const handleChange = () => {
-        const regex = /\/\/ TODO.*/g;
-        let todos = editorRef.current.getValue().match(regex);
-        let arr = []
-        todos.map((el) => {
-            arr.push(el.split("TODO:")[1].trim())
-        })
-        dispatch(setTodo(arr))
         socketio.emit(ACTIONS.CODE_CHANGE, { code: editorRef.current.getValue(), roomId })
     }
 

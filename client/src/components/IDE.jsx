@@ -1,17 +1,12 @@
 import React, { useEffect, useState, useRef } from 'react'
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
-import Sidebar from './Sidebar';
 import Terminal from './Terminal';
 import CodeEditor from './CodeEditor';
-import { initSocket } from '../util/socket';
 
 
 const IDE = () => {
-    const navigate = useNavigate()
     const [output, setOutput] = useState("")
-    // shift this state in store
-    const socketRef = useRef(null);
 
     const handleSubmit = async (e, code) => {
         console.log("called", code)
