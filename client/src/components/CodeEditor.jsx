@@ -5,6 +5,7 @@ import { Play } from 'react-feather';
 import { useDispatch, useSelector } from 'react-redux';
 import ACTIONS from '../util/Actions';
 import { useParams } from 'react-router-dom';
+import { setProblems } from '../features/editor/problemSlice';
 
 
 const CodeEditor = ({ handleSubmit }) => {
@@ -12,6 +13,9 @@ const CodeEditor = ({ handleSubmit }) => {
     const { roomId } = useParams()
     const editorRef = useRef(null);
     const [code, setCode] = useState("")
+    const dispatch = useDispatch()
+
+
     const handleEditorDidMount = (editor) => {
         editorRef.current = editor
         import('monaco-themes/themes/Dracula.json')
@@ -23,7 +27,12 @@ const CodeEditor = ({ handleSubmit }) => {
 
     function handleEditorValidation(markers) {
         // model markers
-        markers.forEach((marker) => console.log('onValidate:', marker.message));
+        console.log(markers);
+        let arr = []
+        markers.forEach((marker) => {
+            arr.push(marker.message)
+        });
+        dispatch(setProblems(arr))
     }
 
     const handleChange = () => {
