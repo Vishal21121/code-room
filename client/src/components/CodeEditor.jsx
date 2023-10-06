@@ -70,7 +70,8 @@ const CodeEditor = ({ handleSubmit }) => {
                         "wordWrap": true,
                         "codeLens": true,
                         "dragAndDrop": false,
-                        "mouseWheelZoom": true
+                        "mouseWheelZoom": true,
+                        // "readOnly": true
                     }
                 }
             />

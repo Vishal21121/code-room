@@ -63,7 +63,7 @@ const Login = () => {
                         <input
                             type="email"
                             required
-                            className="pt-3 pr-4 pb-3 pl-12 w-full bg-[#223243] text-gray-300 font-light rounded-3xl text-lg shadow-lg duration-500 outline-none border border-solid border-[#0000001a] placeholder:text-base placeholder:font-light"
+                            className="pt-3 pr-4 pb-3 pl-12 w-full bg-[#223243] text-gray-300 font-light rounded-3xl text-lg shadow-lg duration-500 outline-none border border-solid border-[#0000001a] placeholder:text-base placeholder:font-light focus:ring-2 focus:ring-orange-500"
                             placeholder='Email'
                             onChange={(e) => setUserDetails(prev => ({ ...prev, email: e.target.value }))}
                         />
@@ -73,7 +73,7 @@ const Login = () => {
                         <input
                             type="password"
                             required
-                            className="pt-3 pr-4 pb-3 pl-12 w-full bg-[#223243] text-gray-300 font-light rounded-3xl text-lg shadow-lg duration-500 outline-none border border-solid border-[#0000001a] placeholder:text-base placeholder:font-light"
+                            className="pt-3 pr-4 pb-3 pl-12 w-full bg-[#223243] text-gray-300 font-light rounded-3xl text-lg shadow-lg duration-500 outline-none border border-solid border-[#0000001a] placeholder:text-base placeholder:font-light focus:ring-2 focus:ring-orange-500"
                             placeholder='Password'
                             onChange={(e) => setUserDetails(prev => ({ ...prev, password: e.target.value }))}
                         />
