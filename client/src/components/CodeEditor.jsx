@@ -6,6 +6,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import ACTIONS from '../util/Actions';
 import { useParams } from 'react-router-dom';
 import { setProblems } from '../features/editor/problemSlice';
+import { setAccess } from '../features/accessPermission/accessSlice';
+import Avatar from 'react-avatar';
+
 
 
 const CodeEditor = ({ handleSubmit }) => {
@@ -14,7 +17,20 @@ const CodeEditor = ({ handleSubmit }) => {
     const editorRef = useRef(null);
     const [code, setCode] = useState("")
     const dispatch = useDispatch()
+    const userData = useSelector((state) => state.userData.userData)
+    const userName = userData.data.loggedInUser.username
+    const [readOnly, setReadOnly] = useState(true)
+    const accessedUser = useSelector((state) => state.access.access)
 
+
+    const viewModeSetter = () => {
+        console.log("accessedUser", accessedUser);
+        if (userName === accessedUser) {
+            setReadOnly(false)
+        } else {
+            setReadOnly(true)
+        }
+    }
 
     const handleEditorDidMount = (editor) => {
         editorRef.current = editor
@@ -35,27 +51,44 @@ const CodeEditor = ({ handleSubmit }) => {
         dispatch(setProblems(arr))
     }
 
+
     const handleChange = () => {
-        socketio.emit(ACTIONS.CODE_CHANGE, { code: editorRef.current.getValue(), roomId })
+        socketio.emit(ACTIONS.CODE_CHANGE, { code: editorRef.current.getValue(), roomId, userName });
     }
 
     useEffect(() => {
-        console.log({ socketio });
+        viewModeSetter()
         if (socketio) {
             socketio.on(ACTIONS.CODE_CHANGE, ({ code }) => {
-                // console.log(code);
-                console.log(editorRef.current);
-                setCode(code)
+                if (userName != accessedUser) {
+                    console.log({ code });
+                    setCode(code)
+                }
+            })
+            socketio.on(ACTIONS.PERMISSION_CHANGE, ({ changedPermissionUser }) => {
+                console.log({ changedPermissionUser });
+                dispatch(setAccess(changedPermissionUser))
+                viewModeSetter()
             })
         }
         return () => {
             socketio?.off(ACTIONS.CODE_CHANGE)
+            socketio?.off(ACTIONS.PERMISSION_CHANGE)
         }
-    }, [socketio])
+    }, [socketio, accessedUser])
 
     return (
         <div className='flex-col'>
-            <div className='flex bg-[#161a2a] h-12'>
+            <div className='flex bg-[#161a2a] h-12 justify-between items-center'>
+                {
+                    accessedUser != userName ? (
+                        <div className='flex gap-1'>
+                            <p className='text-white mx-4'>Permission:</p>
+                            <Avatar name={accessedUser} size={30} round="14px" />
+                        </div>
+
+                    ) : ""
+                }
                 <Play className='absolute right-10 my-[11px] text-white cursor-pointer' onClick={async (e) => { await handleSubmit(e, editorRef.current.getValue()) }} />
             </div>
             <Editor
@@ -71,7 +104,7 @@ const CodeEditor = ({ handleSubmit }) => {
                         "codeLens": true,
                         "dragAndDrop": false,
                         "mouseWheelZoom": true,
-                        // "readOnly": true
+                        "readOnly": readOnly
                     }
                 }
             />
