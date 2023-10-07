@@ -3,6 +3,7 @@ import connectToMongoDb from "./db/dbConnect.js"
 import dotenv from "dotenv"
 import userRouter from "./routes/user.routes.js"
 import roomFeaturesRouter from "./routes/room-features.routes.js"
+import roomRouter from "./routes/room.routes.js"
 import { Server } from "socket.io"
 import http from "http"
 import cors from "cors"
@@ -36,6 +37,7 @@ app.use(cookieParser())
 
 app.use("/api/v1/users", userRouter)
 app.use("/api/v1/room-features", roomFeaturesRouter)
+app.use("/api/v1/room/", roomRouter)
 app.use("/", (req, res) => {
     res.sendFile(path.join(__dirname, "../client", 'dist', 'index.html'))
 })
