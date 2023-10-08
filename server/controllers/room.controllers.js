@@ -9,6 +9,7 @@ export const createRoom = async (req, res) => {
                 statusCode: 403,
                 status: "failure",
                 data: {
+                    statusCode: 403,
                     message: "Enter another room name"
                 }
             })

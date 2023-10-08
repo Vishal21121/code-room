@@ -11,7 +11,7 @@ const generateAccessAndRefreshTokens = async (userid) => {
         // updating the refersh token and isLoggedIn in the database
         await User.updateOne(
             { _id: userid },
-            { $set: { refreshToken: refreshToken, isLoggedIn: true } }
+            { $set: { refreshToken, isLoggedIn: true } }
         )
         return {
             accessToken,
@@ -110,8 +110,8 @@ export const loginUser = async (req, res) => {
         );
         const options = {
             httpOnly: true,
-            sameSite: 'None',
-            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'none',
+            secure: true,
             maxAge: 2 * 24 * 60 * 60 * 1000
         }
         return res.status(200)
@@ -169,12 +169,11 @@ export const refreshAccessToken = async (req, res) => {
         }
         const options = {
             httpOnly: true,
-            sameSite: 'None',
-            secure: process.env.NODE_ENV === "production",
-            maxAge: 2 * 24 * 60 * 60 * 1000
+            sameSite: 'none',
+            secure: true,
+            maxAge: 2 * 24 * 60 * 60 * 1000,
         }
         const { accessToken, refreshToken: newRefreshToken } = await generateAccessAndRefreshTokens(user._id)
-
         return res
             .status(200)
             .cookie("refreshToken", newRefreshToken, options)

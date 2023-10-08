@@ -3,7 +3,7 @@ import { Mail, Lock } from "react-feather"
 import { Link } from 'react-router-dom'
 import toast from 'react-hot-toast'
 import { useDispatch } from 'react-redux'
-import { setUserData } from '../features/authentication/userDataSlice'
+import { setAccessToken, setUserData } from '../features/authentication/userDataSlice'
 import { useNavigate } from 'react-router-dom'
 
 const Login = () => {
@@ -18,6 +18,7 @@ const Login = () => {
             const response = await fetch("http://localhost:8080/api/v1/users/login", {
                 method: "POST",
                 mode: "cors",
+                credentials: 'include',
                 headers: {
                     "Content-Type": "application/json"
                 },
@@ -40,6 +41,7 @@ const Login = () => {
                 return
             }
             dispatch(setUserData(data))
+            dispatch(setAccessToken(data.data.accessToken))
             toast.success("User logged in successfully")
             navigate("/createroom")
         } catch (error) {
