@@ -32,6 +32,7 @@ const CodeEditor = ({ handleSubmit }) => {
                 "Content-Type": "application/json",
                 "Authorization": `Bearer ${accessToken}`
             },
+            // TODO: language is hard coded make a selector for this
             body: JSON.stringify({
                 roomId: roomId,
                 code: code,
@@ -80,8 +81,28 @@ const CodeEditor = ({ handleSubmit }) => {
         debouncedSendCode(editorRef.current.getValue())
     }
 
+    const fetchCode = async () => {
+        console.log(roomId);
+        const response = await fetch("http://localhost:8080/api/v1/room/get-code", {
+            method: "POST",
+            mode: "cors",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${accessToken}`
+            },
+            body: JSON.stringify({
+                roomId: roomId
+            })
+        })
+        let data = await response.json()
+        if (data.data.statusCode === 200) {
+            setCode(data.data.value.code)
+        }
+    }
+
     useEffect(() => {
         viewModeSetter()
+        fetchCode()
         if (socketio) {
             socketio.on(ACTIONS.CODE_CHANGE, ({ code }) => {
                 if (userName != accessedUser) {

@@ -13,7 +13,7 @@ const RoomJoin = () => {
     const userData = useSelector((state) => state.userData.userData)
     const userName = userData.data.loggedInUser.username
     const dispatch = useDispatch()
-    const [createOrJoin, setCreateOrJoin] = useState("Create")
+    const [createOrJoin, setCreateOrJoin] = useState("Join")
 
     const createNewRoomRequest = async (accessToken) => {
         let body, url
@@ -44,6 +44,7 @@ const RoomJoin = () => {
         })
         const data = await response.json()
         if (data.data.statusCode === 201 || data.data.statusCode === 200) {
+            // TODO: save the room information in the state
             toast.success(`${createOrJoin}ed a new room`, {
                 style: {
                     background: "#E5E7EB",
