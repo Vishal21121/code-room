@@ -1,6 +1,6 @@
 import { body } from "express-validator";
 
-export const roomValidator = () => {
+export const roomCreateValidator = () => {
     return [
         body("name")
             .trim()
@@ -29,5 +29,18 @@ export const roomValidator = () => {
             .withMessage("admin name must be lowercase")
             .isLength({ min: 3 })
             .withMessage("admin name must be at least 3 characters long"),
+    ]
+}
+
+export const roomJoinValidator = () => {
+    return [
+        body("name")
+            .trim()
+            .notEmpty()
+            .withMessage("Please enter the room name"),
+        body("password")
+            .trim()
+            .notEmpty()
+            .withMessage("Please enter your password")
     ]
 }

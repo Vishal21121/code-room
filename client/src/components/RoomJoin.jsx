@@ -13,25 +13,38 @@ const RoomJoin = () => {
     const userData = useSelector((state) => state.userData.userData)
     const userName = userData.data.loggedInUser.username
     const dispatch = useDispatch()
+    const [createOrJoin, setCreateOrJoin] = useState("Create")
 
     const createNewRoomRequest = async (accessToken) => {
-        const response = await fetch("http://localhost:8080/api/v1/room/create-room", {
+        let body, url
+        if (createOrJoin === "Create") {
+            body = JSON.stringify({
+                name: roomName,
+                users: [userName],
+                password: Password,
+                admin: userName
+            })
+            url = "http://localhost:8080/api/v1/room/create-room"
+            console.log("Create");
+        } else {
+            body = JSON.stringify({
+                name: roomName,
+                password: Password,
+            })
+            url = "http://localhost:8080/api/v1/room/join-room"
+        }
+        const response = await fetch(url, {
             method: "POST",
             mode: "cors",
             headers: {
                 'Content-Type': "application/json",
                 'Authorization': `Bearer ${accessToken}`
             },
-            body: JSON.stringify({
-                name: roomName,
-                users: [userName],
-                password: Password,
-                admin: userName
-            })
+            body: body
         })
         const data = await response.json()
-        if (data.data.statusCode === 201) {
-            toast.success("Created a new room", {
+        if (data.data.statusCode === 201 || data.data.statusCode === 200) {
+            toast.success(`${createOrJoin}ed a new room`, {
                 style: {
                     background: "#E5E7EB",
                     color: "#333"
@@ -84,7 +97,7 @@ const RoomJoin = () => {
                 return;
             }
             else if (statusCode === 500) {
-                toast.error("Failed to create a new room", {
+                toast.error(`Failed to ${createOrJoin.toLowerCase()} a new room`, {
                     style: {
                         background: "#E5E7EB",
                         color: "#333"
@@ -92,7 +105,7 @@ const RoomJoin = () => {
                 })
                 return;
             }
-            else if (statusCode === 401) {
+            else if (statusCode === 401 && createOrJoin === "Create") {
                 const response = await fetch("http://localhost:8080/api/v1/users/refreshToken", {
                     method: "POST",
                     mode: "cors",
@@ -104,6 +117,13 @@ const RoomJoin = () => {
                 let data = await response.json()
                 dispatch(setAccessToken(data.data.accessToken))
                 await createNewRoomRequest(data.data.accessToken)
+            } else if (statusCode === 404) {
+                toast.error("Room does not exist", {
+                    style: {
+                        background: "#E5E7EB",
+                        color: "#333"
+                    }
+                })
             }
         } catch (error) {
             console.log(error.message);
@@ -116,10 +136,19 @@ const RoomJoin = () => {
         }
     }
 
+    const handleClickOrJoin = (e) => {
+        e.preventDefault()
+        if (createOrJoin === "Create") {
+            setCreateOrJoin("Join")
+        } else {
+            setCreateOrJoin("Create")
+        }
+    }
+
     return (
         <div className="bg-[#22272e] h-screen w-screen flex flex-col justify-center text-center">
             <div className="border w-[30%] h-fit rounded-lg p-8 mx-auto bg-gray-900 flex flex-col gap-4">
-                <h4 className="text-gray-300 text-lg font-bold">Create room</h4>
+                <h4 className="text-gray-300 text-lg font-bold">{createOrJoin} room</h4>
                 <div className="flex flex-col gap-4 items-center">
                     <input
                         type="text"
@@ -140,12 +169,12 @@ const RoomJoin = () => {
                     <button className="px-8 py-2 bg-[#FF6C00] w-fit rounded-lg text-white text-bold text-lg hover:shadow-4xl"
                         onClick={createNewRoom}
                     >
-                        Create
+                        {createOrJoin}
                     </button>
                     <span className="text-gray-300">
-                        Join &nbsp;
+                        {createOrJoin === "Join" ? "Create" : "Join"} &nbsp;
                         <a
-                            onClick={createNewRoom}
+                            onClick={handleClickOrJoin}
                             href=""
                             className="text-[#FF6C00] underline underline-offset-4 hover:text-[#ff6a00c6]"
                         >

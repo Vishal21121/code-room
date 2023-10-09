@@ -35,4 +35,8 @@ roomSchema.pre("save", async function (next) {
     next();
 })
 
+roomSchema.methods.isPasswordCorrect = async function (password) {
+    return await bcrypt.compare(password, this.password);
+};
+
 export const Room = mongoose.model("Room", roomSchema)
