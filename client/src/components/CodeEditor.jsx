@@ -8,6 +8,7 @@ import { useParams } from 'react-router-dom';
 import { setProblems } from '../features/editor/problemSlice';
 import { setAccess } from '../features/accessPermission/accessSlice';
 import Avatar from 'react-avatar';
+import { useDebouncedCallback } from 'use-debounce';
 
 
 
@@ -21,6 +22,28 @@ const CodeEditor = ({ handleSubmit }) => {
     const userName = userData.data.loggedInUser.username
     const [readOnly, setReadOnly] = useState(true)
     const accessedUser = useSelector((state) => state.access.access)
+    const accessToken = useSelector((state) => state.userData.accessToken)
+
+    const sendCode = async (code) => {
+        let response = await fetch("http://localhost:8080/api/v1/room/update-code", {
+            mode: "cors",
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${accessToken}`
+            },
+            body: JSON.stringify({
+                roomId: roomId,
+                code: code,
+                language: "javascript"
+            })
+
+        })
+        let data = await response.json()
+        console.log(data);
+    }
+
+    const debouncedSendCode = useDebouncedCallback(sendCode, 500);
 
 
     const viewModeSetter = () => {
@@ -54,6 +77,7 @@ const CodeEditor = ({ handleSubmit }) => {
 
     const handleChange = () => {
         socketio.emit(ACTIONS.CODE_CHANGE, { code: editorRef.current.getValue(), roomId, userName });
+        debouncedSendCode(editorRef.current.getValue())
     }
 
     useEffect(() => {
