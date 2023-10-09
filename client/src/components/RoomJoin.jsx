@@ -13,7 +13,6 @@ const RoomJoin = () => {
     const userData = useSelector((state) => state.userData.userData)
     const userName = userData.data.loggedInUser.username
     const dispatch = useDispatch()
-    console.log("above");
 
     const createNewRoomRequest = async (accessToken) => {
         const response = await fetch("http://localhost:8080/api/v1/room/create-room", {
@@ -32,37 +31,68 @@ const RoomJoin = () => {
         })
         const data = await response.json()
         if (data.data.statusCode === 201) {
-            console.log("inside");
-            toast.success("Created a new room")
-            console.log("roomId", data.data.value._id);
+            toast.success("Created a new room", {
+                style: {
+                    background: "#E5E7EB",
+                    color: "#333"
+                }
+            })
             navigate(`/room/${data.data.value._id}`)
             return;
-        } else {
+        }
+        else if (data.data.statusCode === 422) {
+            toast.error(Object.values(data.data.value[0])[0], {
+                style: {
+                    background: "#E5E7EB",
+                    color: "#333"
+                }
+            })
+        }
+        else {
             return data.data.statusCode
         }
     }
 
     const createNewRoom = async () => {
         if (!roomName) {
-            toast.error("ROOM name is required")
+            toast.error("ROOM name is required", {
+                style: {
+                    background: "#E5E7EB",
+                    color: "#333"
+                }
+            })
             return;
         }
         if (!Password) {
-            toast.error("Password is required")
+            toast.error("Password is required", {
+                style: {
+                    background: "#E5E7EB",
+                    color: "#333"
+                }
+            })
             return;
         }
         try {
             let statusCode = await createNewRoomRequest(accessToken)
             if (statusCode === 403) {
-                toast.error("Please enter another room name")
+                toast.error("Please enter another room name", {
+                    style: {
+                        background: "#E5E7EB",
+                        color: "#333"
+                    }
+                })
                 return;
             }
             else if (statusCode === 500) {
-                toast.error("Failed to create a new room")
+                toast.error("Failed to create a new room", {
+                    style: {
+                        background: "#E5E7EB",
+                        color: "#333"
+                    }
+                })
                 return;
             }
             else if (statusCode === 401) {
-                console.log("entered");
                 const response = await fetch("http://localhost:8080/api/v1/users/refreshToken", {
                     method: "POST",
                     mode: "cors",
@@ -72,7 +102,6 @@ const RoomJoin = () => {
                     }
                 })
                 let data = await response.json()
-                console.log("token", data.data.accessToken);
                 dispatch(setAccessToken(data.data.accessToken))
                 await createNewRoomRequest(data.data.accessToken)
             }
