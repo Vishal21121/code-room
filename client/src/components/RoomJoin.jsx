@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import toast from "react-hot-toast"
 import { useDispatch, useSelector } from 'react-redux';
 import { setAccessToken } from '../features/authentication/userDataSlice';
+import { setRoom } from '../features/room/roomSlice';
 
 
 const RoomJoin = () => {
@@ -44,7 +45,7 @@ const RoomJoin = () => {
         })
         const data = await response.json()
         if (data.data.statusCode === 201 || data.data.statusCode === 200) {
-            // TODO: save the room information in the state
+            dispatch(setRoom(data.data.value))
             toast.success(`${createOrJoin}ed a new room`, {
                 style: {
                     background: "#E5E7EB",
