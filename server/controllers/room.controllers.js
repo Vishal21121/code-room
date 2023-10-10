@@ -46,7 +46,7 @@ export const createRoom = async (req, res) => {
 }
 
 export const joinRoom = async (req, res) => {
-    const { name, password } = req.body
+    const { name, password, username } = req.body
     try {
         const roomExist = await Room.findOne({ name })
         if (!roomExist) {
@@ -65,6 +65,33 @@ export const joinRoom = async (req, res) => {
                 data: {
                     statusCode: 401,
                     message: "please enter correct credentials"
+                }
+            })
+        }
+        const userGotInRoom = await Room.findOne({
+            name,
+            users: {
+                $elemMatch: {
+                    $eq: username
+                }
+            }
+        })
+        if (userGotInRoom) {
+            return res.status(400).json({
+                status: "failure",
+                data: {
+                    statusCode: 400,
+                    message: "user has already joined the room"
+                }
+            })
+        }
+        const roomUpdated = await Room.updateOne({ name }, { $push: { users: username } })
+        if (!roomUpdated) {
+            return res.status(500).json({
+                status: "failure",
+                data: {
+                    statusCode: 500,
+                    message: "Failed to join user"
                 }
             })
         }
@@ -170,6 +197,52 @@ export const getCode = async (req, res) => {
         })
     } catch (error) {
         console.log(error);
+        return res.status(500).json({
+            status: "failure",
+            data: {
+                statusCode: 500,
+                message: "Internal server error" || error.message
+            }
+        })
+    }
+}
+
+export const getRoomsWithUser = async (req, res) => {
+    const { username } = req.body
+    if (!username) {
+        return res.status(400).json({
+            status: "failure",
+            data: {
+                statusCode: 400,
+                message: "username is not found"
+            }
+        })
+    }
+    try {
+        const rooms = await Room.find({
+            users: {
+                $elemMatch: {
+                    $eq: username
+                }
+            }
+        }).select("-password")
+        if (!rooms) {
+            return res.status(404).json({
+                status: "failure",
+                data: {
+                    statusCode: 404,
+                    message: "no rooms found with this username"
+                }
+            })
+        }
+        return res.status(200).json({
+            status: "success",
+            data: {
+                statusCode: 200,
+                value: rooms
+            }
+        })
+    } catch (error) {
         return res.status(500).json({
             status: "failure",
             data: {

@@ -23,7 +23,7 @@ const CodeEditor = ({ handleSubmit }) => {
     const [readOnly, setReadOnly] = useState(true)
     const accessedUser = useSelector((state) => state.access.access)
     const accessToken = useSelector((state) => state.userData.accessToken)
-
+    const roomInfo = useSelector((state) => state.room.room)
     const sendCode = async (code) => {
         let response = await fetch("http://localhost:8080/api/v1/room/update-code", {
             mode: "cors",

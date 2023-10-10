@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
     // set this after taking the value from database
-    access: "one"
+    access: ""
 }
 
 export const accessSlice = createSlice({

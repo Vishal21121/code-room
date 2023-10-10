@@ -41,6 +41,10 @@ export const roomJoinValidator = () => {
         body("password")
             .trim()
             .notEmpty()
-            .withMessage("Please enter your password")
+            .withMessage("Please enter your password"),
+        body("username")
+            .trim()
+            .notEmpty()
+            .withMessage("Please enter username")
     ]
 }

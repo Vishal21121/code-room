@@ -1,9 +1,10 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import toast from "react-hot-toast"
 import { useDispatch, useSelector } from 'react-redux';
 import { setAccessToken } from '../features/authentication/userDataSlice';
 import { setRoom } from '../features/room/roomSlice';
+import { setAccess } from '../features/accessPermission/accessSlice';
 
 
 const RoomJoin = () => {
@@ -15,6 +16,7 @@ const RoomJoin = () => {
     const userName = userData.data.loggedInUser.username
     const dispatch = useDispatch()
     const [createOrJoin, setCreateOrJoin] = useState("Join")
+    const [rooms, setRooms] = useState([])
 
     const createNewRoomRequest = async (accessToken) => {
         let body, url
@@ -31,6 +33,7 @@ const RoomJoin = () => {
             body = JSON.stringify({
                 name: roomName,
                 password: Password,
+                username: userName
             })
             url = "http://localhost:8080/api/v1/room/join-room"
         }
@@ -45,6 +48,7 @@ const RoomJoin = () => {
         })
         const data = await response.json()
         if (data.data.statusCode === 201 || data.data.statusCode === 200) {
+            console.log(data.data.value.admin);
             dispatch(setRoom(data.data.value))
             toast.success(`${createOrJoin}ed a new room`, {
                 style: {
@@ -126,6 +130,13 @@ const RoomJoin = () => {
                         color: "#333"
                     }
                 })
+            } else if (statusCode === 400) {
+                toast.error(`you have already joined this room`, {
+                    style: {
+                        background: "#E5E7EB",
+                        color: "#333"
+                    }
+                })
             }
         } catch (error) {
             console.log(error.message);
@@ -147,8 +158,60 @@ const RoomJoin = () => {
         }
     }
 
+    const fetchRooms = async () => {
+        const response = await fetch("http://localhost:8080/api/v1/room/get-rooms", {
+            method: "POST",
+            mode: "cors",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${accessToken}`
+            },
+            body: JSON.stringify({
+                username: userName
+            })
+        })
+        const data = await response.json()
+        if (data.data.statusCode === 200) {
+            setRooms(data.data.value)
+        }
+        else if (data.data.statusCode === 404) {
+            setRooms([])
+        }
+        console.log(data);
+        console.log("rooms", rooms);
+    }
+
+    const enterRoom = (e) => {
+        e.preventDefault()
+        const room = rooms.find((el) => el._id === e.currentTarget.id)
+        const admin = room.admin
+        console.log({ admin });
+        dispatch(setAccess(admin))
+        toast.success(`${createOrJoin}ed a new room`, {
+            style: {
+                background: "#E5E7EB",
+                color: "#333"
+            }
+        })
+        navigate(`/room/${e.currentTarget.id}`)
+    }
+
+    useEffect(() => {
+        fetchRooms()
+    }, [])
+
     return (
-        <div className="bg-[#22272e] h-screen w-screen flex flex-col justify-center text-center">
+        <div className="bg-[#22272e] h-screen w-screen flex items-center text-center">
+            <div className='w-[25%] h-full p-4 bg-gray-900 flex flex-col gap-8'>
+                <p className='text-2xl text-gray-300 '>Rooms Joined</p>
+                <div className='flex flex-col gap-4'>
+                    {
+                        rooms.map(({ _id, name }) => (
+                            <button key={_id} id={_id} className='p-2 bg-gray-700 text-white text-md font-semibold rounded-md hover:ring-2 hover:ring-[#FF6C00]' onClick={enterRoom}>{name}</button>
+                        ))
+                    }
+                </div>
+            </div>
             <div className="border w-[30%] h-fit rounded-lg p-8 mx-auto bg-gray-900 flex flex-col gap-4">
                 <h4 className="text-gray-300 text-lg font-bold">{createOrJoin} room</h4>
                 <div className="flex flex-col gap-4 items-center">
