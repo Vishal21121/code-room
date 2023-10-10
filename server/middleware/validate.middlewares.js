@@ -7,7 +7,7 @@ export const validation = (req, res, next) => {
     }
     const errorsExtracted = []
     errors.array().map((err) => errorsExtracted.push({ [err.path]: err.msg }))
-    res.status(422).json({
+    return res.status(422).json({
         status: "failure",
         data: {
             statusCode: 422,

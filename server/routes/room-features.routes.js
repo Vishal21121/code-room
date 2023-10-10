@@ -6,7 +6,7 @@ import { addBoard, updateBoard, getBoardContent } from "../controllers/board.con
 const router = express.Router()
 
 router.route("/chat-bot").post(verifyJWT, chatBot)
-router.route("/update-board").put(verifyJWT, updateBoard)
+router.route("/update-board").patch(verifyJWT, updateBoard)
 router.route("/add-board").post(verifyJWT, addBoard)
 router.route("/get-content").get(verifyJWT, getBoardContent)
 

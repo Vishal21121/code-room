@@ -16,7 +16,7 @@ const Whiteboard = () => {
     const dispatch = useDispatch()
     console.log(userName, accessedUser);
 
-    // TODO: make a permission switcher in the People section so that onClicking the user logo permission can be trasnfered.
+
     const viewModeSetter = () => {
         console.log("accessedUser", accessedUser);
         if (userName === accessedUser) {

@@ -1,4 +1,5 @@
 import { Room } from "../models/room.models.js"
+import mongoose from "mongoose"
 
 export const createRoom = async (req, res) => {
     const { users, password, admin, name } = req.body
@@ -82,6 +83,98 @@ export const joinRoom = async (req, res) => {
             data: {
                 statusCode: 500,
                 message: "Internal server error"
+            }
+        })
+    }
+}
+
+export const updateCode = async (req, res) => {
+    const { code, language, roomId } = req.body
+    if (!roomId) {
+        return res.status(404).json({
+            status: "failure",
+            data: {
+                statusCode: 404,
+                message: "Room id is not provided"
+            }
+        })
+    }
+    if (!language) {
+        return res.status(404).json({
+            status: "failure",
+            data: {
+                statusCode: 404,
+                message: "Code language is not provided"
+            }
+        })
+    }
+    try {
+        const room = await Room.findById({ _id: roomId })
+        if (!room) {
+            return res.status(404).json({
+                status: "failure",
+                data: {
+                    statusCode: 404,
+                    message: "Enter correct room id"
+                }
+            })
+        }
+        await Room.findOneAndUpdate({ _id: roomId }, { $set: { code: code, language: language } })
+        return res.status(200).json({
+            status: "success",
+            data: {
+                statusCode: 200,
+                message: "updated the code"
+            }
+        })
+    } catch (error) {
+        return res.status(500).json({
+            status: "failure",
+            data: {
+                statusCode: 500,
+                message: "Internal server error" || error.message
+            }
+        })
+    }
+}
+
+export const getCode = async (req, res) => {
+    const { roomId } = req.body
+
+    if (!roomId) {
+        return res.status(404).json({
+            status: "failure",
+            data: {
+                statusCode: 404,
+                message: "Room id is not provided"
+            }
+        })
+    }
+    try {
+        if (!mongoose.Types.ObjectId.isValid(roomId)) {
+            return res.status(400).json({
+                status: "failure",
+                data: {
+                    statusCode: 400,
+                    message: "Enter correct room id"
+                }
+            });
+        }
+        const room = await Room.findById({ _id: roomId }).select("-password")
+        return res.status(200).json({
+            status: "success",
+            data: {
+                statusCode: 200,
+                value: room
+            }
+        })
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            status: "failure",
+            data: {
+                statusCode: 500,
+                message: "Internal server error" || error.message
             }
         })
     }
