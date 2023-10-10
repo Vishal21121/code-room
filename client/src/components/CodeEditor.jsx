@@ -9,6 +9,7 @@ import { setProblems } from '../features/editor/problemSlice';
 import { setAccess } from '../features/accessPermission/accessSlice';
 import Avatar from 'react-avatar';
 import { useDebouncedCallback } from 'use-debounce';
+import { setAccessToken } from '../features/authentication/userDataSlice';
 
 
 
@@ -24,6 +25,7 @@ const CodeEditor = ({ handleSubmit }) => {
     const accessedUser = useSelector((state) => state.access.access)
     const accessToken = useSelector((state) => state.userData.accessToken)
     const roomInfo = useSelector((state) => state.room.room)
+
     const sendCode = async (code) => {
         let response = await fetch("http://localhost:8080/api/v1/room/update-code", {
             mode: "cors",
@@ -41,10 +43,31 @@ const CodeEditor = ({ handleSubmit }) => {
 
         })
         let data = await response.json()
+        if (data.data.statusCode === 401) {
+            return data.data.statusCode
+        }
         console.log(data);
     }
 
-    const debouncedSendCode = useDebouncedCallback(sendCode, 500);
+    const updateCode = async (code) => {
+        const statusCode = await sendCode(code);
+        if (statusCode === 401) {
+            const response = await fetch("http://localhost:8080/api/v1/users/refreshToken", {
+                method: "POST",
+                mode: "cors",
+                credentials: "include",
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            })
+            let data = await response.json()
+            console.log("inside ", data);
+            dispatch(setAccessToken(data.data.accessToken))
+            await sendCode(code)
+        }
+    }
+
+    const debouncedSendCode = useDebouncedCallback(updateCode, 500);
 
 
     const viewModeSetter = () => {

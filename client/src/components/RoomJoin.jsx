@@ -143,6 +143,7 @@ const RoomJoin = () => {
         }
 
     }
+
     const handleEnter = (e) => {
         if (e.code === "Enter") {
             createNewRoom()
@@ -158,7 +159,7 @@ const RoomJoin = () => {
         }
     }
 
-    const fetchRooms = async () => {
+    const getRooms = async (accessToken) => {
         const response = await fetch("http://localhost:8080/api/v1/room/get-rooms", {
             method: "POST",
             mode: "cors",
@@ -177,9 +178,27 @@ const RoomJoin = () => {
         else if (data.data.statusCode === 404) {
             setRooms([])
         }
-        console.log(data);
-        console.log("rooms", rooms);
+        return data.data.statusCode
     }
+
+    const fetchRooms = async () => {
+        const statusCode = await getRooms()
+        if (statusCode === 401) {
+            const response = await fetch("http://localhost:8080/api/v1/users/refreshToken", {
+                method: "POST",
+                mode: "cors",
+                credentials: "include",
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            })
+            let data = await response.json()
+            console.log("inside ", data);
+            dispatch(setAccessToken(data.data.accessToken))
+            await getRooms(data.data.accessToken)
+        }
+    }
+
 
     const enterRoom = (e) => {
         e.preventDefault()
