@@ -9,7 +9,8 @@ import { setProblems } from '../features/editor/problemSlice';
 import { setAccess } from '../features/accessPermission/accessSlice';
 import Avatar from 'react-avatar';
 import { useDebouncedCallback } from 'use-debounce';
-import { setAccessToken } from '../features/authentication/userDataSlice';
+import { refreshTokens, setAccessToken } from '../features/authentication/userDataSlice';
+import { languages } from '../util/languages';
 
 
 
@@ -25,8 +26,10 @@ const CodeEditor = ({ handleSubmit }) => {
     const accessedUser = useSelector((state) => state.access.access)
     const accessToken = useSelector((state) => state.userData.accessToken)
     const roomInfo = useSelector((state) => state.room.room)
+    const [language, setLanguage] = useState("javascript")
+    const [version, setVersion] = useState("1.32.3")
 
-    const sendCode = async (code) => {
+    const sendCode = async (code, retry = true) => {
         let response = await fetch("http://localhost:8080/api/v1/room/update-code", {
             mode: "cors",
             method: "PATCH",
@@ -44,30 +47,12 @@ const CodeEditor = ({ handleSubmit }) => {
         })
         let data = await response.json()
         if (data.data.statusCode === 401) {
-            return data.data.statusCode
+            dispatch(refreshTokens())
+            return await sendCode(code, retry = false)
         }
         console.log(data);
     }
-
-    const updateCode = async (code) => {
-        const statusCode = await sendCode(code);
-        if (statusCode === 401) {
-            const response = await fetch("http://localhost:8080/api/v1/users/refreshToken", {
-                method: "POST",
-                mode: "cors",
-                credentials: "include",
-                headers: {
-                    "Content-Type": "application/json"
-                }
-            })
-            let data = await response.json()
-            console.log("inside ", data);
-            dispatch(setAccessToken(data.data.accessToken))
-            await sendCode(code)
-        }
-    }
-
-    const debouncedSendCode = useDebouncedCallback(updateCode, 500);
+    const debouncedSendCode = useDebouncedCallback(sendCode, 500);
 
 
     const viewModeSetter = () => {
@@ -145,6 +130,14 @@ const CodeEditor = ({ handleSubmit }) => {
         }
     }, [socketio, accessedUser])
 
+    const langChange = (e) => {
+        e.preventDefault()
+        setLanguage(e.target.value)
+        const el = languages.find((el) => el.name === e.target.value)
+        console.log(el.version);
+        setVersion(el.version)
+    }
+
     return (
         <div className='flex-col'>
             <div className='flex bg-[#161a2a] h-12 justify-between items-center'>
@@ -157,7 +150,16 @@ const CodeEditor = ({ handleSubmit }) => {
 
                     ) : ""
                 }
-                <Play className='absolute right-10 my-[11px] text-white cursor-pointer' onClick={async (e) => { await handleSubmit(e, editorRef.current.getValue()) }} />
+                <div className='flex gap-2 items-center mx-2'>
+                    <select name="elementSelect" className='px-4 py-1 rounded-lg text-md outline-none bg-gray-700 text-white text-center' onChange={langChange}>
+                        {
+                            languages.map(({ name }, i) => (
+                                <option className='hover:bg-gray-300' key={i} >{name}</option>
+                            ))
+                        }
+                    </select>
+                </div>
+                <Play className='absolute right-10 my-[11px] text-white cursor-pointer' onClick={async (e) => { await handleSubmit(e, editorRef.current.getValue(), language, version) }} />
             </div>
             <Editor
                 height="100vh"
@@ -166,6 +168,7 @@ const CodeEditor = ({ handleSubmit }) => {
                 onValidate={handleEditorValidation}
                 onMount={handleEditorDidMount}
                 onChange={handleChange}
+                language={language}
                 options={
                     {
                         "wordWrap": true,

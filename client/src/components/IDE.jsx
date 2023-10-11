@@ -8,7 +8,7 @@ import CodeEditor from './CodeEditor';
 const IDE = () => {
     const [output, setOutput] = useState("")
 
-    const handleSubmit = async (e, code) => {
+    const handleSubmit = async (e, code, language, version) => {
         console.log("called", code)
         if (!code) {
             return
@@ -22,8 +22,8 @@ const IDE = () => {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                language: 'javascript',
-                version: '1.32.3',
+                language: language,
+                version: version,
                 "files": [{ content: code }],
             })
         })
