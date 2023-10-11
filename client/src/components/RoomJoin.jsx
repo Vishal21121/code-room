@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import toast from "react-hot-toast"
 import { useDispatch, useSelector } from 'react-redux';
-import { setAccessToken } from '../features/authentication/userDataSlice';
+import { refreshTokens } from '../features/authentication/userDataSlice';
 import { setRoom } from '../features/room/roomSlice';
 import { setAccess } from '../features/accessPermission/accessSlice';
 
@@ -18,7 +18,7 @@ const RoomJoin = () => {
     const [createOrJoin, setCreateOrJoin] = useState("Join")
     const [rooms, setRooms] = useState([])
 
-    const createNewRoomRequest = async (accessToken, retry = true) => {
+    const createNewRoomRequest = async (retry = true) => {
         let body, url
         if (createOrJoin === "Create") {
             body = JSON.stringify({
@@ -67,7 +67,6 @@ const RoomJoin = () => {
             })
             const data = await response.json()
             if (data.data.statusCode === 201 || data.data.statusCode === 200) {
-                console.log(data.data.value.admin);
                 dispatch(setRoom(data.data.value))
                 toast.success(`${createOrJoin}ed a new room`, {
                     style: {
@@ -79,18 +78,8 @@ const RoomJoin = () => {
                 return;
             }
             else if (data.data.statusCode === 401 && retry) {
-                // On 401 status code, we will try to refresh the token and retry once
-                const response = await fetch("http://localhost:8080/api/v1/users/refreshToken", {
-                    method: "POST",
-                    mode: "cors",
-                    credentials: "include",
-                    headers: {
-                        "Content-Type": "application/json"
-                    }
-                })
-                let data = await response.json()
-                dispatch(setAccessToken(data.data.accessToken))
-                return await createNewRoomRequest(data.data.accessToken, false) // Call createNewRoomRequest again with the new accessToken and set retry to false
+                dispatch(refreshTokens())
+                return await createNewRoomRequest(false)
             }
             else if (data.data.statusCode === 422) {
                 toast.error(Object.values(data.data.value[0])[0], {
@@ -161,17 +150,8 @@ const RoomJoin = () => {
                 return;
             }
             else if (data.data.statusCode === 401 && createOrJoin === "Create") {
-                const response = await fetch("http://localhost:8080/api/v1/users/refreshToken", {
-                    method: "POST",
-                    mode: "cors",
-                    credentials: "include",
-                    headers: {
-                        "Content-Type": "application/json"
-                    }
-                })
-                let data = await response.json()
-                dispatch(setAccessToken(data.data.accessToken))
-                await createNewRoomRequest(data.data.accessToken)
+                dispatch(refreshTokens())
+                return await createNewRoomRequest()
             } else if (data.data.statusCode === 404) {
                 toast.error("Room does not exist", {
                     style: {
@@ -208,7 +188,7 @@ const RoomJoin = () => {
         }
     }
 
-    const getRooms = async (accessToken, retry = true) => {
+    const getRooms = async (retry = true) => {
         try {
             const response = await fetch("http://localhost:8080/api/v1/room/get-rooms", {
                 method: "POST",
@@ -228,18 +208,8 @@ const RoomJoin = () => {
             else if (data.data.statusCode === 404) {
                 setRooms([])
             } else if (data.data.statusCode === 401 && retry) {
-                const response = await fetch("http://localhost:8080/api/v1/users/refreshToken", {
-                    method: "POST",
-                    mode: "cors",
-                    credentials: "include",
-                    headers: {
-                        "Content-Type": "application/json"
-                    }
-                })
-                let data = await response.json()
-                console.log("inside ", data);
-                dispatch(setAccessToken(data.data.accessToken))
-                await getRooms(data.data.accessToken, false)
+                dispatch(refreshTokens())
+                await getRooms(accessToken, false)
             }
 
         } catch (error) {
@@ -299,7 +269,7 @@ const RoomJoin = () => {
                         onKeyUp={handleEnter}
                     />
                     <button className="px-8 py-2 bg-[#FF6C00] w-fit rounded-lg text-white text-bold text-lg hover:shadow-4xl"
-                        onClick={createNewRoom}
+                        onClick={createNewRoomRequest}
                     >
                         {createOrJoin}
                     </button>

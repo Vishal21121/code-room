@@ -59,15 +59,6 @@ export const joinRoom = async (req, res) => {
             })
         }
         const passwordCorrect = await roomExist.isPasswordCorrect(password)
-        if (!passwordCorrect) {
-            return res.status(401).json({
-                status: "failure",
-                data: {
-                    statusCode: 401,
-                    message: "please enter correct credentials"
-                }
-            })
-        }
         const userGotInRoom = await Room.findOne({
             name,
             users: {
@@ -85,6 +76,16 @@ export const joinRoom = async (req, res) => {
                 }
             })
         }
+        if (!passwordCorrect) {
+            return res.status(401).json({
+                status: "failure",
+                data: {
+                    statusCode: 401,
+                    message: "please enter correct credentials"
+                }
+            })
+        }
+
         const roomUpdated = await Room.updateOne({ name }, { $push: { users: username } })
         if (!roomUpdated) {
             return res.status(500).json({
