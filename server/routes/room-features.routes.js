@@ -8,6 +8,6 @@ const router = express.Router()
 router.route("/chat-bot").post(verifyJWT, chatBot)
 router.route("/update-board").patch(verifyJWT, updateBoard)
 router.route("/add-board").post(verifyJWT, addBoard)
-router.route("/get-content").get(verifyJWT, getBoardContent)
+router.route("/get-content").post(verifyJWT, getBoardContent)
 
 export default router

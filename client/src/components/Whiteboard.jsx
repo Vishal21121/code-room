@@ -4,6 +4,8 @@ import { useDispatch, useSelector } from "react-redux"
 import ACTIONS from '../util/Actions';
 import { useParams } from 'react-router-dom';
 import { setAccess } from '../features/accessPermission/accessSlice';
+import { useDebouncedCallback } from 'use-debounce';
+import { refreshTokens } from '../features/authentication/userDataSlice';
 
 const Whiteboard = () => {
     const [excalidrawApi, setExcalidrawApi] = useState(null)
@@ -13,12 +15,11 @@ const Whiteboard = () => {
     const userData = useSelector((state) => state.userData.userData)
     const userName = userData.data.loggedInUser.username
     const accessedUser = useSelector((state) => state.access.access)
+    const accessToken = useSelector((state) => state.userData.accessToken)
     const dispatch = useDispatch()
-    console.log(userName, accessedUser);
 
 
     const viewModeSetter = () => {
-        console.log("accessedUser", accessedUser);
         if (userName === accessedUser) {
             setViewMode(false)
         } else {
@@ -26,29 +27,78 @@ const Whiteboard = () => {
         }
     }
 
+    const sendContent = async (content, retry = true) => {
+        const response = await fetch("http://localhost:8080/api/v1/room-features/update-board", {
+            method: "PATCH",
+            mode: "cors",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${accessToken}`
+            },
+            body: JSON.stringify({
+                roomId: roomId,
+                content: JSON.stringify(content)
+            })
+        })
+        const data = await response.json()
+        if (data.data.statusCode === 401 && retry) {
+            dispatch(refreshTokens())
+            return await sendContent(content, retry = false)
+        }
+    }
+
+    const debouncedSendContent = useDebouncedCallback(sendContent, 500);
+
     const handleChange = () => {
         const elements = excalidrawApi?.getSceneElements()
         socketio.emit(ACTIONS.BOARD_CHANGE, { roomId, elements })
+        if (userName === accessedUser) {
+            debouncedSendContent(elements)
+        }
         if (elements.length > 0) {
             localStorage.setItem("Elements", JSON.stringify(elements))
         }
     };
+
+    const fetchContent = async (api, retry = true) => {
+        console.log("called");
+        try {
+            const response = await fetch("http://localhost:8080/api/v1/room-features/get-content", {
+                method: "POST",
+                mode: "cors",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${accessToken}`
+                },
+                body: JSON.stringify({
+                    roomId: roomId
+                })
+            })
+            const data = await response.json()
+            console.log({ data });
+            if (data.data.statusCode === 401 && retry) {
+                return await fetchContent(retry = false)
+            }
+            if (data.data.statusCode === 200) {
+                console.log("value", JSON.parse(data.data.value.content))
+                setTimeout(() => {
+                    api.updateScene({ elements: JSON.parse(data.data.value.content) })
+                }, 0)
+            }
+        } catch (error) {
+            console.log(error);
+        }
+
+    }
 
     useEffect(() => {
         if (!excalidrawApi) {
             return;
         }
         viewModeSetter()
+
         excalidrawApi.readyPromise.then((api) => {
-            console.log({ api });
-            const storedElements = JSON.parse(localStorage.getItem("Elements"));
-            console.log({ storedElements });
-            if (storedElements) {
-                setTimeout(() => {
-                    api.updateScene({ elements: storedElements });
-                }, 0)
-                console.log("updated");
-            }
+            fetchContent(api)
             socketio.on(ACTIONS.BOARD_CHANGE, ({ elements }) => {
                 if (userName != accessedUser) {
                     api.updateScene({ elements: elements });
