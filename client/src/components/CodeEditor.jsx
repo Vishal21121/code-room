@@ -140,7 +140,7 @@ const CodeEditor = ({ handleSubmit }) => {
 
     return (
         <div className='flex-col'>
-            <div className='flex bg-[#161a2a] h-12 justify-between items-center'>
+            <div className='flex bg-[#161a2a] h-12 items-center'>
                 {
                     accessedUser != userName ? (
                         <div className='flex gap-1'>
