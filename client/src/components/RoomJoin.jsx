@@ -88,6 +88,7 @@ const RoomJoin = () => {
             const data = await response.json()
             if (data.data.statusCode === 201 || data.data.statusCode === 200) {
                 dispatch(setRoom(data.data.value))
+                dispatch(setAccess(data.data.value.admin))
                 toast.success(`${createOrJoin}ed a new room`, {
                     style: {
                         background: "#E5E7EB",

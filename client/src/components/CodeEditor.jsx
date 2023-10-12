@@ -29,7 +29,7 @@ const CodeEditor = ({ handleSubmit }) => {
     const [language, setLanguage] = useState("javascript")
     const [version, setVersion] = useState("1.32.3")
 
-    const sendCode = async (code, retry = true) => {
+    const sendCode = async (code, language, retry = true) => {
         let response = await fetch("http://localhost:8080/api/v1/room/update-code", {
             mode: "cors",
             method: "PATCH",
@@ -41,12 +41,12 @@ const CodeEditor = ({ handleSubmit }) => {
             body: JSON.stringify({
                 roomId: roomId,
                 code: code,
-                language: "javascript"
+                language: language
             })
 
         })
         let data = await response.json()
-        if (data.data.statusCode === 401) {
+        if (data.data.statusCode === 401 && retry) {
             dispatch(refreshTokens())
             return await sendCode(code, retry = false)
         }
@@ -86,10 +86,10 @@ const CodeEditor = ({ handleSubmit }) => {
 
     const handleChange = () => {
         socketio.emit(ACTIONS.CODE_CHANGE, { code: editorRef.current.getValue(), roomId, userName });
-        debouncedSendCode(editorRef.current.getValue())
+        debouncedSendCode(editorRef.current.getValue(), language)
     }
 
-    const fetchCode = async () => {
+    const fetchCode = async (retry = true) => {
         console.log(roomId);
         const response = await fetch("http://localhost:8080/api/v1/room/get-code", {
             method: "POST",
@@ -105,6 +105,10 @@ const CodeEditor = ({ handleSubmit }) => {
         let data = await response.json()
         if (data.data.statusCode === 200) {
             setCode(data.data.value.code)
+        }
+        else if (data.data.statusCode === 401 && retry) {
+            dispatch(refreshTokens())
+            await fetchCode(retry = false)
         }
     }
 
