@@ -105,6 +105,7 @@ const CodeEditor = ({ handleSubmit }) => {
         let data = await response.json()
         if (data.data.statusCode === 200) {
             setCode(data.data.value.code)
+            setLanguage(data.data.value.language)
         }
         else if (data.data.statusCode === 401 && retry) {
             dispatch(refreshTokens())
@@ -134,9 +135,10 @@ const CodeEditor = ({ handleSubmit }) => {
         }
     }, [socketio, accessedUser])
 
-    const langChange = (e) => {
+    const langChange = async (e) => {
         e.preventDefault()
         setLanguage(e.target.value)
+        await sendCode(code, language)
         const el = languages.find((el) => el.name === e.target.value)
         console.log(el.version);
         setVersion(el.version)
