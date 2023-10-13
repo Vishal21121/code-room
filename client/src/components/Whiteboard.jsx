@@ -51,12 +51,9 @@ const Whiteboard = () => {
 
     const handleChange = () => {
         const elements = excalidrawApi?.getSceneElements()
-        socketio.emit(ACTIONS.BOARD_CHANGE, { roomId, elements })
         if (userName === accessedUser) {
+            socketio.emit(ACTIONS.BOARD_CHANGE, { roomId, elements })
             debouncedSendContent(elements)
-        }
-        if (elements.length > 0) {
-            localStorage.setItem("Elements", JSON.stringify(elements))
         }
     };
 
