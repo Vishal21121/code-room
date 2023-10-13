@@ -22,7 +22,7 @@ const Terminal = ({ output }) => {
       </div>
       {
         !outputShow ? (
-          <div className='flex flex-col mt-4 mx-4 gap-1'>
+          <div className='flex flex-col mt-4 mx-4 gap-1 overflow-auto'>
             {
               problems.map((el) => (
                 <div className='flex gap-1'>
@@ -32,7 +32,7 @@ const Terminal = ({ output }) => {
               ))
             }
           </div>
-        ) : <pre className='text-gray-300 mt-4 mx-4'>{output}</pre>
+        ) : <pre className='text-gray-300 mt-4 mx-4 overflow-auto'>{output}</pre>
       }
     </div>
   )

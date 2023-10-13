@@ -137,8 +137,8 @@ const CodeEditor = ({ handleSubmit }) => {
 
     const langChange = async (e) => {
         e.preventDefault()
+        await sendCode(code, e.target.value)
         setLanguage(e.target.value)
-        await sendCode(code, language)
         const el = languages.find((el) => el.name === e.target.value)
         console.log(el.version);
         setVersion(el.version)
@@ -170,7 +170,7 @@ const CodeEditor = ({ handleSubmit }) => {
             <Editor
                 height="100vh"
                 value={code}
-                defaultLanguage="javascript"
+                defaultLanguage={language}
                 onValidate={handleEditorValidation}
                 onMount={handleEditorDidMount}
                 onChange={handleChange}
