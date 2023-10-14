@@ -9,9 +9,9 @@
 }
 
 /* Track */
-::-webkit-scrollbar-track {
+/* ::-webkit-scrollbar-track {
     background: gray;
-}
+} */
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
@@ -19,9 +19,9 @@
 }
 
 /* Handle on hover */
-::-webkit-scrollbar-thumb:hover {
+/* ::-webkit-scrollbar-thumb:hover {
     background: #252a32;
-}
+} */
 
 .markdown>* {
     all: revert;

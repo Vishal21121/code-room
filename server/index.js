@@ -26,7 +26,7 @@ dotenv.config({
 connectToMongoDb()
 
 const corsOptions = {
-    origin: ['http://localhost:5173'],
+    origin: ['http://localhost:5173', 'https://tiny-roses-stay.tunnelapp.dev'],
     credentials: true,
     optionsSuccessStatus: 200
 }
@@ -86,6 +86,10 @@ io.on("connection", (socket) => {
 
     socket.on(ACTIONS.CODE_CHANGE, ({ code, roomId }) => {
         socket.to(roomId).emit(ACTIONS.CODE_CHANGE, { code })
+    })
+
+    socket.on(ACTIONS.MESSAGE_SEND, ({ roomId, _id, username, message }) => {
+        io.in(roomId).emit(ACTIONS.MESSAGE_SEND, { roomId, _id, username, message });
     })
 
     socket.on('disconnecting', () => {

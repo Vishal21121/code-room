@@ -6,7 +6,7 @@ import modes from '../util/Mode';
 import { useDispatch } from 'react-redux';
 import { setMode } from '../features/mode/modeSlice';
 import { useSelector } from 'react-redux';
-import People from './People';
+import { MdMessage } from "react-icons/md";
 
 
 const Navbar = ({ peopleNav, todoNav }) => {
@@ -29,6 +29,9 @@ const Navbar = ({ peopleNav, todoNav }) => {
             </div>
             <div className='rounded-full bg-[#0d65d9] mx-auto p-2'>
                 <SiDependabot onClick={() => dispatch(setMode(modes.BOT))} size={28} className={`${mode === "bot" ? "text-white" : "text-gray-900"} hover:text-white cursor-pointer`} />
+            </div>
+            <div className='rounded-full bg-[#0d65d9] mx-auto p-2'>
+                <MdMessage onClick={() => dispatch(setMode(modes.MESSAGE))} size={28} className={`${mode === "message" ? "text-white" : "text-gray-900"} hover:text-white cursor-pointer`} />
             </div>
             {/* <div className='rounded-full bg-blue-600 mx-auto p-2'>
                 <FaRobot onClick={() => setMode("file")} size={28} className='text-gray-900 hover:text-white cursor-pointer' />

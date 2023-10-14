@@ -13,6 +13,7 @@ import { initSocket } from '../util/socket'
 import { setSocket } from '../features/sockets/socketSlice'
 import { setClient, removeClient } from '../features/clients/clientSlice'
 import NotesForm from '../components/NotesForm'
+import UserChat from '../components/UserChat'
 
 
 const LandingPage = () => {
@@ -87,6 +88,9 @@ const LandingPage = () => {
                 }
                 {
                     mode === modes.NOTES && <NotesForm />
+                }
+                {
+                    mode === modes.MESSAGE && <UserChat />
                 }
             </div>
         </div>
