@@ -4,7 +4,7 @@ import UserMessage from './UserMessage'
 import { useDispatch, useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import ACTIONS from '../util/Actions'
-import { useDebounce } from 'use-debounce'
+import { refreshTokens } from '../features/authentication/userDataSlice';
 
 const UserChat = () => {
     const [chats, setChats] = useState([])
@@ -13,8 +13,6 @@ const UserChat = () => {
     const socketio = useSelector((state) => state.socket.socket)
     const dispatch = useDispatch()
     const chatRef = useRef(null)
-    const [typing, setTyping] = useState(false)
-    const [userTyping, setUserTyping] = useState("")
 
 
     const fetchMessages = async (retry = true) => {
@@ -30,11 +28,10 @@ const UserChat = () => {
             })
         })
         const data = await response.json()
-        console.log(data.data.value);
         if (data.data.statusCode === 200) {
             setChats(data.data.value)
         } else if (data.data.statusCode === 401 && retry) {
-            dispatch(refreshTokens)
+            dispatch(refreshTokens())
             await fetchMessages(retry = false)
         }
     }
@@ -42,7 +39,7 @@ const UserChat = () => {
     useEffect(() => {
         fetchMessages()
         if (socketio) {
-            socketio.on(ACTIONS.MESSAGE_SEND, ({ roomId, _id, username, message }) => {
+            socketio.on(ACTIONS.MESSAGE_SEND, ({ _id, username, message }) => {
                 setChats((prev) => [...prev, { _id, username, message }])
                 setTimeout(() => {
                     chatRef.current?.lastElementChild?.scrollIntoView({ behavior: 'smooth' });
@@ -56,12 +53,6 @@ const UserChat = () => {
 
     return (
         <div className='w-full h-screen flex flex-col items-center p-4'>
-            {
-                typing ? <div className='w-full flex justify-center'>
-                    <p className='text-white'>{userTyping} is typing...</p>
-                </div> : ""
-            }
-
             <div className='w-full h-[75%] max-h-[75%] overflow-auto gap-4 flex flex-col mt-8  p-4' ref={chatRef}>
                 {
                     chats && chats.map(({ username, message, _id }) => (

@@ -10,7 +10,7 @@ const UserMessage = ({ username, message }) => {
                 <Avatar name={username} size={40} round="20px" />
                 <div className='flex flex-col'>
                     <p className='text-white'>{username}</p>
-                    <p className='text-gray-300'>{message}</p>
+                    <pre className='text-gray-300'>{message}</pre>
                 </div>
             </div>
         </div>

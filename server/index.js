@@ -26,7 +26,7 @@ dotenv.config({
 connectToMongoDb()
 
 const corsOptions = {
-    origin: ['http://localhost:5173', 'https://tiny-roses-stay.tunnelapp.dev'],
+    origin: ['http://localhost:5173'],
     credentials: true,
     optionsSuccessStatus: 200
 }
