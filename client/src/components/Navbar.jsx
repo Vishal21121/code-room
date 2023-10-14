@@ -25,7 +25,7 @@ const Navbar = ({ peopleNav, todoNav }) => {
                 <RiPencilFill onClick={() => dispatch(setMode(modes.BOARD))} size={28} className={`${mode === "board" ? "text-white" : "text-gray-900"} hover:text-white cursor-pointer`} />
             </div>
             <div className='rounded-full bg-[#0d65d9] mx-auto p-2' onClick={todoNav}>
-                <HiCheckBadge onClick={() => dispatch(setMode(modes.NOTES))} size={28} className={`${mode === "todo" ? "text-white" : "text-gray-900"} hover:text-white cursor-pointer`} />
+                <HiCheckBadge onClick={() => dispatch(setMode(modes.NOTES))} size={28} className={`${mode === "notes" ? "text-white" : "text-gray-900"} hover:text-white cursor-pointer`} />
             </div>
             <div className='rounded-full bg-[#0d65d9] mx-auto p-2'>
                 <SiDependabot onClick={() => dispatch(setMode(modes.BOT))} size={28} className={`${mode === "bot" ? "text-white" : "text-gray-900"} hover:text-white cursor-pointer`} />

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Avatar from 'react-avatar';
 import ReactMarkdown from "react-markdown"
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
@@ -6,13 +6,14 @@ import { dracula } from 'react-syntax-highlighter/dist/esm/styles/prism'
 
 
 const UserMessage = ({ username, message }) => {
-    console.log({ username, message });
     return (
         <div>
             <div className='flex gap-2'>
                 <Avatar name={username} size={40} round="20px" />
                 <div className='flex flex-col'>
-                    <p className='text-white'>{username}</p>
+                    <div className='flex gap-2'>
+                        <p className='text-white text-lg font-semibold'>{username}</p>
+                    </div>
                     <ReactMarkdown
                         className='text-gray-300 w-fit markdown -mt-2'
                         children={message}
