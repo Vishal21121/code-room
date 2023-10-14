@@ -31,7 +31,7 @@ const RoomJoin = () => {
             })
         })
         const data = await response.json()
-        if (data.data.statusCode === 401) {
+        if (data.data.statusCode === 401 && retry) {
             dispatch(refreshTokens)
             return await addBoard(roomId, retry = false)
         }
