@@ -14,7 +14,7 @@ const UserMessage = ({ username, message }) => {
                 <div className='flex flex-col'>
                     <p className='text-white'>{username}</p>
                     <ReactMarkdown
-                        className='text-gray-300 w-fit markdown'
+                        className='text-gray-300 w-fit markdown -mt-2'
                         children={message}
                         components={{
                             code({ node, inline, className, children, ...props }) {
@@ -27,7 +27,8 @@ const UserMessage = ({ username, message }) => {
                                             style={dracula}
                                             language={match[1]}
                                             customStyle={{
-                                                padding: "25px"
+                                                padding: "25px",
+                                                margin: "0px"
                                             }}
                                             wrapLongLines="true"
                                         />

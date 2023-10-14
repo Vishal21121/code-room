@@ -30,6 +30,9 @@ const UserChat = () => {
         const data = await response.json()
         if (data.data.statusCode === 200) {
             setChats(data.data.value)
+            setTimeout(() => {
+                chatRef.current?.lastElementChild?.scrollIntoView();
+            }, 0);
         } else if (data.data.statusCode === 401 && retry) {
             dispatch(refreshTokens())
             await fetchMessages(retry = false)
