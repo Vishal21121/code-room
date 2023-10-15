@@ -44,7 +44,7 @@ const MessageSendBox = ({ fetchMessages }) => {
     }
 
     const handleKeyUp = (e) => {
-        e.target.style.height = '3rem'
+        e.target.style.height = '2.5rem'
         let height = e.target.scrollHeight
         e.target.style.height = `${height}px`
     }
@@ -62,8 +62,8 @@ const MessageSendBox = ({ fetchMessages }) => {
     }
 
     return (
-        <div className='absolute bottom-0 flex bg-[#282a36] w-1/2 mx-auto p-2 rounded-lg mb-10 z-10 border border-gray-700'>
-            <textarea type="text" className='box-border w-11/12 h-10  max-h-52 text-white outline-none bg-[#282a36] rounded-lg mr-2 z-30 resize-none p-2 overflow-auto' placeholder='Message' spellCheck="false" onChange={(e) => setMessage(e.target.value)} value={message} onKeyUp={handleKeyUp} onKeyDown={handleKeyDown} >
+        <div className='absolute bottom-0 flex bg-[#282a36] w-1/2 mx-auto p-2 rounded-lg mb-10 z-10'>
+            <textarea type="text" className='box-border w-11/12 h-10  max-h-52 text-white outline-none bg-[#282a36] rounded-lg mr-2 z-30 resize-none p-2 overflow-auto' placeholder='Send a message' spellCheck="false" onChange={(e) => setMessage(e.target.value)} value={message} onKeyUp={handleKeyUp} onKeyDown={handleKeyDown} >
             </textarea>
             <MdSend className='text-gray-500 my-auto cursor-pointer mr-4 hover:text-white' size={24} onClick={handleSubmit} />
         </div>

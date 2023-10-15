@@ -55,8 +55,8 @@ const UserChat = () => {
     }, [socketio])
 
     return (
-        <div className='w-full h-screen flex flex-col items-center p-4'>
-            <div className='w-full h-[75%] max-h-[75%] overflow-auto gap-4 flex flex-col mt-8  p-4' ref={chatRef}>
+        <div className='w-full h-screen flex flex-col items-center p-4 bg-[#080B19]'>
+            <div className='w-full h-[75%] max-h-[75%] overflow-auto gap-4 flex flex-col mt-8  p-4 scrollbar-rounded' ref={chatRef}>
                 {
                     chats && chats.map(({ username, message, _id }) => (
                         <UserMessage key={_id} username={username} message={message} />

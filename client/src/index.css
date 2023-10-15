@@ -3,25 +3,15 @@
 @tailwind utilities;
 
 
-/* width */
 ::-webkit-scrollbar {
-    width: 10px;
+    width: 8px;
 }
 
-/* Track */
-/* ::-webkit-scrollbar-track {
-    background: gray;
-} */
-
-/* Handle */
 ::-webkit-scrollbar-thumb {
     background: #3a424d;
+    border-radius: 20px;
+    width: 1px;
 }
-
-/* Handle on hover */
-/* ::-webkit-scrollbar-thumb:hover {
-    background: #252a32;
-} */
 
 .markdown>* {
     all: revert;
