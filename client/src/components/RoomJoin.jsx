@@ -45,7 +45,10 @@ const RoomJoin = () => {
                 name: roomName,
                 users: [userName],
                 password: Password,
-                admin: userName
+                admin: userName,
+                language: "javascript",
+                version: "1.32.3"
+                // TODO:pass language and add version field for the language
             })
             url = "http://localhost:8080/api/v1/room/create-room"
             console.log("Create");
@@ -187,7 +190,7 @@ const RoomJoin = () => {
                 setRooms([])
             } else if (data.data.statusCode === 401 && retry) {
                 dispatch(refreshTokens())
-                await getRooms(accessToken, false)
+                return await getRooms(accessToken, false)
             }
 
         } catch (error) {

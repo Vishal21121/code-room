@@ -29,6 +29,14 @@ export const roomCreateValidator = () => {
             .withMessage("admin name must be lowercase")
             .isLength({ min: 3 })
             .withMessage("admin name must be at least 3 characters long"),
+        body("language")
+            .trim()
+            .notEmpty()
+            .withMessage("Please enter language"),
+        body("version")
+            .trim()
+            .notEmpty()
+            .withMessage("Please enter language")
     ]
 }
 

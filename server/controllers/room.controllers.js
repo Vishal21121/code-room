@@ -2,7 +2,7 @@ import { Room } from "../models/room.models.js"
 import mongoose from "mongoose"
 
 export const createRoom = async (req, res) => {
-    const { users, password, admin, name } = req.body
+    const { users, password, admin, name, language, version } = req.body
     try {
         const roomGot = await Room.findOne({ name })
         if (roomGot) {
@@ -15,7 +15,7 @@ export const createRoom = async (req, res) => {
                 }
             })
         }
-        const roomCreated = await Room.create({ name, users, code: "", password, admin, language: "" })
+        const roomCreated = await Room.create({ name, users, code: "", password, admin, language, version })
         const roomFound = await Room.findOne({ _id: roomCreated._id }).select("-password ");
         if (!roomFound) {
             return res.status(500).json({
@@ -117,7 +117,7 @@ export const joinRoom = async (req, res) => {
 }
 
 export const updateCode = async (req, res) => {
-    const { code, language, roomId } = req.body
+    const { code, language, version, roomId } = req.body
     if (!roomId) {
         return res.status(404).json({
             status: "failure",
@@ -147,7 +147,7 @@ export const updateCode = async (req, res) => {
                 }
             })
         }
-        await Room.findOneAndUpdate({ _id: roomId }, { $set: { code: code, language: language } })
+        await Room.findOneAndUpdate({ _id: roomId }, { $set: { code: code, language: language, version: version } })
         return res.status(200).json({
             status: "success",
             data: {

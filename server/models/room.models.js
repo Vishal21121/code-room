@@ -20,6 +20,9 @@ const roomSchema = mongoose.Schema({
     },
     language: {
         type: String
+    },
+    version: {
+        type: String
     }
 }, {
     timestamps: true

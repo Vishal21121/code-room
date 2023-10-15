@@ -8,12 +8,12 @@ import CodeEditor from './CodeEditor';
 const IDE = () => {
     const [output, setOutput] = useState("")
 
-    const handleSubmit = async (e, code, language, version) => {
-        console.log("called", code)
+    const handleSubmit = async (code, language, version) => {
+        console.log({ language, version })
         if (!code) {
             return
         }
-        e.preventDefault()
+        // e.preventDefault()
         document.getElementById("terminal").classList.remove("invisible")
         document.getElementById("termEl").click()
         const result = await fetch("https://emkc.org/api/v2/piston/execute", {

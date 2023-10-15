@@ -84,8 +84,8 @@ io.on("connection", (socket) => {
         socket.to(roomId).emit(ACTIONS.PERMISSION_CHANGE, { changedPermissionUser })
     })
 
-    socket.on(ACTIONS.CODE_CHANGE, ({ code, roomId }) => {
-        socket.to(roomId).emit(ACTIONS.CODE_CHANGE, { code })
+    socket.on(ACTIONS.CODE_CHANGE, ({ code, roomId, language, version }) => {
+        socket.to(roomId).emit(ACTIONS.CODE_CHANGE, { code, language, version })
     })
 
     socket.on(ACTIONS.MESSAGE_SEND, ({ roomId, _id, username, message }) => {

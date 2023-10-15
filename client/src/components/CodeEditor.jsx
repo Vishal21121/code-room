@@ -26,10 +26,10 @@ const CodeEditor = ({ handleSubmit }) => {
     const accessedUser = useSelector((state) => state.access.access)
     const accessToken = useSelector((state) => state.userData.accessToken)
     const roomInfo = useSelector((state) => state.room.room)
-    const [language, setLanguage] = useState("javascript")
-    const [version, setVersion] = useState("1.32.3")
+    const [language, setLanguage] = useState("")
+    const [version, setVersion] = useState("")
 
-    const sendCode = async (code, language, retry = true) => {
+    const sendCode = async (code, language, version, retry = true) => {
         let response = await fetch("http://localhost:8080/api/v1/room/update-code", {
             mode: "cors",
             method: "PATCH",
@@ -41,14 +41,15 @@ const CodeEditor = ({ handleSubmit }) => {
             body: JSON.stringify({
                 roomId: roomId,
                 code: code,
-                language: language
+                language: language,
+                version: version
             })
 
         })
         let data = await response.json()
         if (data.data.statusCode === 401 && retry) {
             dispatch(refreshTokens())
-            return await sendCode(code, retry = false)
+            return await sendCode(code, language, version, retry = false)
         }
         console.log(data);
     }
@@ -85,8 +86,8 @@ const CodeEditor = ({ handleSubmit }) => {
 
 
     const handleChange = () => {
-        socketio.emit(ACTIONS.CODE_CHANGE, { code: editorRef.current.getValue(), roomId, userName });
-        debouncedSendCode(editorRef.current.getValue(), language)
+        socketio.emit(ACTIONS.CODE_CHANGE, { code: editorRef.current.getValue(), language, version, roomId, userName });
+        debouncedSendCode(editorRef.current.getValue(), language, version, true)
     }
 
     const fetchCode = async (retry = true) => {
@@ -106,10 +107,11 @@ const CodeEditor = ({ handleSubmit }) => {
         if (data.data.statusCode === 200) {
             setCode(data.data.value.code)
             setLanguage(data.data.value.language)
+            setVersion(data.data.value.version)
         }
         else if (data.data.statusCode === 401 && retry) {
             dispatch(refreshTokens())
-            await fetchCode(retry = false)
+            return await fetchCode(retry = false)
         }
     }
 
@@ -117,10 +119,12 @@ const CodeEditor = ({ handleSubmit }) => {
         viewModeSetter()
         fetchCode()
         if (socketio) {
-            socketio.on(ACTIONS.CODE_CHANGE, ({ code }) => {
+            socketio.on(ACTIONS.CODE_CHANGE, ({ code, language, version }) => {
                 if (userName != accessedUser) {
                     console.log({ code });
                     setCode(code)
+                    setLanguage(language)
+                    setVersion(version)
                 }
             })
             socketio.on(ACTIONS.PERMISSION_CHANGE, ({ changedPermissionUser }) => {
@@ -136,12 +140,12 @@ const CodeEditor = ({ handleSubmit }) => {
     }, [socketio, accessedUser])
 
     const langChange = async (e) => {
-        e.preventDefault()
-        await sendCode(code, e.target.value)
-        setLanguage(e.target.value)
+        console.log(e.target.value);
         const el = languages.find((el) => el.name === e.target.value)
-        console.log(el.version);
+        console.log("version: ", el.version);
+        setLanguage(e.target.value)
         setVersion(el.version)
+        await sendCode(code, e.target.value, el.version, true)
     }
 
     return (
@@ -165,7 +169,7 @@ const CodeEditor = ({ handleSubmit }) => {
                         }
                     </select>
                 </div>
-                <Play className='absolute right-10 my-[11px] text-white cursor-pointer' onClick={async (e) => { await handleSubmit(e, editorRef.current.getValue(), language, version) }} />
+                <Play className='absolute right-10 my-[11px] text-white cursor-pointer' onClick={() => { handleSubmit(editorRef.current.getValue(), language, version) }} />
             </div>
             <Editor
                 height="100vh"
