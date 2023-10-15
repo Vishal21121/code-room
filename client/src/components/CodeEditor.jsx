@@ -108,6 +108,7 @@ const CodeEditor = ({ handleSubmit }) => {
             setCode(data.data.value.code)
             setLanguage(data.data.value.language)
             setVersion(data.data.value.version)
+            document.getElementById("select").value = data.data.value.language
         }
         else if (data.data.statusCode === 401 && retry) {
             dispatch(refreshTokens())
@@ -161,7 +162,7 @@ const CodeEditor = ({ handleSubmit }) => {
                     ) : ""
                 }
                 <div className='flex gap-2 items-center mx-2'>
-                    <select name="elementSelect" className='px-4 py-1 rounded-lg text-md outline-none bg-gray-700 text-white text-center' onChange={langChange}>
+                    <select className='px-4 py-1 rounded-lg text-md outline-none bg-gray-700 text-white text-center' onChange={langChange} id='select'>
                         {
                             languages.map(({ name }, i) => (
                                 <option className='hover:bg-gray-300' key={i} >{name}</option>
