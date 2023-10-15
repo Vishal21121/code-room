@@ -42,8 +42,8 @@ const UserChat = () => {
     useEffect(() => {
         fetchMessages()
         if (socketio) {
-            socketio.on(ACTIONS.MESSAGE_SEND, ({ _id, username, message }) => {
-                setChats((prev) => [...prev, { _id, username, message }])
+            socketio.on(ACTIONS.MESSAGE_SEND, ({ value }) => {
+                setChats((prev) => [...prev, value])
                 setTimeout(() => {
                     chatRef.current?.lastElementChild?.scrollIntoView({ behavior: 'smooth' });
                 }, 0);
@@ -58,8 +58,8 @@ const UserChat = () => {
         <div className='w-full h-screen flex flex-col items-center p-4 bg-[#080B19]'>
             <div className='w-full h-[75%] max-h-[75%] overflow-auto gap-4 flex flex-col mt-8  p-4 scrollbar-rounded' ref={chatRef}>
                 {
-                    chats && chats.map(({ username, message, _id }) => (
-                        <UserMessage key={_id} username={username} message={message} />
+                    chats && chats.map(({ username, message, _id, createdAt }) => (
+                        <UserMessage key={_id} username={username} message={message} createdAt={createdAt} />
                     ))
                 }
             </div>

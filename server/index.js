@@ -88,8 +88,8 @@ io.on("connection", (socket) => {
         socket.to(roomId).emit(ACTIONS.CODE_CHANGE, { code, language, version })
     })
 
-    socket.on(ACTIONS.MESSAGE_SEND, ({ roomId, _id, username, message }) => {
-        io.in(roomId).emit(ACTIONS.MESSAGE_SEND, { roomId, _id, username, message });
+    socket.on(ACTIONS.MESSAGE_SEND, ({ roomId, value }) => {
+        io.in(roomId).emit(ACTIONS.MESSAGE_SEND, { roomId, value });
     })
 
     socket.on('disconnecting', () => {

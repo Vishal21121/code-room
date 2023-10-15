@@ -35,7 +35,7 @@ const MessageSendBox = ({ fetchMessages }) => {
         const data = await response.json()
         if (data.data.statusCode === 201) {
             console.log("success");
-            socketio.emit(ACTIONS.MESSAGE_SEND, { roomId, _id: data.data.value._id, username: userName, message: data.data.value.message })
+            socketio.emit(ACTIONS.MESSAGE_SEND, { roomId, value: data.data.value })
         } else if (data.data.statusCode === 401 && retry) {
             console.log("got");
             dispatch(refreshTokens())
