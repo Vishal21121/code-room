@@ -33,7 +33,7 @@ const UserMessage = ({ username, message, createdAt, messageType, imageUrl }) =>
                     </div>
                     {
                         messageType === "media" ? (
-                            <img src={imageUrl} className='w-[400px] h-auto aspect-square' />
+                            <img src={imageUrl} className='max-w-[400px] object-contain rounded-lg' />
                         ) : <ReactMarkdown
                             className='text-gray-300 w-fit markdown -mt-2'
                             children={message}
