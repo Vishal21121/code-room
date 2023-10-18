@@ -58,10 +58,10 @@ const UserChat = () => {
 
     return (
         <div className='w-full h-screen flex flex-col items-center p-4 bg-[#080B19]'>
-            <div className='w-full h-[75%] max-h-[75%] overflow-auto gap-4 flex flex-col mt-8  p-4 scrollbar-rounded' ref={chatRef}>
+            <div className='w-full h-[83%] overflow-auto gap-4 flex flex-col mt-8  p-4 scrollbar-rounded' ref={chatRef}>
                 {
-                    chats && chats.map(({ username, message, _id, createdAt }) => (
-                        <UserMessage key={_id} username={username} message={message} createdAt={createdAt} />
+                    chats && chats.map(({ username, message, _id, createdAt, messageType, imageUrl }) => (
+                        <UserMessage key={_id} username={username} message={message} createdAt={createdAt} messageType={messageType} imageUrl={imageUrl} />
                     ))
                 }
             </div>

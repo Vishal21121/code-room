@@ -1,5 +1,5 @@
 import mongoose from "mongoose"
-import { AvailableMessageTypes } from "../util/constants"
+import { AvailableMessageTypes } from "../util/constants.js"
 
 const messageSchema = mongoose.Schema({
     message: {
@@ -14,6 +14,9 @@ const messageSchema = mongoose.Schema({
     messageType: {
         type: String,
         enum: AvailableMessageTypes
+    },
+    imageUrl: {
+        type: String
     }
 },
     {

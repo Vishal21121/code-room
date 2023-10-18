@@ -5,7 +5,7 @@ import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
 import { dracula } from 'react-syntax-highlighter/dist/esm/styles/prism'
 
 
-const UserMessage = ({ username, message, createdAt }) => {
+const UserMessage = ({ username, message, createdAt, messageType, imageUrl }) => {
     const [time, setTime] = useState("")
     const decorateTime = (createdAt) => {
         let dateObj = new Date(createdAt);
@@ -31,34 +31,39 @@ const UserMessage = ({ username, message, createdAt }) => {
                             <p className='text-gray-400 text-xs font-semibold mt-2'>{time}</p>
                         </div>
                     </div>
-                    <ReactMarkdown
-                        className='text-gray-300 w-fit markdown -mt-2'
-                        children={message}
-                        components={{
-                            code({ node, inline, className, children, ...props }) {
-                                const match = /language-(\w+)/.exec(className || '')
-                                return !inline && match ? (
-                                    <>
-                                        <SyntaxHighlighter
-                                            {...props}
-                                            children={String(children).replace(/\n$/, '')}
-                                            style={dracula}
-                                            language={match[1]}
-                                            customStyle={{
-                                                padding: "25px",
-                                                margin: "0px"
-                                            }}
-                                            wrapLongLines="true"
-                                        />
-                                    </>
-                                ) : (
-                                    <code {...props} className={className}>
-                                        {children}
-                                    </code>
-                                )
-                            }
-                        }}
-                    />
+                    {
+                        messageType === "media" ? (
+                            <img src={imageUrl} className='w-[400px] h-auto aspect-square' />
+                        ) : <ReactMarkdown
+                            className='text-gray-300 w-fit markdown -mt-2'
+                            children={message}
+                            components={{
+                                code({ node, inline, className, children, ...props }) {
+                                    const match = /language-(\w+)/.exec(className || '')
+                                    return !inline && match ? (
+                                        <>
+                                            <SyntaxHighlighter
+                                                {...props}
+                                                children={String(children).replace(/\n$/, '')}
+                                                style={dracula}
+                                                language={match[1]}
+                                                customStyle={{
+                                                    padding: "25px",
+                                                    margin: "0px"
+                                                }}
+                                                wrapLongLines="true"
+                                            />
+                                        </>
+                                    ) : (
+                                        <code {...props} className={className}>
+                                            {children}
+                                        </code>
+                                    )
+                                }
+                            }}
+                        />
+                    }
+
                 </div>
             </div>
         </div>

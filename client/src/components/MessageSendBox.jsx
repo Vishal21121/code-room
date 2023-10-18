@@ -4,8 +4,11 @@ import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { refreshTokens } from '../features/authentication/userDataSlice';
 import ACTIONS from '../util/Actions';
+import { HiPlusCircle } from "react-icons/hi2";
+import { storage } from '../appwrite/appwriteConfig';
+import { ID } from 'appwrite';
 
-const MessageSendBox = ({ fetchMessages }) => {
+const MessageSendBox = () => {
     const { roomId } = useParams()
     const [message, setMessage] = useState("")
     const userData = useSelector((state) => state.userData.userData)
@@ -14,11 +17,13 @@ const MessageSendBox = ({ fetchMessages }) => {
     const dispatch = useDispatch()
     const socketio = useSelector((state) => state.socket.socket)
 
-
-
-    const handleSubmit = async (retry = true) => {
+    const handleSubmit = async (messageType, imageUrl, retry = true) => {
         const value = message
+        if (value) {
+            messageType = "text"
+        }
         setMessage("")
+        console.log(messageType, imageUrl);
         const response = await fetch("http://localhost:8080/api/v1/room-features/send-message", {
             method: "POST",
             mode: "cors",
@@ -29,7 +34,9 @@ const MessageSendBox = ({ fetchMessages }) => {
             body: JSON.stringify({
                 roomId,
                 username: userName,
-                message: value
+                message: value,
+                imageUrl: imageUrl,
+                messageType: messageType
             })
         })
         const data = await response.json()
@@ -39,7 +46,7 @@ const MessageSendBox = ({ fetchMessages }) => {
         } else if (data.data.statusCode === 401 && retry) {
             console.log("got");
             dispatch(refreshTokens())
-            return await handleSubmit(retry = false)
+            return await handleSubmit(messageType, imageUrl, false)
         }
     }
 
@@ -61,8 +68,19 @@ const MessageSendBox = ({ fetchMessages }) => {
         }
     }
 
+    const handleUpload = async (e) => {
+        const response = await storage.createFile(import.meta.env.VITE_BUCKET_ID, ID.unique(), e.target.files[0])
+        let messageId = response.$id
+        const filelink = storage.getFileView(import.meta.env.VITE_BUCKET_ID, messageId)
+        const responseSubmit = await handleSubmit("media", filelink.href, true)
+        const dataSubmitted = await responseSubmit.json()
+        socketio.emit(ACTIONS.MESSAGE_SEND, { roomId, value: dataSubmitted.data.value })
+    }
+
     return (
-        <div className='absolute bottom-0 flex bg-[#282a36] w-1/2 mx-auto p-2 rounded-lg mb-10 z-10'>
+        <div className='absolute bottom-0 flex items-center bg-[#282a36] w-1/2 mx-auto p-2 rounded-lg mb-10 z-10'>
+            <label htmlFor="file"><HiPlusCircle size={30} className='cursor-pointer text-gray-400' name='file' /></label>
+            <input type="file" name="" id="file" className='hidden' accept='image/*' onChange={handleUpload} />
             <textarea type="text" className='box-border w-11/12 h-10  max-h-52 text-white outline-none bg-[#282a36] rounded-lg mr-2 z-30 resize-none p-2 overflow-auto' placeholder='Send a message' spellCheck="false" onChange={(e) => setMessage(e.target.value)} value={message} onKeyUp={handleKeyUp} onKeyDown={handleKeyDown} >
             </textarea>
             <MdSend className='text-gray-500 my-auto cursor-pointer mr-4 hover:text-white' size={24} onClick={handleSubmit} />

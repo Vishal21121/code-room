@@ -80,7 +80,6 @@ io.on("connection", (socket) => {
     })
 
     socket.on(ACTIONS.PERMISSION_CHANGE, ({ roomId, changedPermissionUser }) => {
-        console.log({ changedPermissionUser });
         socket.to(roomId).emit(ACTIONS.PERMISSION_CHANGE, { changedPermissionUser })
     })
 

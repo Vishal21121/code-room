@@ -4,7 +4,7 @@ import mongoose from "mongoose";
 
 
 export const sendMessage = async (req, res) => {
-    const { message, roomId, username, messageType } = req.body
+    const { message, roomId, username, messageType, imageUrl } = req.body
     try {
         if (!mongoose.Types.ObjectId.isValid(roomId)) {
             return res.status(400).json({
@@ -34,7 +34,7 @@ export const sendMessage = async (req, res) => {
                 }
             })
         }
-        const messageSaved = await Message.create({ message, roomId, username, messageType })
+        const messageSaved = await Message.create({ message, roomId, username, messageType, imageUrl })
         const messageGot = await Message.findOne({ _id: messageSaved._id })
         if (!messageGot) {
             return res.status(500).json({
