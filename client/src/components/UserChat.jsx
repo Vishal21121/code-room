@@ -54,6 +54,8 @@ const UserChat = () => {
         }
     }, [socketio])
 
+    // TODO: add gif search for the message
+
     return (
         <div className='w-full h-screen flex flex-col items-center p-4 bg-[#080B19]'>
             <div className='w-full h-[75%] max-h-[75%] overflow-auto gap-4 flex flex-col mt-8  p-4 scrollbar-rounded' ref={chatRef}>

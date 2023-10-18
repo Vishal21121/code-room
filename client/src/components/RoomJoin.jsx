@@ -48,7 +48,6 @@ const RoomJoin = () => {
                 admin: userName,
                 language: "javascript",
                 version: "1.32.3"
-                // TODO:pass language and add version field for the language
             })
             url = "http://localhost:8080/api/v1/room/create-room"
             console.log("Create");

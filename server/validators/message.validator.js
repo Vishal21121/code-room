@@ -1,4 +1,5 @@
 import { body } from "express-validator"
+import { AvailableMessageTypes } from "../util/constants"
 
 export const messageValidator = () => {
     return [
@@ -14,5 +15,8 @@ export const messageValidator = () => {
             .trim()
             .notEmpty()
             .withMessage("Please enter username"),
+        body("messsageType")
+            .isIn(AvailableMessageTypes)
+            .withMessage("Invalid message type"),
     ]
 }

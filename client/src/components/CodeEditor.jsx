@@ -37,7 +37,6 @@ const CodeEditor = ({ handleSubmit }) => {
                 "Content-Type": "application/json",
                 "Authorization": `Bearer ${accessToken}`
             },
-            // TODO: language is hard coded make a selector for this
             body: JSON.stringify({
                 roomId: roomId,
                 code: code,

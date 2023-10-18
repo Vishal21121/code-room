@@ -1,4 +1,5 @@
 import mongoose from "mongoose"
+import { AvailableMessageTypes } from "../util/constants"
 
 const messageSchema = mongoose.Schema({
     message: {
@@ -9,6 +10,10 @@ const messageSchema = mongoose.Schema({
     },
     username: {
         type: String
+    },
+    messageType: {
+        type: String,
+        enum: AvailableMessageTypes
     }
 },
     {
