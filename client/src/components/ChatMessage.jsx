@@ -13,7 +13,7 @@ const ChatMessage = ({ mode, text }) => {
             }
             {/* <ReactMarkdown className='text-gray-300 w-fit'>{text}</ReactMarkdown> */}
             <ReactMarkdown
-                className='text-gray-300 w-fit'
+                className='text-gray-300 w-full'
                 children={text}
                 components={{
                     code({ node, inline, className, children, ...props }) {
