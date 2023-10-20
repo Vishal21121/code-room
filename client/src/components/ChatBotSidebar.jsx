@@ -9,7 +9,7 @@ const ChatBotSidebar = () => {
                 <RxPlus size={20} className='text-gray-400' />
                 <p className='text-gray-300'>New Chat</p>
             </div>
-            <div className='w-full h-full flex flex-col gap-4 items-center'>
+            <div className='w-full h-full flex flex-col gap-4 items-center overflow-auto py-2'>
                 <SidebarMessage />
             </div>
         </div>

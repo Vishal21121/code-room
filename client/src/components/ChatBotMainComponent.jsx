@@ -67,6 +67,7 @@ const ChatBotMainComponent = () => {
         }
     }
 
+    // TODO: improve this code
     const handleChange = async (e) => {
         setPrompt(e.target.value)
         textAreaRef.current.style.height = 'auto';
@@ -77,7 +78,7 @@ const ChatBotMainComponent = () => {
 
     return (
         <div className='h-full flex flex-col items-center w-[80%]'>
-            <div className='h-[80%] overflow-auto' ref={chatRef}>
+            <div className='h-[80%] overflow-auto w-full' ref={chatRef}>
                 {
                     chat && chat.map((el) => (
                         <ChatMessage mode={el.mode} text={el.text} />
