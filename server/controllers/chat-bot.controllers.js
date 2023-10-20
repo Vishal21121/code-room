@@ -1,6 +1,9 @@
 import OpenAI from 'openai'
 import { encode } from 'gpt-3-encoder';
 import dotenv from "dotenv"
+import mongoose from 'mongoose';
+import { Room } from '../models/room.models.js';
+import { ChatContainer } from '../models/chat.models.js';
 
 dotenv.config()
 
@@ -54,5 +57,57 @@ export const chatBot = async (req, res) => {
             }
         })
         console.log(error)
+    }
+}
+
+export const createChatContainer = async (req, res) => {
+    const { roomId, name } = req.body
+    try {
+        if (!mongoose.Types.ObjectId.isValid(roomId)) {
+            return res.status(400).json({
+                status: "failure",
+                data: {
+                    statusCode: 400,
+                    message: "Enter correct room id"
+                }
+            });
+        }
+        const roomGot = Room.findById(roomId)
+        if (!roomGot) {
+            return res.status(400).json({
+                status: "failure",
+                data: {
+                    statusCode: 400,
+                    message: "no room exists with this roomId"
+                }
+            });
+        }
+        const containerCreated = await ChatContainer.create({ roomId, name })
+        const containerGot = await ChatContainer.findById(containerCreated._id)
+        if (!containerGot) {
+            return res.status(500).json({
+                status: "failure",
+                data: {
+                    statusCode: 400,
+                    message: "Failed to create chat container"
+                }
+            });
+        }
+        return res.status(201).json({
+            status: "success",
+            data: {
+                statusCode: 201,
+                value: containerGot
+            }
+        });
+
+    } catch (error) {
+        return res.status(500).json({
+            status: "failure",
+            data: {
+                statusCode: 400,
+                message: error.message || "Internal server error"
+            }
+        });
     }
 }
