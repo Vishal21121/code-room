@@ -3,7 +3,7 @@ import { encode } from 'gpt-3-encoder';
 import dotenv from "dotenv"
 import mongoose from 'mongoose';
 import { Room } from '../models/room.models.js';
-import { ChatContainer } from '../models/chat.models.js';
+import { Chat, ChatContainer } from '../models/chat.models.js';
 
 dotenv.config()
 
@@ -98,6 +98,68 @@ export const createChatContainer = async (req, res) => {
             data: {
                 statusCode: 201,
                 value: containerGot
+            }
+        });
+
+    } catch (error) {
+        return res.status(500).json({
+            status: "failure",
+            data: {
+                statusCode: 400,
+                message: error.message || "Internal server error"
+            }
+        });
+    }
+}
+
+export const createChat = async (req, res) => {
+    const { roomId, chatContainerId, content, senderType } = req.body
+    try {
+        if (!mongoose.Types.ObjectId.isValid(roomId) || !mongoose.Types.ObjectId.isValid(chatContainerId)) {
+            return res.status(400).json({
+                status: "failure",
+                data: {
+                    statusCode: 400,
+                    message: "Enter correct room id or containerId"
+                }
+            });
+        }
+        const roomGot = Room.findById(roomId)
+        if (!roomGot) {
+            return res.status(400).json({
+                status: "failure",
+                data: {
+                    statusCode: 400,
+                    message: "no room exists with this roomId"
+                }
+            });
+        }
+        const containerGot = ChatContainer.findById(chatContainerId)
+        if (!containerGot) {
+            return res.status(400).json({
+                status: "failure",
+                data: {
+                    statusCode: 400,
+                    message: "no chat container exists with this containerId"
+                }
+            });
+        }
+        const chatCreate = await Chat.create({ roomId, chatContainerId, content, senderType })
+        const chatGot = await Chat.findById(chatCreate._id)
+        if (!chatGot) {
+            return res.status(500).json({
+                status: "failure",
+                data: {
+                    statusCode: 400,
+                    message: "Failed to create chat"
+                }
+            });
+        }
+        return res.status(201).json({
+            status: "success",
+            data: {
+                statusCode: 201,
+                value: chatGot
             }
         });
 
