@@ -35,6 +35,15 @@ function addMessage(data, type) {
 
 export const chatBot = async (req, res) => {
     const { prompt } = req.body
+    if (!prompt) {
+        return res.status(400).json({
+            "status": "failure",
+            data: {
+                statusCode: 400,
+                message: "Please enter prompt to process"
+            }
+        })
+    }
     addMessage(prompt, 'user')
     try {
         const completion = await openai.chat.completions.create({
