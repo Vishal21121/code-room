@@ -228,9 +228,63 @@ export const createChat = async (req, res) => {
         return res.status(500).json({
             status: "failure",
             data: {
-                statusCode: 400,
+                statusCode: 500,
                 message: error.message || "Internal server error"
             }
         });
     }
 }
+
+export const getChats = async (req, res) => {
+    const { chatContainerId } = req.body
+    try {
+        if (!chatContainerId) {
+            return res.status(400).json({
+                status: "failure",
+                data: {
+                    statusCode: 400,
+                    message: "please enter roomId"
+                }
+            })
+        }
+        if (!mongoose.Types.ObjectId.isValid(chatContainerId)) {
+            return res.status(400).json({
+                status: "failure",
+                data: {
+                    statusCode: 400,
+                    message: "Enter correct room id"
+                }
+            });
+        }
+        const chatContainerGot = await ChatContainer.findById(chatContainerId)
+        if (!chatContainerGot) {
+            return res.status(400).json({
+                status: "failure",
+                data: {
+                    statusCode: 400,
+                    message: "no chatContainer exists with this id"
+                }
+            });
+        }
+        const chatsGot = await Chat.find({ chatContainerId })
+        return res.status(200).json({
+            status: "success",
+            data: {
+                statusCode: 200,
+                data: chatsGot
+            }
+        })
+
+    } catch (error) {
+        return res.status(500).json({
+            status: "failure",
+            data: {
+                statusCode: 500,
+                message: error.message || "Internal server error"
+            }
+        });
+    }
+
+}
+
+
