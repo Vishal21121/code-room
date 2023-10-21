@@ -16,10 +16,6 @@ export const createChatContainerValidator = () => {
 
 export const createChatValidator = () => {
     return [
-        body("roomId")
-            .trim()
-            .notEmpty()
-            .withMessage("Please enter roomId"),
         body("chatContainerId")
             .trim()
             .notEmpty()

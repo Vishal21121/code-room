@@ -121,6 +121,58 @@ export const createChatContainer = async (req, res) => {
     }
 }
 
+export const getChatContainer = async (req, res) => {
+    const { roomId } = req.body
+    try {
+        if (!roomId) {
+            return res.status(400).json({
+                status: "failure",
+                data: {
+                    statusCode: 400,
+                    message: "please enter roomId"
+                }
+            })
+        }
+        if (!mongoose.Types.ObjectId.isValid(roomId)) {
+            return res.status(400).json({
+                status: "failure",
+                data: {
+                    statusCode: 400,
+                    message: "Enter correct room id"
+                }
+            });
+        }
+        const roomGot = await Room.findById(roomId)
+        if (!roomGot) {
+            return res.status(400).json({
+                status: "failure",
+                data: {
+                    statusCode: 400,
+                    message: "no room exists with this roomId"
+                }
+            });
+        }
+        const chatContainersGot = await ChatContainer.find({ roomId })
+        return res.status(200).json({
+            status: "success",
+            data: {
+                statusCode: 200,
+                data: chatContainersGot
+            }
+        })
+
+    } catch (error) {
+        return res.status(500).json({
+            status: "failure",
+            data: {
+                statusCode: 400,
+                message: error.message || "Internal server error"
+            }
+        });
+    }
+
+}
+
 export const createChat = async (req, res) => {
     const { roomId, chatContainerId, content, senderType } = req.body
     try {

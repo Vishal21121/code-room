@@ -11,9 +11,6 @@ const chatContainerSchema = mongoose.Schema({
 })
 
 const chatSchema = mongoose.Schema({
-    roomId: {
-        type: String
-    },
     chatContainerId: {
         type: String
     },
