@@ -174,24 +174,14 @@ export const getChatContainer = async (req, res) => {
 }
 
 export const createChat = async (req, res) => {
-    const { roomId, chatContainerId, content, senderType } = req.body
+    const { chatContainerId, content, senderType } = req.body
     try {
-        if (!mongoose.Types.ObjectId.isValid(roomId) || !mongoose.Types.ObjectId.isValid(chatContainerId)) {
+        if (!mongoose.Types.ObjectId.isValid(chatContainerId)) {
             return res.status(400).json({
                 status: "failure",
                 data: {
                     statusCode: 400,
                     message: "Enter correct room id or containerId"
-                }
-            });
-        }
-        const roomGot = Room.findById(roomId)
-        if (!roomGot) {
-            return res.status(400).json({
-                status: "failure",
-                data: {
-                    statusCode: 400,
-                    message: "no room exists with this roomId"
                 }
             });
         }
@@ -205,7 +195,7 @@ export const createChat = async (req, res) => {
                 }
             });
         }
-        const chatCreate = await Chat.create({ roomId, chatContainerId, content, senderType })
+        const chatCreate = await Chat.create({ chatContainerId, content, senderType })
         const chatGot = await Chat.findById(chatCreate._id)
         if (!chatGot) {
             return res.status(500).json({
