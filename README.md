@@ -12,6 +12,8 @@ Code Room is a comprehensive platform designed to facilitate collaboration and p
 
 - **Chatbot Assistance**: The platform features a chatbot that can assist with user queries and issues. This provides immediate support and guidance to users, enhancing the overall user experience.
 
+- **Messaging**: The messaging feature in Code Room allows users to communicate effectively by sending text messages as well as images. This enhances the collaborative experience by providing a direct line of communication between users. Whether you need to share a quick update, ask a question, or send a relevant screenshot or diagram, the messaging feature supports it.
+
 This platform aims to provide a unified workspace for coding collaboration, idea generation, project management, and immediate assistance from the built-in chatbot.
 
 ## Usage
