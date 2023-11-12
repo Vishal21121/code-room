@@ -11,7 +11,7 @@ const router = express.Router()
 
 router.route("/chat-bot").post(verifyJWT, chatBot)
 router.route("/create-chatContainer").post(verifyJWT, createChatContainerValidator(), validation, createChatContainer)
-router.route("/get-chatContainer").post(verifyJWT, getChatContainer)
+router.route("/get-chatContainer").get(verifyJWT, getChatContainer)
 router.route("/get-chats").post(verifyJWT, getChats)
 router.route("/create-chat").post(verifyJWT, createChatValidator(), validation, createChat)
 router.route("/update-board").patch(verifyJWT, updateBoard)

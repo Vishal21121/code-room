@@ -122,7 +122,7 @@ export const createChatContainer = async (req, res) => {
 }
 
 export const getChatContainer = async (req, res) => {
-    const { roomId } = req.body
+    const roomId = req.query.roomId
     try {
         if (!roomId) {
             return res.status(400).json({
