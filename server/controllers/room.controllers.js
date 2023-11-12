@@ -208,7 +208,7 @@ export const getCode = async (req, res) => {
 }
 
 export const getRoomsWithUser = async (req, res) => {
-    const { username } = req.body
+    const username = req.query.username
     if (!username) {
         return res.status(400).json({
             status: "failure",

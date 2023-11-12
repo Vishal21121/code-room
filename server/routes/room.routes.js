@@ -10,6 +10,6 @@ router.route("/create-room").post(verifyJWT, roomCreateValidator(), validation, 
 router.route("/join-room").post(verifyJWT, roomJoinValidator(), validation, joinRoom)
 router.route("/update-code").patch(verifyJWT, updateCode)
 router.route("/get-code").get(verifyJWT, getCode)
-router.route("/get-rooms").post(verifyJWT, getRoomsWithUser)
+router.route("/get-rooms").get(verifyJWT, getRoomsWithUser)
 
 export default router
