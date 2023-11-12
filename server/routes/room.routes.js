@@ -9,7 +9,7 @@ const router = express.Router()
 router.route("/create-room").post(verifyJWT, roomCreateValidator(), validation, createRoom)
 router.route("/join-room").post(verifyJWT, roomJoinValidator(), validation, joinRoom)
 router.route("/update-code").patch(verifyJWT, updateCode)
-router.route("/get-code").post(verifyJWT, getCode)
+router.route("/get-code").get(verifyJWT, getCode)
 router.route("/get-rooms").post(verifyJWT, getRoomsWithUser)
 
 export default router
