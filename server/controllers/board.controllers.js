@@ -75,7 +75,7 @@ export const updateBoard = async (req, res) => {
 }
 
 export const getBoardContent = async (req, res) => {
-    const { roomId } = req.body
+    const roomId = req.query.roomId
     if (!roomId) {
         return res.status(404).json({
             status: "failure",

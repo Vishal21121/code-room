@@ -16,7 +16,7 @@ router.route("/get-chats").get(verifyJWT, getChats)
 router.route("/create-chat").post(verifyJWT, createChatValidator(), validation, createChat)
 router.route("/update-board").patch(verifyJWT, updateBoard)
 router.route("/add-board").post(verifyJWT, addBoard)
-router.route("/get-content").post(verifyJWT, getBoardContent)
+router.route("/get-content").get(verifyJWT, getBoardContent)
 router.route("/send-message").post(verifyJWT, messageValidator(), validation, sendMessage)
 router.route("/get-message").post(verifyJWT, fetchMessages)
 
