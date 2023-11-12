@@ -66,7 +66,7 @@ export const sendMessage = async (req, res) => {
 }
 
 export const fetchMessages = async (req, res) => {
-    const { roomId } = req.body
+    const roomId = req.query.roomId
     if (!roomId) {
         return res.status(400).json({
             status: "failure",

@@ -18,7 +18,7 @@ router.route("/update-board").patch(verifyJWT, updateBoard)
 router.route("/add-board").post(verifyJWT, addBoard)
 router.route("/get-content").get(verifyJWT, getBoardContent)
 router.route("/send-message").post(verifyJWT, messageValidator(), validation, sendMessage)
-router.route("/get-message").post(verifyJWT, fetchMessages)
+router.route("/get-message").get(verifyJWT, fetchMessages)
 
 
 export default router
