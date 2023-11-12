@@ -226,7 +226,7 @@ export const createChat = async (req, res) => {
 }
 
 export const getChats = async (req, res) => {
-    const { chatContainerId } = req.body
+    const chatContainerId = req.query.chatContainerId
     try {
         if (!chatContainerId) {
             return res.status(400).json({
