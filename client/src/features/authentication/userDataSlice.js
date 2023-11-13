@@ -38,3 +38,5 @@ export const userDataSlice = createSlice({
 
 export const { setUserData, setAccessToken } = userDataSlice.actions
 export default userDataSlice.reducer
+export const selectCurrentUser = (state) => state.userData.userData
+export const selectCurrentToken = (state) => state.userData.accessToken
