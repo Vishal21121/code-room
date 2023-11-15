@@ -1,11 +1,25 @@
 import { configureStore } from "@reduxjs/toolkit";
-import reducer from "./reducer";
+import modeReducer from "../features/mode/modeSlice"
+import fileReducer from "../features/editor/fileSlice"
+import userDataReducer from "../features/authentication/userDataSlice"
+import socketReducer from "../features/sockets/socketSlice"
+import clientReducer from "../features/clients/clientSlice"
+import accessReducer from "../features/accessPermission/accessSlice"
+import problemReducer from "../features/editor/problemSlice"
+import roomReducer from "../features/room/roomSlice"
 import { apiSlice } from "./api/apiSlice";
 
 const store = configureStore({
     reducer: {
         [apiSlice.reducerPath]: apiSlice.reducer,
-        reducer
+        mode: modeReducer,
+        currentFile: fileReducer,
+        userData: userDataReducer,
+        socket: socketReducer,
+        client: clientReducer,
+        access: accessReducer,
+        problems: problemReducer,
+        room: roomReducer
     },
     // for redux toolkit query to cache our query
     middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(apiSlice.middleware),

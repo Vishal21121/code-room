@@ -2,22 +2,31 @@ import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import toast from "react-hot-toast"
 import { useDispatch, useSelector } from 'react-redux';
-import { refreshTokens } from '../features/authentication/userDataSlice';
+import { refreshTokens, selectCurrentToken, selectCurrentUser } from '../features/authentication/userDataSlice';
 import { setRoom } from '../features/room/roomSlice';
 import { setAccess } from '../features/accessPermission/accessSlice';
+import { useGetRoomsQuery } from '../features/room/roomApiSlice';
 
 
 const RoomJoin = () => {
     const [roomName, setRoomName] = useState("")
     const [Password, setPassword] = useState("")
     const navigate = useNavigate();
-    const accessToken = useSelector((state) => state.userData.accessToken)
-    const userData = useSelector((state) => state.userData.userData)
-    const userName = userData.data.loggedInUser.username
+    const accessToken = useSelector(selectCurrentToken)
+    const userData = useSelector(selectCurrentUser)
+    console.log({ userData });
+    const userName = userData.username
+    console.log({ userName });
     const dispatch = useDispatch()
     const [createOrJoin, setCreateOrJoin] = useState("Join")
-    const [rooms, setRooms] = useState([])
-
+    const {
+        data: roomsData,
+        isLoading,
+        isSuccess,
+        isError,
+        error
+    } = useGetRoomsQuery(userName)
+    const rooms = roomsData?.data.value
     const addBoard = async (roomId, retry = true) => {
         const response = await fetch("http://localhost:8080/api/v1/room-features/add-board", {
             method: "post",
@@ -213,9 +222,9 @@ const RoomJoin = () => {
         navigate(`/room/${e.currentTarget.id}`)
     }
 
-    useEffect(() => {
-        getRooms()
-    }, [])
+    // useEffect(() => {
+    //     getRooms()
+    // }, [])
 
     return (
         <div className="bg-[#22272e] h-screen w-screen flex items-center text-center">
@@ -223,7 +232,7 @@ const RoomJoin = () => {
                 <p className='text-2xl text-gray-300 '>Rooms Joined</p>
                 <div className='flex flex-col gap-4'>
                     {
-                        rooms.map(({ _id, name }) => (
+                        isSuccess && rooms.map(({ _id, name }) => (
                             <button key={_id} id={_id} className='p-2 bg-gray-700 text-white text-md font-semibold rounded-md hover:ring-2 hover:ring-[#FF6C00]' onClick={enterRoom}>{name}</button>
                         ))
                     }

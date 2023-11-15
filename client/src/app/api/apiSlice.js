@@ -10,8 +10,7 @@ const baseQuery = fetchBaseQuery({
     // here headers is being set
     prepareHeaders: (headers, { getState }) => {
         // getting the token from the auth state
-        console.log("token ", getState().reducer.userData.accessToken);
-        const token = getState().reducer.userData.accessToken
+        const token = getState().userData.accessToken
         // if there is token then set the token in the header
         if (token) {
             headers.set('Authorization', `Bearer ${token}`)
