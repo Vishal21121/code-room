@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
-import { setCredentials, logOut } from '../../features/auth/authSlice'
+import { setAccessToken, setUserData } from '../../features/authentication/userDataSlice'
 
 
 const baseQuery = fetchBaseQuery({
@@ -10,7 +10,8 @@ const baseQuery = fetchBaseQuery({
     // here headers is being set
     prepareHeaders: (headers, { getState }) => {
         // getting the token from the auth state
-        const token = getState().userData.accessToken
+        console.log("token ", getState().reducer.userData.accessToken);
+        const token = getState().reducer.userData.accessToken
         // if there is token then set the token in the header
         if (token) {
             headers.set('Authorization', `Bearer ${token}`)
@@ -32,12 +33,11 @@ const baseQueryWithReauth = async (args, api, extraOptions) => {
             const user = api.getState().userData.userData
             // store the new token received
             console.log("token", refreshResult?.data.data.accessToken);
-            api.dispatch(setCredentials({ accessToken: refreshResult?.data.data.accessToken, userData: user }))
+            api.dispatch(setAccessToken(refreshResult?.data.data.accessToken))
+            api.dispatch(setUserData(user))
 
             // retry the original query with new accessToken
             result = await baseQuery(args, api, extraOptions)
-        } else {
-            api.dispatch(logOut())
         }
     }
     return result

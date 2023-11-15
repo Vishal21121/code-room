@@ -1,8 +1,8 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-    userData: {},
-    accessToken: ""
+    userData: null,
+    accessToken: null
 }
 
 export const refreshTokens = createAsyncThunk("token/refreshToken", async () => {
@@ -29,11 +29,11 @@ export const userDataSlice = createSlice({
             state.accessToken = action.payload
         }
     },
-    extraReducers(builder) {
-        builder.addCase(refreshTokens.fulfilled, (state, action) => {
-            state.accessToken = action.payload.data.accessToken;
-        })
-    }
+    // extraReducers(builder) {
+    //     builder.addCase(refreshTokens.fulfilled, (state, action) => {
+    //         state.accessToken = action.payload.data.accessToken;
+    //     })
+    // }
 })
 
 export const { setUserData, setAccessToken } = userDataSlice.actions
