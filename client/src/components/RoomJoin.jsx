@@ -14,7 +14,7 @@ const RoomJoin = () => {
     const navigate = useNavigate();
     const accessToken = useSelector(selectCurrentToken)
     const userData = useSelector(selectCurrentUser)
-    const userName = userData.username
+    const userName = userData.data.loggedInUser.username
     const dispatch = useDispatch()
     const [createOrJoin, setCreateOrJoin] = useState("Join")
     const {

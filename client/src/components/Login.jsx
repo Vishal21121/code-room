@@ -20,19 +20,20 @@ const Login = () => {
             // The unwrap() method is used to extract the payload of a fulfilled action if it was resolved successfully, or throw an error with the rejected value if it was not.
             const userData = await login({ email: userDetails.email, password: userDetails.password }).unwrap()
             dispatch(setAccessToken(userData?.data?.accessToken))
-            dispatch(setUserData(userData?.data?.loggedInUser))
+            dispatch(setUserData(userData))
             toast.success("User logged in successfully")
             navigate("/createroom")
         } catch (err) {
-            if (err.originalStatus === 422) {
-                if (data.data.value[0].email) {
-                    toast.error(data.data.value[0].email)
+            if (err.data.data.statusCode === 422) {
+                console.log({ err });
+                if (err.data.data.value[0].email) {
+                    toast.error(err.data.data.value[0].email)
                 } else {
-                    toast.error(data.data.value[0].password)
+                    toast.error(err.data.data.value[0].password)
                 }
                 return
-            } else if (err.originalStatus === 401) {
-                toast.error(data.data.message)
+            } else if (err.data.data.statusCode === 401) {
+                toast.error(err.data.data.message)
                 return
             }
         }
