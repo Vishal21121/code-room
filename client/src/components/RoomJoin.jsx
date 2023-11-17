@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { refreshTokens, selectCurrentToken, selectCurrentUser } from '../features/authentication/userDataSlice';
 import { setRoom } from '../features/room/roomSlice';
 import { setAccess } from '../features/accessPermission/accessSlice';
-import { useGetRoomsQuery } from '../features/room/roomApiSlice';
+import { useAddBoardsMutation, useCreateRoomMutation, useGetRoomsQuery, useJoinRoomMutation } from '../features/room/roomApiSlice';
 
 
 const RoomJoin = () => {
@@ -14,60 +14,94 @@ const RoomJoin = () => {
     const navigate = useNavigate();
     const accessToken = useSelector(selectCurrentToken)
     const userData = useSelector(selectCurrentUser)
-    console.log({ userData });
     const userName = userData.username
-    console.log({ userName });
     const dispatch = useDispatch()
     const [createOrJoin, setCreateOrJoin] = useState("Join")
     const {
         data: roomsData,
-        isLoading,
         isSuccess,
-        isError,
-        error
     } = useGetRoomsQuery(userName)
+    const [createRoom] = useCreateRoomMutation()
+    const [joinRoom] = useJoinRoomMutation()
+    const [addBoard] = useAddBoardsMutation()
     const rooms = roomsData?.data.value
-    const addBoard = async (roomId, retry = true) => {
-        const response = await fetch("http://localhost:8080/api/v1/room-features/add-board", {
-            method: "post",
-            mode: "cors",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${accessToken}`
-            },
-            body: JSON.stringify({
-                roomId
+
+    const errorCodeResponse = async (data) => {
+        console.log("data: ", data.data.data.statusCode)
+        if (data.data.data.statusCode === 422) {
+            toast.error(Object.values(data.data.data.value[0])[0], {
+                style: {
+                    background: "#E5E7EB",
+                    color: "#333"
+                }
             })
-        })
-        const data = await response.json()
-        if (data.data.statusCode === 401 && retry) {
-            dispatch(refreshTokens)
-            return await addBoard(roomId, retry = false)
         }
-        console.log({ data });
+        else if (data.data.data.statusCode === 403) {
+            toast.error("Please enter another room name", {
+                style: {
+                    background: "#E5E7EB",
+                    color: "#333"
+                }
+            })
+            return;
+        }
+        else if (data.data.data.statusCode === 500) {
+            toast.error(`Failed to ${createOrJoin.toLowerCase()} a new room`, {
+                style: {
+                    background: "#E5E7EB",
+                    color: "#333"
+                }
+            })
+            return;
+        }
+        else if (data.data.data.statusCode === 404) {
+            toast.error("Room does not exist", {
+                style: {
+                    background: "#E5E7EB",
+                    color: "#333"
+                }
+            })
+        } else if (data.data.data.statusCode === 400) {
+            console.log("inside 400");
+            toast.error(`you have already joined this room`, {
+                style: {
+                    background: "#E5E7EB",
+                    color: "#333"
+                }
+            })
+        }
     }
 
-    const createNewRoomRequest = async (retry = true) => {
-        let body, url
-        if (createOrJoin === "Create") {
-            body = JSON.stringify({
-                name: roomName,
-                users: [userName],
-                password: Password,
-                admin: userName,
-                language: "javascript",
-                version: "1.32.3"
+    const successCodeResponse = async (response) => {
+        console.log({ response });
+        if (response.data.statusCode === 201 || response.data.statusCode === 200) {
+            dispatch(setRoom(response.data.value))
+            dispatch(setAccess(response.data.value.admin))
+            let createOrJoin;
+            if (response.data.statusCode === 200) {
+                createOrJoin = "Joined"
+            } else {
+                createOrJoin = "Created"
+            }
+            toast.success(`${createOrJoin}ed a new room`, {
+                style: {
+                    background: "#E5E7EB",
+                    color: "#333"
+                }
             })
-            url = "http://localhost:8080/api/v1/room/create-room"
-            console.log("Create");
-        } else {
-            body = JSON.stringify({
-                name: roomName,
-                password: Password,
-                username: userName
-            })
-            url = "http://localhost:8080/api/v1/room/join-room"
+            navigate(`/room/${response.data.value._id}`)
+            if (response.data.statusCode === 201) {
+                const data = {
+                    roomId: response.data.value._id
+                }
+                return await addBoard(data).unwrap()
+            }
+            return;
         }
+    }
+
+    const createNewRoomRequest = async () => {
+        let body
         if (!roomName) {
             toast.error("ROOM name is required", {
                 style: {
@@ -86,79 +120,40 @@ const RoomJoin = () => {
             })
             return;
         }
-        try {
-            const response = await fetch(url, {
-                method: "POST",
-                mode: "cors",
-                headers: {
-                    'Content-Type': "application/json",
-                    'Authorization': `Bearer ${accessToken}`
-                },
-                body: body
-            })
-            const data = await response.json()
-            if (data.data.statusCode === 201 || data.data.statusCode === 200) {
-                dispatch(setRoom(data.data.value))
-                dispatch(setAccess(data.data.value.admin))
-                toast.success(`${createOrJoin}ed a new room`, {
-                    style: {
-                        background: "#E5E7EB",
-                        color: "#333"
-                    }
-                })
-                navigate(`/room/${data.data.value._id}`)
-                if (data.data.statusCode === 201) {
-                    return await addBoard(data.data.value._id)
-                }
-                return;
+        if (createOrJoin === "Create") {
+            body = {
+                name: roomName,
+                users: [userName],
+                password: Password,
+                admin: userName,
+                language: "javascript",
+                version: "1.32.3"
             }
-            else if (data.data.statusCode === 401 && retry) {
-                dispatch(refreshTokens())
-                return await createNewRoomRequest(false)
+            let response
+            try {
+                response = await createRoom(body).unwrap()
+                console.log({ response });
+                successCodeResponse(response)
+
+            } catch (error) {
+                errorCodeResponse(response)
             }
-            else if (data.data.statusCode === 422) {
-                toast.error(Object.values(data.data.value[0])[0], {
-                    style: {
-                        background: "#E5E7EB",
-                        color: "#333"
-                    }
-                })
+            console.log("Create");
+        } else {
+            body = {
+                name: roomName,
+                password: Password,
+                username: userName
             }
-            else if (data.data.statusCode === 403) {
-                toast.error("Please enter another room name", {
-                    style: {
-                        background: "#E5E7EB",
-                        color: "#333"
-                    }
-                })
-                return;
+            let response;
+            try {
+                response = await joinRoom(body).unwrap()
+                console.log("Joined room", response);
+                successCodeResponse(response)
+            } catch (error) {
+                console.log("Got error: ", error);
+                errorCodeResponse(error)
             }
-            else if (data.data.statusCode === 500) {
-                toast.error(`Failed to ${createOrJoin.toLowerCase()} a new room`, {
-                    style: {
-                        background: "#E5E7EB",
-                        color: "#333"
-                    }
-                })
-                return;
-            }
-            else if (data.data.statusCode === 404) {
-                toast.error("Room does not exist", {
-                    style: {
-                        background: "#E5E7EB",
-                        color: "#333"
-                    }
-                })
-            } else if (data.data.statusCode === 400) {
-                toast.error(`you have already joined this room`, {
-                    style: {
-                        background: "#E5E7EB",
-                        color: "#333"
-                    }
-                })
-            }
-        } catch (error) {
-            console.log(error.message);
         }
     }
 
@@ -177,36 +172,6 @@ const RoomJoin = () => {
         }
     }
 
-    const getRooms = async (retry = true) => {
-        try {
-            const response = await fetch("http://localhost:8080/api/v1/room/get-rooms", {
-                method: "POST",
-                mode: "cors",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${accessToken}`
-                },
-                body: JSON.stringify({
-                    username: userName
-                })
-            })
-            const data = await response.json()
-            if (data.data.statusCode === 200) {
-                setRooms(data.data.value)
-            }
-            else if (data.data.statusCode === 404) {
-                setRooms([])
-            } else if (data.data.statusCode === 401 && retry) {
-                dispatch(refreshTokens())
-                return await getRooms(accessToken, false)
-            }
-
-        } catch (error) {
-            console.log(error);
-        }
-    }
-
-
     const enterRoom = (e) => {
         e.preventDefault()
         const room = rooms.find((el) => el._id === e.currentTarget.id)
@@ -221,10 +186,6 @@ const RoomJoin = () => {
         })
         navigate(`/room/${e.currentTarget.id}`)
     }
-
-    // useEffect(() => {
-    //     getRooms()
-    // }, [])
 
     return (
         <div className="bg-[#22272e] h-screen w-screen flex items-center text-center">

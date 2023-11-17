@@ -36,40 +36,6 @@ const Login = () => {
                 return
             }
         }
-        // try {
-        //     const response = await fetch("http://localhost:8080/api/v1/users/login", {
-        //         method: "POST",
-        //         mode: "cors",
-        //         credentials: 'include',
-        //         headers: {
-        //             "Content-Type": "application/json"
-        //         },
-        //         body: JSON.stringify({
-        //             email: userDetails.email,
-        //             password: userDetails.password
-        //         })
-        //     })
-        //     const data = await response.json()
-        //     if (data.data.statusCode === 401) {
-        //         toast.error(data.data.message)
-        //         return
-        //     }
-        //     else if (data.data.statusCode === 422) {
-        //         if (data.data.value[0].email) {
-        //             toast.error(data.data.value[0].email)
-        //         } else {
-        //             toast.error(data.data.value[0].password)
-        //         }
-        //         return
-        //     }
-        //     dispatch(setUserData(data))
-        //     dispatch(setAccessToken(data.data.accessToken))
-        //     toast.success("User logged in successfully")
-        //     navigate("/createroom")
-        // } catch (error) {
-        //     console.log(error.message)
-        // }
-
     }
 
     const handleSubmit = async (e) => {

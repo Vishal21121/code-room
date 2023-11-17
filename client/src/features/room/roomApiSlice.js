@@ -6,10 +6,33 @@ export const authApiSlice = apiSlice.injectEndpoints({
             query: (userName) => `/room/get-rooms?username=${userName}`,
             keepUnusedDataFor: 5
         }),
+        addBoards: builder.mutation({
+            query: (data) => ({
+                url: "room-features/add-board",
+                method: "POST",
+                body: { ...data }
+            })
+        }),
+        createRoom: builder.mutation({
+            query: (data) => ({
+                url: "room/create-room",
+                method: "POST",
+                body: { ...data }
+            })
+        }),
+        joinRoom: builder.mutation({
+            query: (data) => ({
+                url: "room/join-room",
+                method: "POST",
+                body: { ...data }
+            })
+        })
     })
 })
 
-// if it's a mutation, it will end with "Mutation" and if it's a query, it will end with "Query"
 export const {
-    useGetRoomsQuery
+    useGetRoomsQuery,
+    useAddBoardsMutation,
+    useCreateRoomMutation,
+    useJoinRoomMutation
 } = authApiSlice
