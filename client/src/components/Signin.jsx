@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { User, Mail, Lock } from "react-feather"
 import { Link, useNavigate } from 'react-router-dom'
 import toast from 'react-hot-toast'
+import { useRegisterMutation } from '../features/authentication/authApiSlice'
 
 const Signin = () => {
     const navigate = useNavigate()
@@ -11,49 +12,41 @@ const Signin = () => {
         password: "",
         confirmPassword: ""
     })
+    const [register] = useRegisterMutation()
 
-    const setuserDetails = async () => {
+
+    const registerUser = async () => {
         const { username, email, password, confirmPassword } = userDetails
-        if (confirmPassword !== password) {
-            toast.error("Password and confirm password do not match")
-            return
+        const data = {
+            username,
+            email,
+            password
         }
         try {
-            const response = await fetch("http://localhost:8080/api/v1/users/register", {
-                method: "POST",
-                mode: "cors",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    username,
-                    email,
-                    password
-                })
-            })
-            const data = await response.json()
-            if (data.data.statusCode === 409) {
-                toast.error(data.data.message)
-                return
-            }
-            else if (data.data.statusCode === 422) {
-                if (data.data.value[0].username) {
-                    toast.error(data.data.value[0].username)
-                } else {
-                    toast.error(data.data.value[0].password)
-                }
-                return
-            }
+            const response = await register(data).unwrap()
+            console.log({ response });
             toast.success("User created successfully")
             navigate("/")
         } catch (error) {
-            console.log(error.message);
+            if (error.data.data.statusCode === 409) {
+                toast.error(error.data.data.message)
+                return
+            }
+            else if (error.data.data.statusCode === 422) {
+                if (error.data.data.value[0].username) {
+                    toast.error(data.data.value[0].username)
+                } else {
+                    toast.error(error.data.data.value[0].password)
+                }
+                return
+            }
         }
     }
 
+
     const handleSubmit = async (e) => {
         e.preventDefault()
-        await setuserDetails()
+        await registerUser()
     }
 
     return (
