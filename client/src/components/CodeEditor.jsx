@@ -11,7 +11,7 @@ import Avatar from 'react-avatar';
 import { useDebouncedCallback } from 'use-debounce';
 import { refreshTokens, setAccessToken } from '../features/authentication/userDataSlice';
 import { languages } from '../util/languages';
-import { useLazyGetCodeQuery } from '../features/editor/editorApiSlice';
+import { useLazyGetCodeQuery, useUpdateCodeMutation } from '../features/editor/editorApiSlice';
 
 
 
@@ -31,27 +31,20 @@ const CodeEditor = ({ handleSubmit }) => {
     const [version, setVersion] = useState("")
     console.log({ roomId });
     const [getCode] = useLazyGetCodeQuery({ roomId })
+    const [updateCode] = useUpdateCodeMutation()
 
-    const sendCode = async (code, language, version, retry = true) => {
-        let response = await fetch("http://localhost:8080/api/v1/room/update-code", {
-            mode: "cors",
-            method: "PATCH",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${accessToken}`
-            },
-            body: JSON.stringify({
-                roomId: roomId,
-                code: code,
-                language: language,
-                version: version
-            })
-
-        })
-        let data = await response.json()
-        if (data.data.statusCode === 401 && retry) {
-            dispatch(refreshTokens())
-            return await sendCode(code, language, version, retry = false)
+    const sendCode = async (code, language, version) => {
+        const body = {
+            roomId: roomId,
+            code: code,
+            language: language,
+            version: version
+        }
+        try {
+            let response = await updateCode(body).unwrap()
+            console.log({ response });
+        } catch (error) {
+            console.log(error);
         }
         console.log(data);
     }
