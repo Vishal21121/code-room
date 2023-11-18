@@ -11,6 +11,7 @@ import Avatar from 'react-avatar';
 import { useDebouncedCallback } from 'use-debounce';
 import { refreshTokens, setAccessToken } from '../features/authentication/userDataSlice';
 import { languages } from '../util/languages';
+import { useLazyGetCodeQuery } from '../features/editor/editorApiSlice';
 
 
 
@@ -28,6 +29,8 @@ const CodeEditor = ({ handleSubmit }) => {
     const roomInfo = useSelector((state) => state.room.room)
     const [language, setLanguage] = useState("")
     const [version, setVersion] = useState("")
+    console.log({ roomId });
+    const [getCode] = useLazyGetCodeQuery({ roomId })
 
     const sendCode = async (code, language, version, retry = true) => {
         let response = await fetch("http://localhost:8080/api/v1/room/update-code", {
@@ -89,30 +92,14 @@ const CodeEditor = ({ handleSubmit }) => {
         debouncedSendCode(editorRef.current.getValue(), language, version, true)
     }
 
-    const fetchCode = async (retry = true) => {
+    const fetchCode = async () => {
         console.log(roomId);
-        const response = await fetch("http://localhost:8080/api/v1/room/get-code", {
-            method: "POST",
-            mode: "cors",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${accessToken}`
-            },
-            body: JSON.stringify({
-                roomId: roomId
-            })
-        })
-        let data = await response.json()
-        if (data.data.statusCode === 200) {
-            setCode(data.data.value.code)
-            setLanguage(data.data.value.language)
-            setVersion(data.data.value.version)
-            document.getElementById("select").value = data.data.value.language
-        }
-        else if (data.data.statusCode === 401 && retry) {
-            dispatch(refreshTokens())
-            return await fetchCode(retry = false)
-        }
+        const response = await getCode({ roomId: roomId }).unwrap()
+        console.log("response got: ", response);
+        setCode(response.data.value.code)
+        setLanguage(response.data.value.language)
+        setVersion(response.data.value.version)
+        document.getElementById("select").value = response.data.value.language
     }
 
     useEffect(() => {

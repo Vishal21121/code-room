@@ -1,6 +1,6 @@
 import { apiSlice } from "../../app/api/apiSlice";
 
-export const authApiSlice = apiSlice.injectEndpoints({
+export const roomApiSlice = apiSlice.injectEndpoints({
     endpoints: builder => ({
         getRooms: builder.query({
             query: (userName) => `/room/get-rooms?username=${userName}`,
@@ -35,4 +35,4 @@ export const {
     useAddBoardsMutation,
     useCreateRoomMutation,
     useJoinRoomMutation
-} = authApiSlice
+} = roomApiSlice
