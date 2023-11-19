@@ -7,6 +7,7 @@ import ACTIONS from '../util/Actions';
 import { HiPlusCircle } from "react-icons/hi2";
 import { storage } from '../appwrite/appwriteConfig';
 import { ID } from 'appwrite';
+import { useSendMessageMutation } from '../features/userMessage/userMessageApiSlice';
 
 const MessageSendBox = () => {
     const { roomId } = useParams()
@@ -16,37 +17,28 @@ const MessageSendBox = () => {
     const accessToken = useSelector((state) => state.userData.accessToken)
     const dispatch = useDispatch()
     const socketio = useSelector((state) => state.socket.socket)
+    const [sendMessage] = useSendMessageMutation()
 
-    const handleSubmit = async (messageType, imageUrl, retry = true) => {
+    const handleSubmit = async (messageType, imageUrl) => {
         const value = message
         if (value) {
             messageType = "text"
         }
         setMessage("")
         console.log(messageType, imageUrl);
-        const response = await fetch("http://localhost:8080/api/v1/room-features/send-message", {
-            method: "POST",
-            mode: "cors",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${accessToken}`
-            },
-            body: JSON.stringify({
-                roomId,
-                username: userName,
-                message: value,
-                imageUrl: imageUrl,
-                messageType: messageType
-            })
-        })
-        const data = await response.json()
-        if (data.data.statusCode === 201) {
-            console.log("success");
-            socketio.emit(ACTIONS.MESSAGE_SEND, { roomId, value: data.data.value })
-        } else if (data.data.statusCode === 401 && retry) {
-            console.log("got");
-            dispatch(refreshTokens())
-            return await handleSubmit(messageType, imageUrl, false)
+        const body = {
+            roomId,
+            username: userName,
+            message: value,
+            imageUrl: imageUrl,
+            messageType: messageType
+        }
+        try {
+            const response = await sendMessage(body).unwrap()
+            console.log("success", response);
+            socketio.emit(ACTIONS.MESSAGE_SEND, { roomId, value: response.data.value })
+        } catch (error) {
+            console.log(error);
         }
     }
 
