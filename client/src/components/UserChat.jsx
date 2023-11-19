@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import ACTIONS from '../util/Actions'
 import { refreshTokens } from '../features/authentication/userDataSlice';
+import { useLazyGetMessageQuery } from '../features/userMessage/userMessageApiSlice'
 
 const UserChat = () => {
     const [chats, setChats] = useState([])
@@ -13,30 +14,15 @@ const UserChat = () => {
     const socketio = useSelector((state) => state.socket.socket)
     const dispatch = useDispatch()
     const chatRef = useRef(null)
+    const [getMessage] = useLazyGetMessageQuery();
 
 
-    const fetchMessages = async (retry = true) => {
-        const response = await fetch("http://localhost:8080/api/v1/room-features/get-message", {
-            method: "POST",
-            mode: "cors",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${accessToken}`
-            },
-            body: JSON.stringify({
-                roomId,
-            })
-        })
-        const data = await response.json()
-        if (data.data.statusCode === 200) {
-            setChats(data.data.value)
-            setTimeout(() => {
-                chatRef.current?.lastElementChild?.scrollIntoView();
-            }, 0);
-        } else if (data.data.statusCode === 401 && retry) {
-            dispatch(refreshTokens())
-            await fetchMessages(retry = false)
-        }
+    const fetchMessages = async () => {
+        const response = await getMessage({ roomId }).unwrap()
+        setChats(response.data.value)
+        setTimeout(() => {
+            chatRef.current?.lastElementChild?.scrollIntoView();
+        }, 0);
     }
 
     useEffect(() => {
