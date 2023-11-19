@@ -6,6 +6,7 @@ import { useParams } from 'react-router-dom';
 import { setAccess } from '../features/accessPermission/accessSlice';
 import { useDebouncedCallback } from 'use-debounce';
 import { refreshTokens } from '../features/authentication/userDataSlice';
+import { useLazyGetContentQuery } from '../features/whiteboard/boardApiSlice';
 
 const Whiteboard = () => {
     const [excalidrawApi, setExcalidrawApi] = useState(null)
@@ -17,7 +18,7 @@ const Whiteboard = () => {
     const accessedUser = useSelector((state) => state.access.access)
     const accessToken = useSelector((state) => state.userData.accessToken)
     const dispatch = useDispatch()
-
+    const [getContent] = useLazyGetContentQuery()
 
     const viewModeSetter = () => {
         if (userName === accessedUser) {
@@ -57,31 +58,17 @@ const Whiteboard = () => {
         }
     };
 
-    const fetchContent = async (api, retry = true) => {
+    const fetchContent = async (api) => {
         console.log("called");
         try {
-            const response = await fetch("http://localhost:8080/api/v1/room-features/get-content", {
-                method: "POST",
-                mode: "cors",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${accessToken}`
-                },
-                body: JSON.stringify({
-                    roomId: roomId
-                })
-            })
-            const data = await response.json()
-            console.log({ data });
-            if (data.data.statusCode === 401 && retry) {
-                return await fetchContent(retry = false)
+            const dataSend = {
+                roomId: roomId
             }
-            if (data.data.statusCode === 200) {
-                console.log("value", JSON.parse(data.data.value.content))
-                setTimeout(() => {
-                    api.updateScene({ elements: JSON.parse(data.data.value.content) })
-                }, 0)
-            }
+            const response = await getContent(dataSend).unwrap()
+            console.log({ response });
+            setTimeout(() => {
+                api.updateScene({ elements: JSON.parse(response.data.value.content) })
+            }, 0)
         } catch (error) {
             console.log(error);
         }
