@@ -6,7 +6,7 @@ import { useParams } from 'react-router-dom';
 import { setAccess } from '../features/accessPermission/accessSlice';
 import { useDebouncedCallback } from 'use-debounce';
 import { refreshTokens } from '../features/authentication/userDataSlice';
-import { useLazyGetContentQuery } from '../features/whiteboard/boardApiSlice';
+import { useLazyGetContentQuery, useUpdateBoardContentMutation } from '../features/whiteboard/boardApiSlice';
 
 const Whiteboard = () => {
     const [excalidrawApi, setExcalidrawApi] = useState(null)
@@ -19,6 +19,7 @@ const Whiteboard = () => {
     const accessToken = useSelector((state) => state.userData.accessToken)
     const dispatch = useDispatch()
     const [getContent] = useLazyGetContentQuery()
+    const [updateBoardContent] = useUpdateBoardContentMutation()
 
     const viewModeSetter = () => {
         if (userName === accessedUser) {
@@ -29,19 +30,16 @@ const Whiteboard = () => {
     }
 
     const sendContent = async (content, retry = true) => {
-        const response = await fetch("http://localhost:8080/api/v1/room-features/update-board", {
-            method: "PATCH",
-            mode: "cors",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${accessToken}`
-            },
-            body: JSON.stringify({
-                roomId: roomId,
-                content: JSON.stringify(content)
-            })
-        })
-        const data = await response.json()
+        const body = {
+            roomId: roomId,
+            content: JSON.stringify(content)
+        }
+        try {
+            const response = await updateBoardContent(body).unwrap()
+            console.log({ response });
+        } catch (error) {
+            console.log(error);
+        }
         if (data.data.statusCode === 401 && retry) {
             dispatch(refreshTokens())
             return await sendContent(content, retry = false)
