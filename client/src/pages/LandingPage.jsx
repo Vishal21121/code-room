@@ -14,6 +14,7 @@ import { setSocket } from '../features/sockets/socketSlice'
 import { setClient, removeClient } from '../features/clients/clientSlice'
 import NotesForm from '../components/NotesForm'
 import UserChat from '../components/UserChat'
+import Notes from '../components/Notes'
 
 
 const LandingPage = () => {
@@ -87,7 +88,7 @@ const LandingPage = () => {
                     mode === modes.BOT && <ChatBot />
                 }
                 {
-                    mode === modes.NOTES && <NotesForm />
+                    mode === modes.NOTES && <Notes />
                 }
                 {
                     mode === modes.MESSAGE && <UserChat />
