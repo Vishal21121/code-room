@@ -29,46 +29,21 @@ const RoomJoin = () => {
     const errorCodeResponse = async (data) => {
         console.log("data: ", data.data.data.statusCode)
         if (data.data.data.statusCode === 422) {
-            toast.error(Object.values(data.data.data.value[0])[0], {
-                style: {
-                    background: "#E5E7EB",
-                    color: "#333"
-                }
-            })
+            toast.error(Object.values(data.data.data.value[0])[0])
         }
         else if (data.data.data.statusCode === 403) {
-            toast.error("Please enter another room name", {
-                style: {
-                    background: "#E5E7EB",
-                    color: "#333"
-                }
-            })
+            toast.error("Please enter another room name")
             return;
         }
         else if (data.data.data.statusCode === 500) {
-            toast.error(`Failed to ${createOrJoin.toLowerCase()} a new room`, {
-                style: {
-                    background: "#E5E7EB",
-                    color: "#333"
-                }
-            })
+            toast.error(`Failed to ${createOrJoin.toLowerCase()} a new room`)
             return;
         }
         else if (data.data.data.statusCode === 404) {
-            toast.error("Room does not exist", {
-                style: {
-                    background: "#E5E7EB",
-                    color: "#333"
-                }
-            })
+            toast.error("Room does not exist")
         } else if (data.data.data.statusCode === 400) {
             console.log("inside 400");
-            toast.error(`you have already joined this room`, {
-                style: {
-                    background: "#E5E7EB",
-                    color: "#333"
-                }
-            })
+            toast.error(`you have already joined this room`)
         }
     }
 
@@ -83,12 +58,7 @@ const RoomJoin = () => {
             } else {
                 createOrJoin = "Created"
             }
-            toast.success(`${createOrJoin}ed a new room`, {
-                style: {
-                    background: "#E5E7EB",
-                    color: "#333"
-                }
-            })
+            toast.success(`${createOrJoin}ed a new room`)
             navigate(`/room/${response.data.value._id}`)
             if (response.data.statusCode === 201) {
                 const data = {
@@ -103,21 +73,11 @@ const RoomJoin = () => {
     const createNewRoomRequest = async () => {
         let body
         if (!roomName) {
-            toast.error("ROOM name is required", {
-                style: {
-                    background: "#E5E7EB",
-                    color: "#333"
-                }
-            })
+            toast.error("ROOM name is required")
             return;
         }
         if (!Password) {
-            toast.error("Password is required", {
-                style: {
-                    background: "#E5E7EB",
-                    color: "#333"
-                }
-            })
+            toast.error("Password is required")
             return;
         }
         if (createOrJoin === "Create") {
@@ -178,12 +138,7 @@ const RoomJoin = () => {
         const admin = room.admin
         console.log({ admin });
         dispatch(setAccess(admin))
-        toast.success(`${createOrJoin}ed a new room`, {
-            style: {
-                background: "#E5E7EB",
-                color: "#333"
-            }
-        })
+        toast.success(`${createOrJoin}ed a new room`)
         navigate(`/room/${e.currentTarget.id}`)
     }
 

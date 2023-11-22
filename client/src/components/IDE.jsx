@@ -16,19 +16,26 @@ const IDE = () => {
         // e.preventDefault()
         document.getElementById("terminal").classList.remove("invisible")
         document.getElementById("termEl").click()
-        const result = await fetch("https://emkc.org/api/v2/piston/execute", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                language: language,
-                version: version,
-                "files": [{ content: code }],
+        let data
+        const toastId = toast.loading("Compiling code...")
+        try {
+            const result = await fetch("https://emkc.org/api/v2/piston/execute", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    language: language,
+                    version: version,
+                    "files": [{ content: code }],
+                })
             })
-        })
-        let data = await result.json()
+            data = await result.json()
+        } catch (error) {
+            console.error(error);
+        }
         console.log("code compiled: ", data);
+        toast.dismiss(toastId)
         if (data.run.stdout) {
             setOutput(data.run.stdout)
             toast.success("Code compiled successfully")

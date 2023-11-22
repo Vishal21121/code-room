@@ -11,8 +11,12 @@ function App() {
     <>
       <BrowserRouter className="bg-[#22272e]">
         <Toaster
-          position="top-right"
-          reverseOrder={false}
+          toastOptions={
+            {
+              className: "bg-gray-900 text-white"
+            }
+          }
+          position='top-right'
         />
         <Routes>
           <Route path='/room/:roomId' element={<LandingPage />} />
