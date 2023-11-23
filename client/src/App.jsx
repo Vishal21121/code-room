@@ -25,7 +25,6 @@ function App() {
           <Route path='/signin' element={<Signin />} />
           <Route path='/' element={<Login />} />
           <Route path='/createroom' element={<RoomJoin />} />
-          <Route path='/notesForm' element={<NotesForm />} />
         </Routes>
       </BrowserRouter>
     </>

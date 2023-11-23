@@ -6,7 +6,6 @@ import { HiClipboard, HiCheckCircle } from "react-icons/hi";
 
 
 const NotesForm = () => {
-    const [content, setContent] = useState("")
     const [copied, setCopied] = useState(false);
     const [textCopied, setTextCopied] = useState("copy code");
     useEffect(() => {
@@ -17,18 +16,27 @@ const NotesForm = () => {
         return () => clearTimeout(timer)
     }, [copied, textCopied])
 
+    const [notesInfo, setNotesInfo] = useState({
+        title: "",
+        content: ""
+    })
+
+    const handleClick = (e) => {
+        e.preventDefault()
+    }
+
     return (
-        <div className='bg-[#22272E] w-screen h-screen'>
+        <div>
             <form className='flex w-full p-4 justify-center gap-4'>
-                <input type="text" placeholder='Enter title' className='bg-gray-700 w-1/2 p-4 rounded-lg text-gray-300 placeholder:text-left placeholder:text-xl outline-none' />
-                <input type="submit" value="Create" className="py-2 px-4  rounded-xl text-lg shadow-lg duration-500 outline-none border border-solid border-[#0000001a] bg-[#FF6C00] text-white font-medium cursor-pointer hover:shadow-4xl" />
+                <input type="text" placeholder='Enter title' className='bg-gray-700 w-1/2 p-4 rounded-lg text-gray-300 placeholder:text-left placeholder:text-xl outline-none' onChange={(e) => setNotesInfo(notesInfo => ({ ...notesInfo, title: e.target.value }))} />
+                <input type="submit" value="Create" className="py-2 px-4  rounded-xl text-lg shadow-lg duration-500 outline-none ring-2 ring-green-500 text-white font-medium cursor-pointer hover:shadow-green" />
             </form>
             <div className='flex w-full gap-2 p-2'>
-                <textarea type="text" placeholder='Write your markdown code' className='bg-gray-700 w-1/2 p-4 rounded-lg text-gray-300  placeholder:text-lg placeholder:text-left outline-none h-[80vh] resize-none' onChange={(e) => setContent(e.target.value)} />
+                <textarea type="text" placeholder='Write your markdown code' className='bg-gray-700 w-1/2 p-4 rounded-lg text-gray-300  placeholder:text-lg placeholder:text-left outline-none h-[80vh] resize-none' onChange={(e) => setNotesInfo(notesInfo => ({ ...notesInfo, content: e.target.value }))} />
                 <div className='w-1/2 rounded-lg bg-gray-700 text-white px-4  h-[80vh] overflow-auto'>
                     <ReactMarkdown
                         className='w-fit markdown'
-                        children={content}
+                        children={notesInfo.content}
                         components={{
                             code({ node, inline, className, children, ...props }) {
                                 const match = /language-(\w+)/.exec(className || '')
