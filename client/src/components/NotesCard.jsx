@@ -1,8 +1,8 @@
 import React from 'react'
 
-const NotesCard = ({ id, title }) => {
+const NotesCard = ({ id, title, showNotes }) => {
     return (
-        <div className='w-72 p-4 bg-gray-700 rounded-md h-fit flex flex-col gap-4' id={id}>
+        <div className='w-72 p-4 bg-gray-700 rounded-md h-fit flex flex-col gap-4 cursor-pointer' id={id} onClick={() => showNotes(id)}>
             <h1 className='text-white text-xl truncate'>{title}</h1>
             <div className='flex justify-between items-center'>
                 <div className='flex gap-2'>

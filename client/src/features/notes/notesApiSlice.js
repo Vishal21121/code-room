@@ -10,7 +10,7 @@ export const notesApiSlice = apiSlice.injectEndpoints({
             }),
         }),
         getAllNotes: builder.query({
-            query: (roomId) => `room-features/get-notes?roomId=${roomId}`,
+            query: ({ roomId }) => `room-features/get-notes?roomId=${roomId}`,
             keepUnusedDataFor: 5
         })
     })

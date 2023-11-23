@@ -3,8 +3,6 @@ import ReactMarkdown from "react-markdown"
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
 import { dracula } from 'react-syntax-highlighter/dist/esm/styles/prism'
 import { HiClipboard, HiCheckCircle } from "react-icons/hi";
-import { useCreateNotesMutation } from '../features/notes/notesApiSlice';
-
 
 const NotesForm = ({ handleSubmit }) => {
     const [copied, setCopied] = useState(false);
@@ -32,7 +30,7 @@ const NotesForm = ({ handleSubmit }) => {
             </form>
             <div className='flex w-full gap-2 p-2'>
                 <textarea type="text" placeholder='Write your markdown code' className='bg-gray-700 w-1/2 p-4 rounded-lg text-gray-300  placeholder:text-lg placeholder:text-left outline-none h-[80vh] resize-none' onChange={(e) => setNotesInfo(notesInfo => ({ ...notesInfo, content: e.target.value }))} />
-                <div className='w-1/2 rounded-lg bg-gray-700 text-white px-4  h-[80vh] overflow-auto'>
+                <div className='w-1/2 rounded-lg bg-gray-700 text-white px-4 h-[80vh] overflow-auto'>
                     <ReactMarkdown
                         className='w-fit markdown'
                         children={notesInfo.content}
