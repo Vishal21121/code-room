@@ -17,6 +17,7 @@ function App() {
             }
           }
           position='top-right'
+          reverseOrder={false}
         />
         <Routes>
           <Route path='/room/:roomId' element={<LandingPage />} />

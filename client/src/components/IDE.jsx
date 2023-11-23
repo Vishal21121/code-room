@@ -35,15 +35,20 @@ const IDE = () => {
             console.error(error);
         }
         console.log("code compiled: ", data);
-        toast.dismiss(toastId)
         if (data.run.stdout) {
             setOutput(data.run.stdout)
-            toast.success("Code compiled successfully")
+            toast.success("Code compiled successfully", {
+                id: toastId
+            })
         } else if (data.run.stderr) {
             setOutput(data.run.stderr)
-            toast.error("error in the code")
+            toast.error("error in the code", {
+                id: toastId
+            })
         } else {
-            toast.success("Code compiled")
+            toast.success("Code compiled", {
+                id: toastId
+            })
             setOutput("Nothing to print")
         }
     }
