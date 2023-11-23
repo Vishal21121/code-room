@@ -26,7 +26,6 @@ export const createNotes = async (req, res) => {
             })
         }
         const notesCreated = await Notes.create({ roomId, title, content })
-        console.log({ notesCreated });
         const notesGot = await Notes.findById(notesCreated)
         if (!notesGot) {
             return res.status(500).json({

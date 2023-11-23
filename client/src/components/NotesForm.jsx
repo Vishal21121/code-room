@@ -3,9 +3,10 @@ import ReactMarkdown from "react-markdown"
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
 import { dracula } from 'react-syntax-highlighter/dist/esm/styles/prism'
 import { HiClipboard, HiCheckCircle } from "react-icons/hi";
+import { useCreateNotesMutation } from '../features/notes/notesApiSlice';
 
 
-const NotesForm = () => {
+const NotesForm = ({ handleSubmit }) => {
     const [copied, setCopied] = useState(false);
     const [textCopied, setTextCopied] = useState("copy code");
     useEffect(() => {
@@ -21,15 +22,13 @@ const NotesForm = () => {
         content: ""
     })
 
-    const handleClick = (e) => {
-        e.preventDefault()
-    }
+
 
     return (
         <div>
             <form className='flex w-full p-4 justify-center gap-4'>
                 <input type="text" placeholder='Enter title' className='bg-gray-700 w-1/2 p-4 rounded-lg text-gray-300 placeholder:text-left placeholder:text-xl outline-none' onChange={(e) => setNotesInfo(notesInfo => ({ ...notesInfo, title: e.target.value }))} />
-                <input type="submit" value="Create" className="py-2 px-4  rounded-xl text-lg shadow-lg duration-500 outline-none ring-2 ring-green-500 text-white font-medium cursor-pointer hover:shadow-green" />
+                <button value="Create" className="py-2 px-4  rounded-xl text-lg shadow-lg duration-500 outline-none ring-2 ring-green-500 text-white font-medium cursor-pointer hover:shadow-green" onClick={(e) => handleSubmit(e, notesInfo)} >Create</button>
             </form>
             <div className='flex w-full gap-2 p-2'>
                 <textarea type="text" placeholder='Write your markdown code' className='bg-gray-700 w-1/2 p-4 rounded-lg text-gray-300  placeholder:text-lg placeholder:text-left outline-none h-[80vh] resize-none' onChange={(e) => setNotesInfo(notesInfo => ({ ...notesInfo, content: e.target.value }))} />
