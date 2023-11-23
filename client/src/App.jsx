@@ -4,6 +4,7 @@ import Login from './components/Login'
 import { Toaster } from 'react-hot-toast'
 import Signin from './components/Signin'
 import RoomJoin from './components/RoomJoin'
+import NotesForm from './components/NotesForm'
 
 function App() {
 
@@ -24,6 +25,7 @@ function App() {
           <Route path='/signin' element={<Signin />} />
           <Route path='/' element={<Login />} />
           <Route path='/createroom' element={<RoomJoin />} />
+          <Route path='/notesForm' element={<NotesForm />} />
         </Routes>
       </BrowserRouter>
     </>

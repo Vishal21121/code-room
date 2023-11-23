@@ -18,8 +18,8 @@ const NotesForm = () => {
     }, [copied, textCopied])
 
     return (
-        <div>
-            <form className='flex w-full p-4 justify-center mt-4 gap-4'>
+        <div className='bg-[#22272E] w-screen h-screen'>
+            <form className='flex w-full p-4 justify-center gap-4'>
                 <input type="text" placeholder='Enter title' className='bg-gray-700 w-1/2 p-4 rounded-lg text-gray-300 placeholder:text-left placeholder:text-xl outline-none' />
                 <input type="submit" value="Create" className="py-2 px-4  rounded-xl text-lg shadow-lg duration-500 outline-none border border-solid border-[#0000001a] bg-[#FF6C00] text-white font-medium cursor-pointer hover:shadow-4xl" />
             </form>
