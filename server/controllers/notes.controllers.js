@@ -17,10 +17,10 @@ export const createNotes = async (req, res) => {
     try {
         const roomGot = await Room.findById(roomId)
         if (!roomGot) {
-            return res.status(400).json({
+            return res.status(404).json({
                 status: "failure",
                 data: {
-                    statusCode: 400,
+                    statusCode: 404,
                     message: "no room exists with this roomId"
                 }
             })
@@ -57,5 +57,45 @@ export const createNotes = async (req, res) => {
 
 }
 // Retrieve all notes
+export const getAllNotes = async (req, res) => {
+    const roomId = req.query.roomId
+    if (!mongoose.Types.ObjectId.isValid(roomId)) {
+        return res.status(400).json({
+            status: "failure",
+            data: {
+                statusCode: 400,
+                message: "Enter correct room id"
+            }
+        });
+    }
+    try {
+        const notesGot = await Notes.find({ roomId })
+        if (!notesGot) {
+            return res.status(404).json({
+                status: "failure",
+                data: {
+                    statusCode: 404,
+                    message: "no notes exists with this roomId"
+                }
+            })
+        }
+        return res.status(200).json({
+            status: "success",
+            data: {
+                statusCode: 200,
+                message: "notes fetched successfully",
+                value: notesGot
+            }
+        })
+    } catch (error) {
+        return res.status(500).json({
+            status: "failure",
+            data: {
+                statusCode: 500,
+                message: "Internal server error"
+            }
+        })
+    }
+}
 // update a note
 // Delete a note
