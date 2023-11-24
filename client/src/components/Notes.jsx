@@ -11,7 +11,6 @@ const Notes = () => {
     const { roomId } = useParams()
     const dispatch = useDispatch()
     const notes = useSelector((state) => state.notes.notes)
-    console.log({ notes });
     const [createNotes] = useCreateNotesMutation()
     const [getAllNotes] = useLazyGetAllNotesQuery()
     const [deletNotes] = useDeletNotesMutation()
@@ -26,7 +25,6 @@ const Notes = () => {
         try {
             const response = await createNotes(notesInfo).unwrap()
             dispatch(setNotesMode("notes"))
-            console.log("create request", response.data.value);
             const notesModified = [...notes, { ...response.data.value }]
             dispatch(setNotes(notesModified))
         } catch (error) {
@@ -37,7 +35,6 @@ const Notes = () => {
     const fetchNotes = async () => {
         try {
             const response = await getAllNotes({ roomId }).unwrap()
-            console.log({ response });
             dispatch(setNotes([...response.data.value]))
         } catch (error) {
             console.log(error);
@@ -45,20 +42,17 @@ const Notes = () => {
     }
 
     const showNotes = (id) => {
-        console.log({ id });
         const notesFound = notes.find((el) => el._id === id)
         setNotesFound(notesFound)
         dispatch(setNotesMode("notesView"))
     }
 
     const deleteNoteHandler = async (id) => {
-        console.log({ id });
         const data = {
             notesId: id
         }
         try {
             const response = await deletNotes(data).unwrap()
-            console.log({ response });
             const notesModified = notes.filter((note) => note._id !== id)
             dispatch(setNotes(notesModified))
         } catch (error) {
@@ -76,6 +70,17 @@ const Notes = () => {
         fetchNotes()
     }, [notesMode === "notes"])
 
+    const handleSearch = (e) => {
+        e.preventDefault()
+        const searchValue = e.target.value.toLowerCase()
+        if (searchValue) {
+            const notesModified = notes.filter((note) => note.title.toLowerCase().includes(searchValue))
+            dispatch(setNotes(notesModified))
+        } else {
+            fetchNotes()
+        }
+    }
+
     return (
         <div className='h-screen bg-gray-900 overflow-auto'>
             {
@@ -86,7 +91,7 @@ const Notes = () => {
                     <div>
                         {/* Search Notes */}
                         <form className='flex w-full p-4 justify-center gap-4 sticky top-0 bg-[#22272E]'>
-                            <input type="text" placeholder='Enter title to search' className='bg-gray-700 w-1/2 p-4 rounded-lg text-gray-300 placeholder:text-left placeholder:text-xl outline-none' />
+                            <input type="text" placeholder='Enter title to search' className='bg-gray-700 w-1/2 p-4 rounded-lg text-gray-300 placeholder:text-left placeholder:text-xl outline-none' onChange={(e) => handleSearch(e)} />
                             <button onClick={() => dispatch(setNotesMode("notesForm"))} className="py-2 px-4 rounded-xl text-lg shadow-lg duration-500 outline-none ring-2 ring-solid ring-[#FF6C00] text-white font-medium cursor-pointer hover:shadow-4xl text-center" >Create Notes</button>
                         </form>
                         <h2 className='text-white text-center text-4xl mt-2'>Notes</h2>
