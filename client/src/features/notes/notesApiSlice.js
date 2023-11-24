@@ -20,11 +20,19 @@ export const notesApiSlice = apiSlice.injectEndpoints({
                 body: { ...data }
             }),
         }),
+        updateNotes: builder.mutation({
+            query: (data) => ({
+                url: "/room-features/update-notes",
+                method: "PATCH",
+                body: { ...data }
+            }),
+        })
     })
 })
 
 export const {
     useCreateNotesMutation,
     useLazyGetAllNotesQuery,
-    useDeletNotesMutation
+    useDeletNotesMutation,
+    useUpdateNotesMutation
 } = notesApiSlice

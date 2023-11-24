@@ -19,7 +19,7 @@ const store = configureStore({
         access: accessReducer,
         problems: problemReducer,
         room: roomReducer,
-        notesMode: notesReducer
+        notes: notesReducer
     },
     // for redux toolkit query to cache our query
     middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(apiSlice.middleware),
