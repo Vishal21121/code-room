@@ -97,4 +97,44 @@ export const getAllNotes = async (req, res) => {
     }
 }
 // update a note
+export const updateNotes = async (req, res) => {
+    const { notesId, title, content } = req.body;
+    if (!mongoose.Types.ObjectId.isValid(notesId)) {
+        return res.status(400).json({
+            status: "failure",
+            data: {
+                statusCode: 400,
+                message: "Enter correct notes id"
+            }
+        });
+    }
+    try {
+        const notesUpdated = await Notes.findByIdAndUpdate(notesId, { title, content }, { new: true })
+        if (!notesUpdated) {
+            return res.status(404).json({
+                status: "failure",
+                data: {
+                    statusCode: 404,
+                    message: "no notes exists with this notesId"
+                }
+            })
+        }
+        return res.status(200).json({
+            status: "success",
+            data: {
+                statusCode: 200,
+                message: "notes updated successfully",
+                value: notesUpdated
+            }
+        })
+    } catch (error) {
+        return res.status(500).json({
+            status: "failure",
+            data: {
+                statusCode: 500,
+                message: "Internal server error"
+            }
+        })
+    }
+}
 // Delete a note

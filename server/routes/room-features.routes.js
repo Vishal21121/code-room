@@ -6,8 +6,8 @@ import { sendMessage, fetchMessages } from "../controllers/message.controller.js
 import { validation } from "../middleware/validate.middlewares.js"
 import { messageValidator } from "../validators/message.validator.js"
 import { createChatContainerValidator, createChatValidator } from "../validators/chat-bot.validator.js"
-import { notesCreateValidator } from "../validators/notes.validator.js"
-import { createNotes, getAllNotes } from "../controllers/notes.controllers.js"
+import { notesCreateValidator, notesUpdateValidator } from "../validators/notes.validator.js"
+import { createNotes, getAllNotes, updateNotes } from "../controllers/notes.controllers.js"
 
 const router = express.Router()
 
@@ -25,6 +25,7 @@ router.route("/get-message").get(verifyJWT, fetchMessages)
 // notes routes
 router.route("/create-notes").post(verifyJWT, notesCreateValidator(), validation, createNotes)
 router.route("/get-notes").get(verifyJWT, getAllNotes)
+router.route("/update-notes").patch(verifyJWT, notesUpdateValidator(), validation, updateNotes)
 
 
 export default router
