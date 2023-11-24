@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import NotesCard from './NotesCard'
 import NotesForm from './NotesForm'
-import { useCreateNotesMutation, useLazyGetAllNotesQuery } from '../features/notes/notesApiSlice';
+import { useCreateNotesMutation, useDeletNotesMutation, useLazyGetAllNotesQuery } from '../features/notes/notesApiSlice';
 import NotesView from './NotesView';
 import { useDispatch, useSelector } from 'react-redux';
 import { setNotesMode } from '../features/notes/notesSlice';
@@ -13,6 +13,7 @@ const Notes = () => {
     const [notes, setNotes] = useState([])
     const [createNotes] = useCreateNotesMutation()
     const [getAllNotes] = useLazyGetAllNotesQuery()
+    const [deletNotes] = useDeletNotesMutation()
     const dispatch = useDispatch()
     const notesMode = useSelector(state => state.notesMode.notesMode)
     // const [notesMode, setNotesMode] = useState("notes")
@@ -50,6 +51,20 @@ const Notes = () => {
         dispatch(setNotesMode("notesView"))
     }
 
+    const deleteNoteHandler = async (id) => {
+        console.log({ id });
+        const data = {
+            notesId: id
+        }
+        try {
+            const response = await deletNotes(data).unwrap()
+            console.log({ response });
+            setNotes((notes) => notes.filter((note) => note._id !== id))
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     useEffect(() => {
         fetchNotes()
     }, [])
@@ -74,7 +89,7 @@ const Notes = () => {
                         <div className='w-full flex gap-4 p-4 mt-4 flex-wrap justify-center'>
                             {
                                 notes.map(({ _id, title }) => (
-                                    <NotesCard key={_id} id={_id} title={title} showNotes={showNotes} />
+                                    <NotesCard key={_id} id={_id} title={title} showNotes={showNotes} deleteNoteHandler={deleteNoteHandler} />
                                 ))
                             }
                             {/* <NotesCard /> */}

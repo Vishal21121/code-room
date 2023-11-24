@@ -11,12 +11,12 @@ const NotesView = ({ notesFound }) => {
     const content = notesFound.content
     return (
         <div className='w-full p-4 h-full'>
-            <div className='flex gap-3 py-2 px-4 rounded-xl text-lg shadow-lg duration-500 outline-none ring-2 ring-solid ring-blue-500 text-white font-medium cursor-pointer hover:shadow-blue text-center w-fit' onClick={() => dispatch(setNotesMode("notes"))}>
+            <div className='flex gap-3 py-2 px-4 rounded-xl text-lg shadow-lg duration-500 outline-none ring-2 ring-solid ring-blue-500 text-white font-medium cursor-pointer hover:shadow-blue text-center w-fit my-4' onClick={() => dispatch(setNotesMode("notes"))}>
                 <TfiArrowLeft className='mt-1' />
                 <p>Back</p>
             </div>
             <ReactMarkdown
-                className='w-fit markdown text-gray-300 bg-gray-900 px-12'
+                className='w-fit markdown text-gray-300 bg-gray-900 px-12 py-4'
                 children={content}
                 components={{
                     code({ node, inline, className, children, ...props }) {
