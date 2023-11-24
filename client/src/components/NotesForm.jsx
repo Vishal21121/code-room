@@ -2,14 +2,12 @@ import React, { useState, useEffect } from 'react'
 import ReactMarkdown from "react-markdown"
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
 import { dracula } from 'react-syntax-highlighter/dist/esm/styles/prism'
-import { HiClipboard, HiCheckCircle } from "react-icons/hi";
 import { TfiArrowLeft } from "react-icons/tfi";
 import { useDispatch, useSelector } from 'react-redux';
 import { setEditMode, setNotes, setNotesMode } from '../features/notes/notesSlice';
 import { useUpdateNotesMutation } from '../features/notes/notesApiSlice';
 
 const NotesForm = ({ handleSubmit }) => {
-    const [textCopied, setTextCopied] = useState("copy code");
     const mode = useSelector(state => state.notes.editMode)
     const notes = useSelector(state => state.notes.notes)
     const id = useSelector(state => state.notes.noteId)
@@ -69,12 +67,6 @@ const NotesForm = ({ handleSubmit }) => {
                                 const match = /language-(\w+)/.exec(className || '')
                                 return !inline && match ? (
                                     <div className='bg-gray-900 rounded-lg flex flex-col'>
-                                        <div className='flex gap-1 p-1 self-end mx-2 cursor-pointer' onClick={() => { navigator.clipboard.writeText(children); setTextCopied("copied") }}>
-                                            <button >
-                                                {/* {copied ? <HiCheckCircle size={22} className='text-green-500' /> : <HiClipboard size={22} className='text-gray-400' />} */}
-                                            </button>
-                                            <p className='text-white font-sans'>{textCopied}</p>
-                                        </div>
                                         <SyntaxHighlighter
                                             {...props}
                                             children={String(children).replace(/\n$/, '')}
