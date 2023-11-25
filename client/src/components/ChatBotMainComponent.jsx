@@ -2,12 +2,13 @@ import React, { useRef, useState } from 'react'
 import { MdSend } from "react-icons/md";
 import ChatMessage from './ChatMessage';
 import { useSelector } from 'react-redux';
+import { useAskBotMutation } from '../features/chat-bot/botApiSlice';
 
 
 const ChatBotMainComponent = () => {
     const chatRef = useRef(null)
     const textAreaRef = useRef(null);
-
+    const [askBot] = useAskBotMutation()
     const [prompt, setPrompt] = useState("")
     const [chat, setChat] = useState([])
     const accessToken = useSelector((state) => state.userData.userData.data.accessToken)
@@ -25,25 +26,18 @@ const ChatBotMainComponent = () => {
 
     const fetchBotResponse = async () => {
         // setChat((prev) => [...prev, { mode: "bot", text: "Please wait a moment while I gather my thoughts and process the information 😊" }])
+        const body = {
+            prompt
+        }
         try {
-            const response = await fetch("http://localhost:8080/api/v1/room-features/chat-bot", {
-                method: "POST",
-                mode: "cors",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${accessToken}`
-                },
-                body: JSON.stringify({
-                    prompt
-                })
-            })
-            const data = await response.json()
-            console.log(data);
+            const response = await askBot(body).unwrap()
+            // console.log(data);
             // if (response.data.statusCode === 401 && response.data.message === "jwt expired") { }
             // let chatsExceptLast = [...chat]
             // chatsExceptLast.pop()
             // setChat(() => chatsExceptLast)
-            setChat((prev) => [...prev, { mode: "bot", text: data.data.response }])
+            console.log("response Bot", response);
+            setChat((prev) => [...prev, { mode: "bot", text: response.data.response }])
             setTimeout(() => {
                 chatRef.current?.lastElementChild?.scrollIntoView({ behavior: 'smooth' });
             }, 0);
@@ -67,14 +61,17 @@ const ChatBotMainComponent = () => {
         }
     }
 
-    // TODO: improve this code
-    const handleChange = async (e) => {
-        setPrompt(e.target.value)
-        textAreaRef.current.style.height = 'auto';
-        // Change the height of the textarea based on scrollHeight
-        // But limit it to a maximum of 300px
-        textAreaRef.current.style.height = Math.min(textAreaRef.current.scrollHeight, 200) + 'px';
+    const handleKeyUp = async (e) => {
+        e.target.style.height = '2.5rem'
+        let height = e.target.scrollHeight
+        e.target.style.height = `${height}px`
     }
+
+    const handleChange = (e) => {
+        setPrompt(e.target.value)
+    }
+
+
 
     return (
         <div className='h-full flex flex-col items-center w-[80%]'>
@@ -86,12 +83,10 @@ const ChatBotMainComponent = () => {
                 }
 
             </div>
-            <div className='flex justify-center max-h-[20%]'>
-                <div className='absolute bottom-0 flex bg-[#282a36] w-1/2 mx-auto p-2 rounded-lg mb-10 z-10 max-h-96 overflow-hidden border'>
-                    <textarea ref={textAreaRef} type="text" className='box-border w-11/12 h-10 text-white outline-none bg-[#282a36] rounded-lg mr-2 z-30 resize-none p-2 overflow-auto' placeholder='Enter your query' onChange={(e) => handleChange(e)} value={prompt} onKeyUp={handleSubmit} spellCheck="false" >
-                    </textarea>
-                    <MdSend className='text-gray-500 my-auto cursor-pointer mr-4 hover:text-white' size={24} onClick={handleUserSubmit} />
-                </div>
+            <div className='absolute bottom-0 flex items-center bg-[#282a36] w-1/2 mx-auto p-2 rounded-lg mb-10 z-10'>
+                <textarea ref={textAreaRef} type="text" className='box-border w-11/12 h-10 text-white outline-none bg-[#282a36] rounded-lg mr-2 z-30 resize-none p-2 overflow-auto' placeholder='Enter your query' onKeyUp={(e) => handleKeyUp(e)} value={prompt} onKeyDown={handleSubmit} onChange={handleChange} spellCheck="false" >
+                </textarea>
+                <MdSend className='text-gray-500 my-auto cursor-pointer mr-4 hover:text-white' size={24} onClick={handleUserSubmit} />
             </div>
         </div >
     )
