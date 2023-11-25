@@ -23,6 +23,10 @@ export const botApiSlice = apiSlice.injectEndpoints({
                 body: { ...data }
             })
         }),
+        getChatContainer: builder.query({
+            query: ({ roomId }) => `get-chatContainer?roomId=${roomId}`,
+            keepUnusedDataFor: 5
+        }),
     })
 })
 
