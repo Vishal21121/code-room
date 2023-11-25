@@ -33,7 +33,7 @@ const ChatBotSidebar = () => {
             <div className='w-full h-full flex flex-col gap-4 items-center overflow-auto py-2'>
                 {
                     chatContainers && chatContainers.map((el) => (
-                        <SidebarMessage name={el.name} />
+                        <SidebarMessage name={el.name} id={el._id} />
                     ))
                 }
             </div>

@@ -4,7 +4,7 @@ import ChatMessage from './ChatMessage';
 import { useDispatch, useSelector } from 'react-redux';
 import { useAskBotMutation, useCreateChatContainerMutation, useCreateChatMutation, useLazyGetChatsQuery } from '../features/chat-bot/botApiSlice';
 import { useParams } from 'react-router-dom';
-import { setChatContainer, setChats } from '../features/chat-bot/botSlice';
+import { setChatContainer, setChat } from '../features/chat-bot/botSlice';
 
 
 const ChatBotMainComponent = () => {
@@ -12,12 +12,10 @@ const ChatBotMainComponent = () => {
     const textAreaRef = useRef(null);
     const [askBot] = useAskBotMutation()
     const [prompt, setPrompt] = useState("")
-    const [chat, setChat] = useState([])
-    const accessToken = useSelector((state) => state.userData.userData.data.accessToken)
+    const chat = useSelector(state => state.bot.chats)
     let id = useSelector(state => state.bot.chatContainer)
     const [createChatContainer] = useCreateChatContainerMutation()
     const [createChat] = useCreateChatMutation()
-    const [getChats] = useLazyGetChatsQuery()
     const { roomId } = useParams()
     const dispatch = useDispatch()
     console.log({ id });
@@ -38,7 +36,7 @@ const ChatBotMainComponent = () => {
 
     const handleUserSubmit = async () => {
         let containerId = id
-        setChat((prev) => [...prev, { senderType: "user", content: prompt }])
+        dispatch(setChat({ senderType: "user", content: prompt }))
         setPrompt("")
         setTimeout(() => {
             chatRef.current?.lastElementChild?.scrollIntoView({ behavior: 'smooth' });
@@ -75,7 +73,7 @@ const ChatBotMainComponent = () => {
             // chatsExceptLast.pop()
             // setChat(() => chatsExceptLast)
             console.log("response Bot", response);
-            setChat((prev) => [...prev, { senderType: "bot", content: response.data.response }])
+            dispatch(setChat({ senderType: "bot", content: response.data.response }))
             setTimeout(() => {
                 chatRef.current?.lastElementChild?.scrollIntoView({ behavior: 'smooth' });
             }, 0);
@@ -109,28 +107,6 @@ const ChatBotMainComponent = () => {
     const handleChange = (e) => {
         setPrompt(e.target.value)
     }
-
-    const fetchChat = async (id) => {
-        console.log("ID IN FETCH CHAT", id);
-        const data = {
-            containerId: id
-        }
-        try {
-            const response = await getChats(data).unwrap()
-            setChat(response.data.value)
-        } catch (error) {
-            console.log(error);
-        }
-    }
-
-
-    useEffect(() => {
-        if (id) {
-            fetchChat(id)
-        }
-    }, [])
-
-
     return (
         <div className='h-full flex flex-col items-center w-[80%]'>
             <div className='h-[80%] overflow-auto w-full' ref={chatRef}>
