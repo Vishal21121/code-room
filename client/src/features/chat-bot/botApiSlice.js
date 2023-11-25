@@ -11,7 +11,14 @@ export const botApiSlice = apiSlice.injectEndpoints({
         }),
         createChatContainer: builder.mutation({
             query: (data) => ({
-                url: "room-features/create-chatContainer",
+                url: "/room-features/create-chatContainer",
+                method: "POST",
+                body: { ...data }
+            })
+        }),
+        createChat: builder.mutation({
+            query: (data) => ({
+                url: "/room-features/create-chat",
                 method: "POST",
                 body: { ...data }
             })
