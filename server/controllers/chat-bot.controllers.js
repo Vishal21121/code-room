@@ -261,7 +261,7 @@ export const getChats = async (req, res) => {
             status: "success",
             data: {
                 statusCode: 200,
-                data: chatsGot
+                value: chatsGot
             }
         })
 
