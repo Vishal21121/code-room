@@ -1,8 +1,10 @@
 import React, { useRef, useState } from 'react'
 import { MdSend } from "react-icons/md";
 import ChatMessage from './ChatMessage';
-import { useSelector } from 'react-redux';
-import { useAskBotMutation } from '../features/chat-bot/botApiSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { useAskBotMutation, useCreateChatContainerMutation, useCreateChatMutation } from '../features/chat-bot/botApiSlice';
+import { useParams } from 'react-router-dom';
+import { setChatContainer } from '../features/chat-bot/botSlice';
 
 
 const ChatBotMainComponent = () => {
@@ -12,19 +14,54 @@ const ChatBotMainComponent = () => {
     const [prompt, setPrompt] = useState("")
     const [chat, setChat] = useState([])
     const accessToken = useSelector((state) => state.userData.userData.data.accessToken)
+    let id = useSelector(state => state.bot.chatContainer)
+    const [createChatContainer] = useCreateChatContainerMutation()
+    const [createChat] = useCreateChatMutation()
+    const { roomId } = useParams()
+    const dispatch = useDispatch()
+    console.log({ id });
 
+    const saveChatsInBackend = async (id, content, senderType) => {
+        console.log("ID IN SAVE CHAT", id);
+        const data = {
+            chatContainerId: id,
+            content,
+            senderType
+        }
+        try {
+            const response = await createChat(data).unwrap()
+        } catch (error) {
+            console.log(error);
+        }
+    }
 
     const handleUserSubmit = async () => {
+        let containerId = id
         setChat((prev) => [...prev, { mode: "user", text: prompt }])
         setPrompt("")
         setTimeout(() => {
             chatRef.current?.lastElementChild?.scrollIntoView({ behavior: 'smooth' });
         }, 0);
-        await fetchBotResponse()
 
+        if (!id) {
+            const data = {
+                roomId,
+                "name": prompt
+            }
+            try {
+                const response = await createChatContainer(data).unwrap()
+                console.log("Got create Container response: ", response.data.value._id);
+                containerId = response.data.value._id
+                dispatch(setChatContainer(response.data.value._id))
+            } catch (error) {
+                console.log(error);
+            }
+        }
+        await saveChatsInBackend(containerId, prompt, "user")
+        await fetchBotResponse(containerId)
     }
 
-    const fetchBotResponse = async () => {
+    const fetchBotResponse = async (containerId) => {
         // setChat((prev) => [...prev, { mode: "bot", text: "Please wait a moment while I gather my thoughts and process the information 😊" }])
         const body = {
             prompt
@@ -41,6 +78,7 @@ const ChatBotMainComponent = () => {
             setTimeout(() => {
                 chatRef.current?.lastElementChild?.scrollIntoView({ behavior: 'smooth' });
             }, 0);
+            await saveChatsInBackend(containerId, response.data.response, "bot")
         } catch (error) {
             console.log(error.message);
         }

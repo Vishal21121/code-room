@@ -36,5 +36,9 @@ export const botApiSlice = apiSlice.injectEndpoints({
 
 // if it's a mutation, it will end with "Mutation" and if it's a query, it will end with "Query"
 export const {
-    useAskBotMutation
+    useAskBotMutation,
+    useCreateChatContainerMutation,
+    useCreateChatMutation,
+    useLazyGetChatContainerQuery,
+    useLazyGetChatsQuery
 } = botApiSlice

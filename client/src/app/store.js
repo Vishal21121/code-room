@@ -8,6 +8,7 @@ import problemReducer from "../features/editor/problemSlice"
 import roomReducer from "../features/room/roomSlice"
 import { apiSlice } from "./api/apiSlice";
 import notesReducer from "../features/notes/notesSlice";
+import botReducer from "../features/chat-bot/botSlice";
 
 const store = configureStore({
     reducer: {
@@ -19,7 +20,8 @@ const store = configureStore({
         access: accessReducer,
         problems: problemReducer,
         room: roomReducer,
-        notes: notesReducer
+        notes: notesReducer,
+        bot: botReducer
     },
     // for redux toolkit query to cache our query
     middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(apiSlice.middleware),
