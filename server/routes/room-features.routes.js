@@ -11,14 +11,19 @@ import { createNotes, deleteNotes, getAllNotes, updateNotes } from "../controlle
 
 const router = express.Router()
 
+// bot routes
 router.route("/chat-bot").post(verifyJWT, chatBot)
 router.route("/create-chatContainer").post(verifyJWT, createChatContainerValidator(), validation, createChatContainer)
 router.route("/get-chatContainer").get(verifyJWT, getChatContainer)
 router.route("/get-chats").get(verifyJWT, getChats)
 router.route("/create-chat").post(verifyJWT, createChatValidator(), validation, createChat)
+
+// whiteboard routes
 router.route("/update-board").patch(verifyJWT, updateBoard)
 router.route("/add-board").post(verifyJWT, addBoard)
 router.route("/get-content").get(verifyJWT, getBoardContent)
+
+// usermessage routes
 router.route("/send-message").post(verifyJWT, messageValidator(), validation, sendMessage)
 router.route("/get-message").get(verifyJWT, fetchMessages)
 
