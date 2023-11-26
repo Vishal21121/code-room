@@ -4,7 +4,7 @@ import { setAccessToken, setUserData } from '../../features/authentication/userD
 
 const baseQuery = fetchBaseQuery({
     // it is the url for the backend
-    baseUrl: "http://localhost:8080/api/v1",
+    baseUrl: import.meta.env.VITE_BACKEND_URL + "/api/v1",
     // credentials: "include" means we want to send cookies
     credentials: "include",
     // here headers is being set

@@ -252,3 +252,36 @@ export const getRoomsWithUser = async (req, res) => {
         })
     }
 }
+
+export const updateAdmin = async (req, res) => {
+    const { roomId, admin } = req.body
+    console.log({ roomId, admin });
+    try {
+        const room = await Room.findById(roomId)
+        if (!room) {
+            return res.status(404).json({
+                status: "failure",
+                data: {
+                    statusCode: 404,
+                    message: "Enter correct room id"
+                }
+            })
+        }
+        await Room.findOneAndUpdate({ _id: roomId }, { $set: { admin: admin } })
+        return res.status(200).json({
+            status: "success",
+            data: {
+                statusCode: 200,
+                message: "updated the admin"
+            }
+        })
+    } catch (error) {
+        return res.status(500).json({
+            status: "failure",
+            data: {
+                statusCode: 500,
+                message: error.message || "Internal server error"
+            }
+        })
+    }
+}

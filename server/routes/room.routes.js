@@ -1,7 +1,7 @@
 import express from "express"
-import { roomCreateValidator, roomJoinValidator } from "../validators/room.validator.js"
+import { adminUpdateValidator, roomCreateValidator, roomJoinValidator } from "../validators/room.validator.js"
 import { validation } from "../middleware/validate.middlewares.js"
-import { createRoom, joinRoom, updateCode, getCode, getRoomsWithUser } from "../controllers/room.controllers.js"
+import { createRoom, joinRoom, updateCode, getCode, getRoomsWithUser, updateAdmin } from "../controllers/room.controllers.js"
 import { verifyJWT } from "../middleware/auth.middleware.js"
 const router = express.Router()
 
@@ -11,5 +11,6 @@ router.route("/join-room").post(verifyJWT, roomJoinValidator(), validation, join
 router.route("/update-code").patch(verifyJWT, updateCode)
 router.route("/get-code").get(verifyJWT, getCode)
 router.route("/get-rooms").get(verifyJWT, getRoomsWithUser)
+router.route("/update-admin").patch(verifyJWT, adminUpdateValidator(), validation, updateAdmin)
 
 export default router

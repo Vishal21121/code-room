@@ -56,3 +56,16 @@ export const roomJoinValidator = () => {
             .withMessage("Please enter username")
     ]
 }
+
+export const adminUpdateValidator = () => {
+    return [
+        body("roomId")
+            .trim()
+            .notEmpty()
+            .withMessage("Please enter roomId"),
+        body("admin")
+            .trim()
+            .notEmpty()
+            .withMessage("Please enter admin name")
+    ]
+}
