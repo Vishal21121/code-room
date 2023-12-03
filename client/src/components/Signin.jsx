@@ -3,7 +3,6 @@ import { User, Mail, Lock } from "react-feather"
 import { Link, useNavigate } from 'react-router-dom'
 import toast from 'react-hot-toast'
 import { useRegisterMutation } from '../features/authentication/authApiSlice'
-import collaborators from '../assets/collaborators.svg'
 import realtime from '../assets/realtime.svg'
 
 const Signin = () => {
