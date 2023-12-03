@@ -48,16 +48,16 @@ const Login = () => {
 
     return (
         <div className="flex  justify-evenly items-center min-h-screen bg-gray-900">
-            <p className='text-white text-[3rem] absolute right-0 top-56 left-[42rem]'>Let's Code</p>
+            <p className='text-gray-300 text-[3rem] absolute right-0 top-56 left-[42rem] font-bold'>Let's Code</p>
             <img src={collab} alt="" className='w-1/2' />
-            <div className="p-10 mt-14 rounded-lg ring-2 ring-gray-500 hover:ring-white h-[22 rem]">
+            <div className="mt-14 p-10 rounded-lg border-8 border-solid border-[#223243] shadow-3xl">
                 <div className="flex justify-center items-center flex-col gap-4">
                     <h2 className="text-gray-300 text-xl font-semibold tracking-widest">Sign up</h2>
                     <div className="relative w-[300px]">
                         <input
                             type="email"
                             required
-                            className="pt-3 pr-4 pb-3 pl-12 w-full bg-gray-900 text-gray-300 font-light rounded-3xl text-lg duration-500 outline-none placeholder:text-base placeholder:font-light focus:ring-2 focus:ring-orange-500 shadow-md shadow-gray-800"
+                            className="pt-3 pr-4 pb-3 pl-12 w-full bg-[#223243] text-gray-300 font-light rounded-3xl text-lg shadow-lg duration-500 outline-none border border-solid border-[#0000001a] placeholder:text-base placeholder:font-light focus:ring-2 focus:ring-orange-500"
                             placeholder='Email'
                             onChange={(e) => setUserDetails(prev => ({ ...prev, email: e.target.value }))}
                         />
@@ -67,7 +67,7 @@ const Login = () => {
                         <input
                             type="password"
                             required
-                            className="pt-3 pr-4 pb-3 pl-12 w-full bg-gray-900 text-gray-300 font-light rounded-3xl text-lg shadow-md shadow-gray-800 duration-500 outline-none placeholder:text-base placeholder:font-light focus:ring-2 focus:ring-orange-500"
+                            className="pt-3 pr-4 pb-3 pl-12 w-full bg-[#223243] text-gray-300 font-light rounded-3xl text-lg shadow-lg duration-500 outline-none border border-solid border-[#0000001a] placeholder:text-base placeholder:font-light focus:ring-2 focus:ring-orange-500"
                             placeholder='Password'
                             onChange={(e) => setUserDetails(prev => ({ ...prev, password: e.target.value }))}
                         />
