@@ -53,10 +53,10 @@ const Signin = () => {
     return (
         <div className="flex justify-evenly items-center min-h-screen bg-gray-900">
             <img src={realtime} alt="" className='w-1/2' />
-            <p className='w-48 text-gray-300 text-[3rem] absolute right-0 bottom-28 left-[42rem] font-bold text-center '>Collaborate for Innovation</p>
+            <p className='w-48 text-gray-300 text-[2.5rem] leading-2 absolute right-0 bottom-28 left-[42rem] font-bold text-center '>Collaborate for Innovation</p>
             <div className="p-10 rounded-lg border-8 border-solid border-[#223243] shadow-3xl">
                 <div className="flex justify-center items-center flex-col gap-4">
-                    <h2 className="text-gray-300 text-xl font-semibold tracking-widest">Sign in</h2>
+                    <h2 className="text-gray-300 text-xl font-bold tracking-widest ">Sign in</h2>
                     <div className="relative w-[300px]">
                         <input
                             type="text"

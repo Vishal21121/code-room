@@ -48,7 +48,7 @@ const Login = () => {
 
     return (
         <div className="flex  justify-evenly items-center min-h-screen bg-gray-900">
-            <p className='text-gray-300 text-[3rem] absolute right-0 top-56 left-[42rem] font-bold'>Let's Code</p>
+            <p className='text-gray-300 text-[2.5rem] absolute right-0 top-56 left-[42rem] font-bold'>Let's Code</p>
             <img src={collab} alt="" className='w-1/2' />
             <div className="mt-14 p-10 rounded-lg border-8 border-solid border-[#223243] shadow-3xl">
                 <div className="flex justify-center items-center flex-col gap-4">
