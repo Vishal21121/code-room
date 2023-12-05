@@ -1,8 +1,8 @@
 import React from 'react'
 import Avatar from 'react-avatar';
 import { useDispatch, useSelector } from 'react-redux';
-import { setAccess } from '../features/accessPermission/accessSlice';
-import ACTIONS from '../util/Actions';
+import { setAccess } from '../../features/accessPermission/accessSlice';
+import ACTIONS from '../../util/Actions';
 import { useParams } from 'react-router-dom';
 
 const Client = ({ people }) => {

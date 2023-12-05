@@ -2,9 +2,9 @@ import React, { useState } from 'react'
 import { RiBracesLine, RiPencilFill } from "react-icons/ri";
 import { HiUsers, HiCheckBadge } from "react-icons/hi2";
 import { SiDependabot } from "react-icons/si";
-import modes from '../util/Mode';
+import modes from '../../util/Mode';
 import { useDispatch } from 'react-redux';
-import { setMode } from '../features/mode/modeSlice';
+import { setMode } from '../../features/mode/modeSlice';
 import { useSelector } from 'react-redux';
 import { MdMessage } from "react-icons/md";
 
