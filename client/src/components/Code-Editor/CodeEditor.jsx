@@ -3,15 +3,15 @@ import "monaco-themes/themes/Monokai Bright.json";
 import Editor, { loader } from '@monaco-editor/react';
 import { Play } from 'react-feather';
 import { useDispatch, useSelector } from 'react-redux';
-import ACTIONS from '../util/Actions';
+import ACTIONS from '../../util/Actions';
 import { useParams } from 'react-router-dom';
-import { setProblems } from '../features/editor/problemSlice';
-import { setAccess } from '../features/accessPermission/accessSlice';
+import { setProblems } from '../../features/editor/problemSlice';
+import { setAccess } from '../../features/accessPermission/accessSlice';
 import Avatar from 'react-avatar';
 import { useDebouncedCallback } from 'use-debounce';
-import { refreshTokens, setAccessToken } from '../features/authentication/userDataSlice';
-import { languages } from '../util/languages';
-import { useLazyGetCodeQuery, useUpdateCodeMutation } from '../features/editor/editorApiSlice';
+import { refreshTokens, setAccessToken } from '../../features/authentication/userDataSlice';
+import { languages } from '../../util/languages';
+import { useLazyGetCodeQuery, useUpdateCodeMutation } from '../../features/editor/editorApiSlice';
 
 
 

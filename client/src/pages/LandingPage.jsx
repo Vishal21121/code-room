@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import Navbar from '../components/Navbar/Navbar'
-import IDE from '../components/IDE'
+import IDE from '../components/Code-Editor/IDE'
 import modes from "../util/Mode"
 import Whiteboard from '../components/Whiteboard'
 import People from '../components/User/People'
