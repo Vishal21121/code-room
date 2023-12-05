@@ -12,9 +12,9 @@ import toast from 'react-hot-toast'
 import { initSocket } from '../util/socket'
 import { setSocket } from '../features/sockets/socketSlice'
 import { setClient, removeClient } from '../features/clients/clientSlice'
-import NotesForm from '../components/NotesForm'
+import NotesForm from '../components/Notes/NotesForm'
 import UserChat from '../components/Message/UserChat'
-import Notes from '../components/Notes'
+import Notes from '../components/Notes/Notes'
 
 
 const LandingPage = () => {

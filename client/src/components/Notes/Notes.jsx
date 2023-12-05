@@ -2,10 +2,10 @@ import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import NotesCard from './NotesCard'
 import NotesForm from './NotesForm'
-import { useCreateNotesMutation, useDeletNotesMutation, useLazyGetAllNotesQuery } from '../features/notes/notesApiSlice';
+import { useCreateNotesMutation, useDeletNotesMutation, useLazyGetAllNotesQuery } from '../../features/notes/notesApiSlice';
 import NotesView from './NotesView';
 import { useDispatch, useSelector } from 'react-redux';
-import { setNotesMode, setNotes, setNoteId, setEditMode } from '../features/notes/notesSlice';
+import { setNotesMode, setNotes, setNoteId, setEditMode } from '../../features/notes/notesSlice';
 
 const Notes = () => {
     const { roomId } = useParams()

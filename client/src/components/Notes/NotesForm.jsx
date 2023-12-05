@@ -4,8 +4,8 @@ import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
 import { dracula } from 'react-syntax-highlighter/dist/esm/styles/prism'
 import { TfiArrowLeft } from "react-icons/tfi";
 import { useDispatch, useSelector } from 'react-redux';
-import { setEditMode, setNotes, setNotesMode } from '../features/notes/notesSlice';
-import { useUpdateNotesMutation } from '../features/notes/notesApiSlice';
+import { setEditMode, setNotes, setNotesMode } from '../../features/notes/notesSlice';
+import { useUpdateNotesMutation } from '../../features/notes/notesApiSlice';
 
 const NotesForm = ({ handleSubmit }) => {
     const mode = useSelector(state => state.notes.editMode)

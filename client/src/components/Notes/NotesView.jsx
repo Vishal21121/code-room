@@ -4,7 +4,7 @@ import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
 import { dracula } from 'react-syntax-highlighter/dist/esm/styles/prism'
 import { TfiArrowLeft } from "react-icons/tfi";
 import { useDispatch } from 'react-redux';
-import { setNotesMode } from '../features/notes/notesSlice';
+import { setNotesMode } from '../../features/notes/notesSlice';
 import { HiClipboard, HiCheckCircle } from "react-icons/hi";
 
 const NotesView = ({ notesFound }) => {
