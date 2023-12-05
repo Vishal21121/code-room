@@ -3,9 +3,9 @@ import MessageSendBox from './MessageSendBox'
 import UserMessage from './UserMessage'
 import { useDispatch, useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
-import ACTIONS from '../util/Actions'
-import { refreshTokens } from '../features/authentication/userDataSlice';
-import { useLazyGetMessageQuery } from '../features/userMessage/userMessageApiSlice'
+import ACTIONS from '../../util/Actions'
+import { refreshTokens } from '../../features/authentication/userDataSlice';
+import { useLazyGetMessageQuery } from '../../features/userMessage/userMessageApiSlice'
 
 const UserChat = () => {
     const [chats, setChats] = useState([])

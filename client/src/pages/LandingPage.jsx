@@ -13,7 +13,7 @@ import { initSocket } from '../util/socket'
 import { setSocket } from '../features/sockets/socketSlice'
 import { setClient, removeClient } from '../features/clients/clientSlice'
 import NotesForm from '../components/NotesForm'
-import UserChat from '../components/UserChat'
+import UserChat from '../components/Message/UserChat'
 import Notes from '../components/Notes'
 
 

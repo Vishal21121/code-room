@@ -2,12 +2,12 @@ import React, { useState } from 'react'
 import { MdSend } from "react-icons/md";
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { refreshTokens } from '../features/authentication/userDataSlice';
-import ACTIONS from '../util/Actions';
+import { refreshTokens } from '../../features/authentication/userDataSlice';
+import ACTIONS from '../../util/Actions';
 import { HiPlusCircle } from "react-icons/hi2";
-import { storage } from '../appwrite/appwriteConfig';
+import { storage } from '../../appwrite/appwriteConfig';
 import { ID } from 'appwrite';
-import { useSendMessageMutation } from '../features/userMessage/userMessageApiSlice';
+import { useSendMessageMutation } from '../../features/userMessage/userMessageApiSlice';
 
 const MessageSendBox = () => {
     const { roomId } = useParams()
