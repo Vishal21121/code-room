@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useAskBotMutation, useCreateChatContainerMutation, useCreateChatMutation, useLazyGetChatsQuery } from '../../features/chat-bot/botApiSlice';
 import { useParams } from 'react-router-dom';
 import { setChatContainer, setChat } from '../../features/chat-bot/botSlice';
+import toast from 'react-hot-toast';
 
 
 const ChatBotMainComponent = () => {
@@ -18,10 +19,8 @@ const ChatBotMainComponent = () => {
     const [createChat] = useCreateChatMutation()
     const { roomId } = useParams()
     const dispatch = useDispatch()
-    console.log({ id });
 
     const saveChatsInBackend = async (id, content, senderType) => {
-        console.log("ID IN SAVE CHAT", id);
         const data = {
             chatContainerId: id,
             content,
@@ -49,7 +48,6 @@ const ChatBotMainComponent = () => {
             }
             try {
                 const response = await createChatContainer(data).unwrap()
-                console.log("Got create Container response: ", response.data.value._id);
                 containerId = response.data.value._id
                 dispatch(setChatContainer(response.data.value._id))
             } catch (error) {
@@ -66,13 +64,9 @@ const ChatBotMainComponent = () => {
             prompt
         }
         try {
+            const toastId = toast.loading("Gathering thoughts. 😊")
             const response = await askBot(body).unwrap()
-            // console.log(data);
-            // if (response.data.statusCode === 401 && response.data.message === "jwt expired") { }
-            // let chatsExceptLast = [...chat]
-            // chatsExceptLast.pop()
-            // setChat(() => chatsExceptLast)
-            console.log("response Bot", response);
+            toast.dismiss(toastId)
             dispatch(setChat({ senderType: "bot", content: response.data.response }))
             setTimeout(() => {
                 chatRef.current?.lastElementChild?.scrollIntoView({ behavior: 'smooth' });
