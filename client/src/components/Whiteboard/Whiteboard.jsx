@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react'
 import { Excalidraw } from "@excalidraw/excalidraw";
 import { useDispatch, useSelector } from "react-redux"
-import ACTIONS from '../util/Actions';
+import ACTIONS from '../../util/Actions';
 import { useParams } from 'react-router-dom';
-import { setAccess } from '../features/accessPermission/accessSlice';
+import { setAccess } from '../../features/accessPermission/accessSlice';
 import { useDebouncedCallback } from 'use-debounce';
-import { refreshTokens } from '../features/authentication/userDataSlice';
-import { useLazyGetContentQuery, useUpdateBoardContentMutation } from '../features/whiteboard/boardApiSlice';
+import { refreshTokens } from '../../features/authentication/userDataSlice';
+import { useLazyGetContentQuery, useUpdateBoardContentMutation } from '../../features/whiteboard/boardApiSlice';
 
 const Whiteboard = () => {
     const [excalidrawApi, setExcalidrawApi] = useState(null)
