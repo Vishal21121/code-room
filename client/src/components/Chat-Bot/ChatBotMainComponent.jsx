@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { MdSend } from "react-icons/md";
-import ChatMessage from '../ChatMessage';
+import ChatMessage from './ChatMessage';
 import { useDispatch, useSelector } from 'react-redux';
 import { useAskBotMutation, useCreateChatContainerMutation, useCreateChatMutation, useLazyGetChatsQuery } from '../../features/chat-bot/botApiSlice';
 import { useParams } from 'react-router-dom';
