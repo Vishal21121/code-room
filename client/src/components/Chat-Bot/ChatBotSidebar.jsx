@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import { RxPlus } from "react-icons/rx";
 import SidebarMessage from './SidebarMessage';
-import { useLazyGetChatContainerQuery } from '../features/chat-bot/botApiSlice';
+import { useLazyGetChatContainerQuery } from '../../features/chat-bot/botApiSlice';
 import { useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { setChatContainer, setChats } from '../features/chat-bot/botSlice';
+import { setChatContainer, setChats } from '../../features/chat-bot/botSlice';
 
 const ChatBotSidebar = () => {
     const id = useSelector(state => state.bot.chatContainer)

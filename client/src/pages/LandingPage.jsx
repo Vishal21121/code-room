@@ -5,7 +5,7 @@ import modes from "../util/Mode"
 import Whiteboard from '../components/Whiteboard/Whiteboard'
 import People from '../components/User/People'
 import { useSelector, useDispatch } from 'react-redux'
-import ChatBot from '../components/ChatBot'
+import ChatBot from '../components/Chat-Bot/ChatBot'
 import { useNavigate, useParams } from 'react-router-dom'
 import ACTIONS from '../util/Actions'
 import toast from 'react-hot-toast'

@@ -1,7 +1,7 @@
 import React from 'react'
 import { PiChatBold } from "react-icons/pi";
-import { useLazyGetChatsQuery } from '../features/chat-bot/botApiSlice';
-import { setChats } from '../features/chat-bot/botSlice';
+import { useLazyGetChatsQuery } from '../../features/chat-bot/botApiSlice';
+import { setChats } from '../../features/chat-bot/botSlice';
 import { useDispatch } from 'react-redux';
 
 const SidebarMessage = ({ name, id }) => {
