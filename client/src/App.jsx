@@ -13,7 +13,11 @@ function App() {
         <Toaster
           toastOptions={
             {
-              className: "bg-gray-900 text-white"
+              // className: "bg-gray-900 text-white",
+              style: {
+                backgroundColor: "rgb(17 24 39)",
+                color: "#fff",
+              }
             }
           }
           position='top-right'
