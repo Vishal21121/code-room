@@ -15,7 +15,7 @@ function App() {
             {
               // className: "bg-gray-900 text-white",
               style: {
-                backgroundColor: "rgb(17 24 39)",
+                backgroundColor: "rgb(3 7 18)",
                 color: "#fff",
               }
             }

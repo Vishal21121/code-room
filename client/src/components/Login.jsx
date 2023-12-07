@@ -18,10 +18,12 @@ const Login = () => {
     const [login, { isLoading }] = useLoginMutation()
     const loginUser = async () => {
         try {
+            const toastId = toast.loading("Logging in...")
             // The unwrap() method is used to extract the payload of a fulfilled action if it was resolved successfully, or throw an error with the rejected value if it was not.
             const userData = await login({ email: userDetails.email, password: userDetails.password }).unwrap()
             dispatch(setAccessToken(userData?.data?.accessToken))
             dispatch(setUserData(userData))
+            toast.dismiss(toastId)
             toast.success("User logged in successfully")
             navigate("/createroom")
         } catch (err) {
