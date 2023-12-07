@@ -47,6 +47,7 @@ const Login = () => {
                 })
                 return
             }
+            toast.dismiss(toastId)
         }
     }
 
