@@ -23,24 +23,34 @@ const Signin = () => {
             email,
             password
         }
+        const toastId = toast.loading("Creating account...")
         try {
             const response = await register(data).unwrap()
             console.log({ response });
-            toast.success("User created successfully")
+            toast.success("User created successfully", {
+                id: toastId
+            })
             navigate("/")
         } catch (error) {
             if (error.data.data.statusCode === 409) {
-                toast.error(error.data.data.message)
+                toast.error(error.data.data.message, {
+                    id: toastId
+                })
                 return
             }
             else if (error.data.data.statusCode === 422) {
                 if (error.data.data.value[0].username) {
-                    toast.error(data.data.value[0].username)
+                    toast.error(data.data.value[0].username, {
+                        id: toastId
+                    })
                 } else {
-                    toast.error(error.data.data.value[0].password)
+                    toast.error(error.data.data.value[0].password, {
+                        id: toastId
+                    })
                 }
                 return
             }
+            toast.dismiss(toastId)
         }
     }
 
