@@ -4,6 +4,7 @@ import Login from './components/Login'
 import { Toaster } from 'react-hot-toast'
 import Signin from './components/Signin'
 import RoomJoin from './components/RoomJoin'
+import { SpeedInsights } from '@vercel/speed-insights/react';
 
 function App() {
 
@@ -30,6 +31,7 @@ function App() {
           <Route path='/createroom' element={<RoomJoin />} />
         </Routes>
       </BrowserRouter>
+      <SpeedInsights />
     </>
   )
 }
