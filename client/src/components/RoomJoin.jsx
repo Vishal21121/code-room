@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import toast from "react-hot-toast"
 import { useDispatch, useSelector } from 'react-redux';
-import { refreshTokens, selectCurrentToken, selectCurrentUser } from '../features/authentication/userDataSlice';
+import { selectCurrentUser } from '../features/authentication/userDataSlice';
 import { setRoom } from '../features/room/roomSlice';
 import { setAccess } from '../features/accessPermission/accessSlice';
 import { useAddBoardsMutation, useCreateRoomMutation, useGetRoomsQuery, useJoinRoomMutation } from '../features/room/roomApiSlice';
@@ -12,7 +12,6 @@ const RoomJoin = () => {
     const [roomName, setRoomName] = useState("")
     const [Password, setPassword] = useState("")
     const navigate = useNavigate();
-    const accessToken = useSelector(selectCurrentToken)
     const userData = useSelector(selectCurrentUser)
     const userName = userData.data.loggedInUser.username
     const dispatch = useDispatch()
@@ -146,11 +145,12 @@ const RoomJoin = () => {
         <div className="bg-[#22272e] h-screen w-screen flex items-center text-center">
             <div className='w-[25%] h-full p-4 bg-gray-900 flex flex-col gap-8'>
                 <p className='text-2xl text-gray-300 '>Rooms Joined</p>
+                <hr />
                 <div className='flex flex-col gap-4'>
                     {
-                        isSuccess && rooms.map(({ _id, name }) => (
+                        isSuccess && rooms.length !== 0 ? rooms.map(({ _id, name }) => (
                             <button key={_id} id={_id} className='p-2 bg-gray-700 text-white text-md font-semibold rounded-md hover:ring-2 hover:ring-[#FF6C00]' onClick={enterRoom}>{name}</button>
-                        ))
+                        )) : <p className='text-gray-300'>No rooms joined</p>
                     }
                 </div>
             </div>
