@@ -6,6 +6,7 @@ import { selectCurrentUser } from '../features/authentication/userDataSlice';
 import { setRoom } from '../features/room/roomSlice';
 import { setAccess } from '../features/accessPermission/accessSlice';
 import { useAddBoardsMutation, useCreateRoomMutation, useGetRoomsQuery, useJoinRoomMutation } from '../features/room/roomApiSlice';
+import BeatLoader from "react-spinners/BeatLoader";
 
 
 const RoomJoin = () => {
@@ -19,6 +20,7 @@ const RoomJoin = () => {
     const {
         data: roomsData,
         isSuccess,
+        isLoading
     } = useGetRoomsQuery(userName)
     const [createRoom] = useCreateRoomMutation()
     const [joinRoom] = useJoinRoomMutation()
@@ -146,13 +148,17 @@ const RoomJoin = () => {
             <div className='w-[25%] h-full p-4 bg-gray-900 flex flex-col gap-8'>
                 <p className='text-2xl text-gray-300 '>Rooms Joined</p>
                 <hr />
-                <div className='flex flex-col gap-4'>
-                    {
-                        isSuccess && rooms.length !== 0 ? rooms.map(({ _id, name }) => (
-                            <button key={_id} id={_id} className='p-2 bg-gray-700 text-white text-md font-semibold rounded-md hover:ring-2 hover:ring-[#FF6C00]' onClick={enterRoom}>{name}</button>
-                        )) : <p className='text-gray-300'>No rooms joined</p>
-                    }
-                </div>
+                {
+                    isLoading ? <BeatLoader color='#888888' className='mx-auto' /> : (
+                        <div className='flex flex-col gap-4'>
+                            {
+                                isSuccess && rooms.length !== 0 ? rooms.map(({ _id, name }) => (
+                                    <button key={_id} id={_id} className='p-2 bg-gray-700 text-white text-md font-semibold rounded-md hover:ring-2 hover:ring-[#FF6C00]' onClick={enterRoom}>{name}</button>
+                                )) : <p className='text-gray-300'>No rooms joined</p>
+                            }
+                        </div>
+                    )
+                }
             </div>
             <div className="border w-[30%] h-fit rounded-lg p-8 mx-auto bg-gray-900 flex flex-col gap-4">
                 <h4 className="text-gray-300 text-lg font-bold">{createOrJoin} room</h4>
