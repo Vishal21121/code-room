@@ -5,12 +5,14 @@ import { useLazyGetChatContainerQuery } from '../../features/chat-bot/botApiSlic
 import { useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { setChatContainer, setChats } from '../../features/chat-bot/botSlice';
+import BeatLoader from "react-spinners/BeatLoader";
+
 
 const ChatBotSidebar = () => {
     const id = useSelector(state => state.bot.chatContainer)
     const { roomId } = useParams()
     const [chatContainers, setChatContainers] = useState([])
-    const [getChatContainer] = useLazyGetChatContainerQuery()
+    const [getChatContainer, { isLoading }] = useLazyGetChatContainerQuery()
     const dispatch = useDispatch()
 
     const fetchChatContainer = async () => {
@@ -39,11 +41,13 @@ const ChatBotSidebar = () => {
                 <RxPlus size={20} className='text-gray-400' />
                 <p className='text-gray-300'>New Chat</p>
             </div>
-            <div className='w-full h-full flex flex-col gap-4 items-center overflow-auto py-2'>
+            <div className='w-full h-full flex flex-col gap-4 items-center overflow-auto py-4'>
                 {
-                    chatContainers && chatContainers.map((el) => (
-                        <SidebarMessage name={el.name} id={el._id} />
-                    ))
+
+                    isLoading ? <BeatLoader color='#888888' className='mx-auto' size={10} /> : (
+                        chatContainers && chatContainers.map((el) => (
+                            <SidebarMessage name={el.name} id={el._id} />
+                        )))
                 }
             </div>
         </div>
