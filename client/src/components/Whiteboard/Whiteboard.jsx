@@ -16,10 +16,10 @@ const Whiteboard = () => {
     const userData = useSelector((state) => state.userData.userData)
     const userName = userData.data.loggedInUser.username
     const accessedUser = useSelector((state) => state.access.access)
-    const accessToken = useSelector((state) => state.userData.accessToken)
     const dispatch = useDispatch()
     const [getContent] = useLazyGetContentQuery()
     const [updateBoardContent] = useUpdateBoardContentMutation()
+    const [previousElements, setPreviousElements] = useState(null);
 
     const viewModeSetter = () => {
         if (userName === accessedUser) {
@@ -29,7 +29,7 @@ const Whiteboard = () => {
         }
     }
 
-    const sendContent = async (content, retry = true) => {
+    const sendContent = async (content) => {
         const body = {
             roomId: roomId,
             content: JSON.stringify(content)
@@ -40,19 +40,16 @@ const Whiteboard = () => {
         } catch (error) {
             console.log(error);
         }
-        if (data.data.statusCode === 401 && retry) {
-            dispatch(refreshTokens())
-            return await sendContent(content, retry = false)
-        }
     }
 
     const debouncedSendContent = useDebouncedCallback(sendContent, 500);
 
     const handleChange = () => {
         const elements = excalidrawApi?.getSceneElements()
-        if (userName === accessedUser) {
+        if (userName === accessedUser && JSON.stringify(elements) !== JSON.stringify(previousElements)) {
             socketio.emit(ACTIONS.BOARD_CHANGE, { roomId, elements })
             debouncedSendContent(elements)
+            setPreviousElements(elements); // update the previous elements
         }
     };
 
@@ -78,11 +75,12 @@ const Whiteboard = () => {
             return;
         }
         viewModeSetter()
-
+        console.log("called");
         excalidrawApi.readyPromise.then((api) => {
             fetchContent(api)
             socketio.on(ACTIONS.BOARD_CHANGE, ({ elements }) => {
                 if (userName != accessedUser) {
+                    console.log("inside the event");
                     api.updateScene({ elements: elements });
                 }
             })
