@@ -14,6 +14,7 @@ const ChatBotSidebar = () => {
     const [chatContainers, setChatContainers] = useState([])
     const [getChatContainer, { isLoading }] = useLazyGetChatContainerQuery()
     const dispatch = useDispatch()
+    const [index, setIndex] = useState("")
 
     const fetchChatContainer = async () => {
         let data = { roomId }
@@ -35,6 +36,11 @@ const ChatBotSidebar = () => {
     useEffect(() => {
         fetchChatContainer()
     }, [id])
+
+    const selectDiv = (id) => {
+        setIndex(id)
+    }
+
     return (
         <div className='w-[20%] bg-gray-950 p-2 flex flex-col items-center gap-8'>
             <div className='border w-[90%] p-2 rounded-md  ring-2 ring-gray-400 mt-2 text-left flex gap-2 items-center cursor-pointer hover:ring-white' onClick={handleNewChat}>
@@ -46,7 +52,7 @@ const ChatBotSidebar = () => {
 
                     isLoading ? <BeatLoader color='#888888' className='mx-auto' size={10} /> : (
                         chatContainers && chatContainers.map((el) => (
-                            <SidebarMessage name={el.name} id={el._id} />
+                            <SidebarMessage name={el.name} id={el._id} index={index} handleDivSelect={selectDiv} />
                         )))
                 }
             </div>
