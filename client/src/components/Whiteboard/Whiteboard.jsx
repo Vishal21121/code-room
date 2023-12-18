@@ -5,7 +5,7 @@ import ACTIONS from '../../util/Actions';
 import { useParams } from 'react-router-dom';
 import { setAccess } from '../../features/accessPermission/accessSlice';
 import { useDebouncedCallback } from 'use-debounce';
-import { refreshTokens } from '../../features/authentication/userDataSlice';
+import { refreshTokens, setAccessToken } from '../../features/authentication/userDataSlice';
 import { useLazyGetContentQuery, useUpdateBoardContentMutation } from '../../features/whiteboard/boardApiSlice';
 
 const Whiteboard = () => {
@@ -20,6 +20,7 @@ const Whiteboard = () => {
     const [getContent] = useLazyGetContentQuery()
     const [updateBoardContent] = useUpdateBoardContentMutation()
     const [previousElements, setPreviousElements] = useState(null);
+    const accessToken = useSelector((state) => state.userData.accessToken)
 
     const viewModeSetter = () => {
         if (userName === accessedUser) {
@@ -29,14 +30,38 @@ const Whiteboard = () => {
         }
     }
 
-    const sendContent = async (content) => {
+    const sendContent = async (content, accessToken, retry = true) => {
         const body = {
             roomId: roomId,
             content: JSON.stringify(content)
         }
         try {
-            const response = await updateBoardContent(body).unwrap()
-            console.log({ response });
+            // const response = await updateBoardContent(body).unwrap()
+            const response = await fetch("http://localhost:8080/api/v1/room-features/update-board", {
+                method: "PATCH",
+                mode: "cors",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${accessToken}`
+                },
+                body: JSON.stringify(body)
+            })
+            const data = await response.json()
+            console.log({ data });
+            if (data.data.statusCode === 401 && retry) {
+                const response = await fetch("http://localhost:8080/api/v1/users/refreshToken", {
+                    method: "GET",
+                    mode: "cors",
+                    credentials: "include",
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                })
+                const data = await response.json()
+                console.log({ "refreshed": data.data.accessToken })
+                dispatch(setAccessToken(data.data.accessToken))
+                return await sendContent(content, data.data.accessToken, false)
+            }
         } catch (error) {
             console.log(error);
         }
@@ -44,13 +69,11 @@ const Whiteboard = () => {
 
     const debouncedSendContent = useDebouncedCallback(sendContent, 500);
 
-    const handleChange = () => {
+    const handleChange = async () => {
         const elements = excalidrawApi?.getSceneElements()
-        // TODO: BUG: if a present element is changed it's not getting saved in the database.
         if (userName === accessedUser && JSON.stringify(elements) !== JSON.stringify(previousElements)) {
             socketio.emit(ACTIONS.BOARD_CHANGE, { roomId, elements })
-            debouncedSendContent(elements)
-            setPreviousElements(elements); // update the previous elements
+            debouncedSendContent(elements, accessToken)
         }
     };
 
@@ -98,6 +121,7 @@ const Whiteboard = () => {
         }
     }, [excalidrawApi, accessedUser])
     return (
+        // TODO: add element for showing that the content is saved and who has the permission
         <div className='h-full w-full'>
             <Excalidraw
                 ref={api => setExcalidrawApi(api)}
