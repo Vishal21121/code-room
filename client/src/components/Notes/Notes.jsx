@@ -6,13 +6,15 @@ import { useCreateNotesMutation, useDeletNotesMutation, useLazyGetAllNotesQuery 
 import NotesView from './NotesView';
 import { useDispatch, useSelector } from 'react-redux';
 import { setNotesMode, setNotes, setNoteId, setEditMode } from '../../features/notes/notesSlice';
+import SyncLoader from "react-spinners/SyncLoader";
+
 
 const Notes = () => {
     const { roomId } = useParams()
     const dispatch = useDispatch()
     const notes = useSelector((state) => state.notes.notes)
     const [createNotes] = useCreateNotesMutation()
-    const [getAllNotes] = useLazyGetAllNotesQuery()
+    const [getAllNotes, { isLoading }] = useLazyGetAllNotesQuery()
     const [deletNotes] = useDeletNotesMutation()
 
 
@@ -99,11 +101,13 @@ const Notes = () => {
 
                         <div className='w-full flex gap-4 p-4 mt-4 flex-wrap justify-center'>
                             {
-                                notes && notes.map(({ _id, title }) => (
-                                    <NotesCard key={_id} id={_id} title={title} showNotes={showNotes} deleteNoteHandler={deleteNoteHandler} updateNoteHandler={updateNoteHandler} />
-                                ))
+                                isLoading ? <SyncLoader color="#888888" className='mt-2' /> : (
+                                    notes && notes.map(({ _id, title }) => (
+                                        <NotesCard key={_id} id={_id} title={title} showNotes={showNotes} deleteNoteHandler={deleteNoteHandler} updateNoteHandler={updateNoteHandler} />
+                                    ))
+                                )
+
                             }
-                            {/* <NotesCard /> */}
                         </div>
                     </div>
                 )

@@ -46,6 +46,7 @@ const Whiteboard = () => {
 
     const handleChange = () => {
         const elements = excalidrawApi?.getSceneElements()
+        // TODO: BUG: if a present element is changed it's not getting saved in the database.
         if (userName === accessedUser && JSON.stringify(elements) !== JSON.stringify(previousElements)) {
             socketio.emit(ACTIONS.BOARD_CHANGE, { roomId, elements })
             debouncedSendContent(elements)
