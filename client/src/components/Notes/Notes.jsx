@@ -7,6 +7,7 @@ import NotesView from './NotesView';
 import { useDispatch, useSelector } from 'react-redux';
 import { setNotesMode, setNotes, setNoteId, setEditMode } from '../../features/notes/notesSlice';
 import SyncLoader from "react-spinners/SyncLoader";
+import toast from 'react-hot-toast';
 
 
 const Notes = () => {
@@ -24,6 +25,13 @@ const Notes = () => {
     const handleSubmit = async (e, notesInfo) => {
         e.preventDefault()
         notesInfo.roomId = roomId
+        if (notesInfo.title.length < 3) {
+            toast.error("Please enter title more than three characters")
+            return
+        } else if (notesInfo.content.length <= 0) {
+            toast.error("Please enter some content")
+            return
+        }
         try {
             const response = await createNotes(notesInfo).unwrap()
             dispatch(setNotesMode("notes"))

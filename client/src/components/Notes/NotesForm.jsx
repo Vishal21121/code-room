@@ -6,6 +6,7 @@ import { TfiArrowLeft } from "react-icons/tfi";
 import { useDispatch, useSelector } from 'react-redux';
 import { setEditMode, setNotes, setNotesMode } from '../../features/notes/notesSlice';
 import { useUpdateNotesMutation } from '../../features/notes/notesApiSlice';
+import toast from "react-hot-toast"
 
 const NotesForm = ({ handleSubmit }) => {
     const mode = useSelector(state => state.notes.editMode)
@@ -28,6 +29,10 @@ const NotesForm = ({ handleSubmit }) => {
 
     const updateNotesHandler = async (e, notesInfo) => {
         e.preventDefault()
+        if (notesInfo.title === "") {
+            toast.error("Please enter title")
+            return
+        }
         notesInfo.notesId = id
         try {
             const response = await updateNotes(notesInfo).unwrap()
@@ -50,9 +55,9 @@ const NotesForm = ({ handleSubmit }) => {
                 <input type="text" placeholder='Enter title' value={notesInfo.title} className='bg-gray-700 w-1/2 p-4 rounded-lg text-gray-300 placeholder:text-left placeholder:text-xl outline-none h-16' onChange={(e) => setNotesInfo(notesInfo => ({ ...notesInfo, title: e.target.value }))} />
                 {
                     mode ? (
-                        <button value="Create" className="w-24 h-12 px-4 rounded-xl text-lg shadow-lg duration-500 outline-none ring-2 ring-green-500 text-white font-medium cursor-pointer hover:shadow-green" onClick={(e) => updateNotesHandler(e, notesInfo)} >Save</button>
+                        <button value="Create" className={`w-24 h-12 px-4 rounded-xl text-lg shadow-lg duration-500 outline-none ring-2 ring-green-500 text-white font-medium cursor-pointer hover:shadow-green ${notesInfo.title === "" ? "disabled:opacity-50" : ""}`} onClick={(e) => updateNotesHandler(e, notesInfo)} >Save</button>
                     ) : (
-                        <button value="Create" className="w-24 h-12 px-4 rounded-xl text-lg shadow-lg duration-500 outline-none ring-2 ring-green-500 text-white font-medium cursor-pointer hover:shadow-green" onClick={(e) => handleSubmit(e, notesInfo)} >Create</button>
+                        <button value="Create" className={`w-24 h-12 px-4 rounded-xl text-lg shadow-lg duration-500 outline-none ring-2 ring-green-500 text-white font-medium cursor-pointer hover:shadow-green ${notesInfo.title === "" ? "disabled:opacity-50" : ""}`} onClick={(e) => handleSubmit(e, notesInfo)} >Create</button>
                     )
                 }
             </form>
