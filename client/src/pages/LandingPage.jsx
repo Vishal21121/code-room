@@ -77,7 +77,7 @@ const LandingPage = () => {
         <div className='flex bg-[#22272e]'>
             <Navbar peopleNav={peopleNav} todoNav={todoNav} />
             <People isPeople={isPeople} />
-            <div className='w-[95%]'>
+            <div className='lg:w-[95%] sm:w-[90%]'>
                 {
                     mode === modes['CODE-EDITOR'] && <IDE />
                 }
