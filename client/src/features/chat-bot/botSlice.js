@@ -2,7 +2,9 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
     chatContainer: null, // this will be set to the id of the chatContainer
-    chats: []
+    chats: [],
+    apiKey: null,
+    modalView: true
 }
 
 export const botSlice = createSlice({
@@ -19,9 +21,15 @@ export const botSlice = createSlice({
         // this will be used to push the object to th existing array
         setChat: (state, action) => {
             state.chats.push(action.payload)
+        },
+        setApiKey: (state, action) => {
+            state.apiKey = action.payload
+        },
+        setModalView: (state, action) => {
+            state.modalView = action.payload
         }
     }
 })
 
-export const { setChatContainer, setChats, setChat } = botSlice.actions
+export const { setChatContainer, setChats, setChat, setApiKey, setModalView } = botSlice.actions
 export default botSlice.reducer

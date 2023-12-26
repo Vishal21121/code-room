@@ -4,8 +4,9 @@ import ChatMessage from './ChatMessage';
 import { useDispatch, useSelector } from 'react-redux';
 import { useAskBotMutation, useCreateChatContainerMutation, useCreateChatMutation, useLazyGetChatsQuery } from '../../features/chat-bot/botApiSlice';
 import { useParams } from 'react-router-dom';
-import { setChatContainer, setChat } from '../../features/chat-bot/botSlice';
+import { setChatContainer, setChat, setModalView } from '../../features/chat-bot/botSlice';
 import toast from 'react-hot-toast';
+import Modal from './Modal';
 
 
 const ChatBotMainComponent = () => {
@@ -19,6 +20,8 @@ const ChatBotMainComponent = () => {
     const [createChat] = useCreateChatMutation()
     const { roomId } = useParams()
     const dispatch = useDispatch()
+    const apiKey = useSelector((state) => state.bot.apiKey)
+    const modalView = useSelector((state) => state.bot.modalView)
 
     const saveChatsInBackend = async (id, content, senderType) => {
         const data = {
@@ -34,6 +37,10 @@ const ChatBotMainComponent = () => {
     }
 
     const handleUserSubmit = async () => {
+        if (apiKey == null || apiKey === "") {
+            dispatch(setModalView(true))
+            return
+        }
         let containerId = id
         dispatch(setChat({ senderType: "user", content: prompt }))
         setPrompt("")
@@ -101,6 +108,7 @@ const ChatBotMainComponent = () => {
     const handleChange = (e) => {
         setPrompt(e.target.value)
     }
+
     return (
         <div className='h-full flex flex-col items-center w-[80%]'>
             <div className='h-[80%] overflow-auto w-full' ref={chatRef}>
@@ -111,11 +119,14 @@ const ChatBotMainComponent = () => {
                 }
 
             </div>
-            <div className='absolute bottom-0 flex items-center bg-[#282a36] w-1/2 mx-auto p-2 rounded-lg mb-10 z-10'>
-                <textarea ref={textAreaRef} type="text" className='box-border w-11/12 h-10 text-white outline-none bg-[#282a36] rounded-lg mr-2 z-30 resize-none p-2 overflow-auto' placeholder='Enter your query' onKeyUp={(e) => handleKeyUp(e)} value={prompt} onKeyDown={handleSubmit} onChange={handleChange} spellCheck="false" >
+            <div className='absolute bottom-0 flex items-center bg-[#282a36] w-1/2 mx-auto p-2 rounded-lg mb-10'>
+                <textarea ref={textAreaRef} type="text" className='box-border w-11/12 h-10 text-white outline-none bg-[#282a36] rounded-lg mr-2  resize-none p-2 overflow-auto' placeholder='Enter your query' onKeyUp={(e) => handleKeyUp(e)} value={prompt} onKeyDown={handleSubmit} onChange={handleChange} spellCheck="false" >
                 </textarea>
                 <MdSend className='text-gray-500 my-auto cursor-pointer mr-4 hover:text-white' size={24} onClick={handleUserSubmit} />
             </div>
+            {
+                modalView ? <Modal visible={modalView} /> : ""
+            }
         </div >
     )
 }
