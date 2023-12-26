@@ -8,9 +8,6 @@ import { Chat, ChatContainer } from '../models/chat.models.js';
 dotenv.config()
 
 
-const openai = new OpenAI({
-    apiKey: process.env.OPENAI_API_KEY
-});
 
 let messageArr = [{ 'role': 'system', 'content': 'you are a code assistant who only answers coding questions and does not replies to prompt outside of coding topic' }]
 
@@ -34,7 +31,10 @@ function addMessage(data, type) {
 
 
 export const chatBot = async (req, res) => {
-    const { prompt } = req.body
+    const { prompt, apiKey } = req.body
+    const openai = new OpenAI({
+        apiKey
+    });
     if (!prompt) {
         return res.status(400).json({
             "status": "failure",
@@ -62,10 +62,10 @@ export const chatBot = async (req, res) => {
         res.status(500).json({
             status: "failure",
             data: {
-                response: "unable to process your request right now please try after some time"
+                response: error.message || "unable to process your request right now please try after some time"
             }
         })
-        console.log(error)
+        console.log(error.message)
     }
 }
 

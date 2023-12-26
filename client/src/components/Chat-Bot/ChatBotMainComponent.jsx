@@ -68,10 +68,12 @@ const ChatBotMainComponent = () => {
     const fetchBotResponse = async (containerId) => {
         // setChat((prev) => [...prev, { mode: "bot", text: "Please wait a moment while I gather my thoughts and process the information 😊" }])
         const body = {
-            prompt
+            prompt,
+            apiKey
         }
+        let toastId
         try {
-            const toastId = toast.loading("Gathering thoughts. 😊")
+            toastId = toast.loading("Gathering thoughts. 😊")
             const response = await askBot(body).unwrap()
             toast.dismiss(toastId)
             dispatch(setChat({ senderType: "bot", content: response.data.response }))
@@ -80,7 +82,14 @@ const ChatBotMainComponent = () => {
             }, 0);
             await saveChatsInBackend(containerId, response.data.response, "bot")
         } catch (error) {
-            console.log(error.message);
+            if (error.data.data.response.startsWith("Incorrect")) {
+                toast.error("Please enter correct api Key", {
+                    id: toastId
+                })
+                dispatch(setModalView(true))
+                return
+            }
+            toast.dismiss(toastId)
         }
     }
 
