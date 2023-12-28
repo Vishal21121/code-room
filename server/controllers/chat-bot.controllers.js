@@ -308,6 +308,16 @@ export const deleteChatContainer = async (req, res) => {
                 }
             })
         }
+        const deleteChats = await Chat.deleteMany({ chatContainerId: { $in: [containerId] } });
+        if (!deleteChats) {
+            return res.status(404).json({
+                status: "failure",
+                data: {
+                    statusCode: 404,
+                    message: "no chats to be deleted"
+                }
+            })
+        }
         return res.status(200).json({
             status: "success",
             data: {
