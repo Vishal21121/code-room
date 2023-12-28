@@ -277,4 +277,54 @@ export const getChats = async (req, res) => {
 
 }
 
+export const deleteChatContainer = async (req, res) => {
+    const { containerId } = req.body
+    if (!containerId) {
+        return res.status(400).json({
+            status: "failure",
+            data: {
+                statusCode: 400,
+                message: "containerId is required"
+            }
+        })
+    }
+    if (!mongoose.Types.ObjectId.isValid(containerId)) {
+        return res.status(400).json({
+            status: "failure",
+            data: {
+                statusCode: 400,
+                message: "Enter correct chatContainer id"
+            }
+        });
+    }
+    try {
+        const containerDeleted = await ChatContainer.findByIdAndDelete(containerId)
+        if (!containerDeleted) {
+            return res.status(404).json({
+                status: "failure",
+                data: {
+                    statusCode: 404,
+                    message: "no chatContainer exists with this containerId"
+                }
+            })
+        }
+        return res.status(200).json({
+            status: "success",
+            data: {
+                statusCode: 200,
+                message: "notes deleted successfully",
+                value: containerDeleted
+            }
+        })
+    } catch (error) {
+        res.status(500).json({
+            status: "failure",
+            data: {
+                statusCode: 500,
+                message: error.message || "Internal server error"
+            }
+        })
+    }
+
+}
 
