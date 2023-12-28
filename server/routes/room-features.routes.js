@@ -2,7 +2,7 @@ import express from "express"
 import { chatBot, createChatContainer, createChat, getChatContainer, getChats, deleteChatContainer } from "../controllers/chat-bot.controllers.js"
 import { verifyJWT } from "../middleware/auth.middleware.js"
 import { addBoard, updateBoard, getBoardContent } from "../controllers/board.controllers.js"
-import { sendMessage, fetchMessages } from "../controllers/message.controller.js"
+import { sendMessage, fetchMessages, deleteMessages } from "../controllers/message.controller.js"
 import { validation } from "../middleware/validate.middlewares.js"
 import { messageValidator } from "../validators/message.validator.js"
 import { createChatContainerValidator, createChatValidator } from "../validators/chat-bot.validator.js"
@@ -27,6 +27,7 @@ router.route("/get-content").get(verifyJWT, getBoardContent)
 // usermessage routes
 router.route("/send-message").post(verifyJWT, messageValidator(), validation, sendMessage)
 router.route("/get-message").get(verifyJWT, fetchMessages)
+router.route("/delete-message").delete(verifyJWT, deleteMessages)
 
 // notes routes
 router.route("/create-notes").post(verifyJWT, notesCreateValidator(), validation, createNotes)

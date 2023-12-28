@@ -115,3 +115,54 @@ export const fetchMessages = async (req, res) => {
     }
 
 }
+
+export const deleteMessages = async (req, res) => {
+    const { messageId } = req.body
+    if (!messageId) {
+        return res.status(400).json({
+            status: "failure",
+            data: {
+                statusCode: 400,
+                message: "messageId is required"
+            }
+        })
+    }
+    if (!mongoose.Types.ObjectId.isValid(messageId)) {
+        return res.status(400).json({
+            status: "failure",
+            data: {
+                statusCode: 400,
+                message: "Enter correct messageId"
+            }
+        });
+    }
+    try {
+        const messageDeleted = await Message.findByIdAndDelete(messageId)
+        if (!messageDeleted) {
+            return res.status(404).json({
+                status: "failure",
+                data: {
+                    statusCode: 404,
+                    message: "no message exists with this messageId"
+                }
+            })
+        }
+        return res.status(200).json({
+            status: "success",
+            data: {
+                statusCode: 200,
+                message: "message deleted successfully",
+                value: messageDeleted
+            }
+        })
+    } catch (error) {
+        res.status(500).json({
+            status: "failure",
+            data: {
+                statusCode: 500,
+                message: error.message || "Internal server error"
+            }
+        })
+    }
+
+}
