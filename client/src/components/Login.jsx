@@ -58,10 +58,10 @@ const Login = () => {
     }
 
     return (
-        <div className="flex  justify-evenly items-center min-h-screen bg-gray-900">
-            <p className='text-gray-300 text-[2.5rem] absolute right-0 top-56 left-[42rem] font-bold'>Let's Code</p>
-            <img src={collab} alt="" className='w-1/2' />
-            <div className="mt-14 p-10 rounded-lg border-8 border-solid border-[#223243] shadow-3xl">
+        <div className="flex lg:justify-evenly lg:items-center lg:h-screen bg-gray-900 xs:w-full xs:h-screen xs:overflow-x-hidden xs:justify-center xs:items-center xs:px-4">
+            <p className='text-gray-300 text-[2.5rem] absolute right-0 top-56 left-[42rem] font-bold xs:hidden'>Let's Code</p>
+            <img src={collab} alt="" className='w-1/2 xs:hidden' />
+            <div className="lg:mt-14 p-10 xs:w-full rounded-lg border-8 border-solid border-[#223243] shadow-3xl">
                 <div className="flex justify-center items-center flex-col gap-4">
                     <h2 className="text-gray-300 text-xl font-semibold tracking-widest">Sign up</h2>
                     <div className="relative w-[300px]">
