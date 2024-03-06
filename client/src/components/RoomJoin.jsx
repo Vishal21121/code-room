@@ -146,7 +146,7 @@ const RoomJoin = () => {
     return (
         <div className="bg-[#22272e] h-screen w-screen flex items-center text-center">
             <div className='w-[25%] h-full p-4 bg-gray-900 flex flex-col gap-8'>
-                <p className='text-2xl text-gray-300 '>Rooms Joined</p>
+                <p className='text-xl sm:text-2xl text-gray-300 '>Rooms Joined</p>
                 <hr />
                 {
                     isLoading ? <BeatLoader color='#888888' className='mx-auto' />
@@ -154,14 +154,14 @@ const RoomJoin = () => {
                             <div className='flex flex-col gap-4'>
                                 {
                                     isSuccess && rooms.length !== 0 ? rooms.map(({ _id, name }) => (
-                                        <button key={_id} id={_id} className='p-2 bg-gray-700 text-white text-md font-semibold rounded-md hover:ring-2 hover:ring-[#FF6C00]' onClick={enterRoom}>{name}</button>
+                                        <button key={_id} id={_id} className='p-2 bg-gray-700 text-white text-sm truncate sm:text-md font-semibold rounded-md hover:ring-2 hover:ring-[#FF6C00]' onClick={enterRoom}>{name}</button>
                                     )) : <p className='text-gray-300'>No rooms joined</p>
                                 }
                             </div>
                         )
                 }
             </div>
-            <div className="border w-[30%] h-fit rounded-lg p-8 mx-auto bg-gray-900 flex flex-col gap-4">
+            <div className="border w-[50%] sm:w-[30%] h-fit rounded-lg p-8 mx-auto bg-gray-900 flex flex-col gap-4">
                 <h4 className="text-gray-300 text-lg font-bold">{createOrJoin} room</h4>
                 <div className="flex flex-col gap-4 items-center">
                     <input
@@ -190,7 +190,7 @@ const RoomJoin = () => {
                         <a
                             onClick={handleClickOrJoin}
                             href=""
-                            className="text-[#FF6C00] underline underline-offset-4 hover:text-[#ff6a00c6]"
+                            className="text-[#FF6C00] underline underline-offset-4 hover:text-[#ff6a00c6] text-sm"
                         >
                             new room
                         </a>
