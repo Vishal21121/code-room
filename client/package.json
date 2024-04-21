@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@excalidraw/excalidraw": "^0.16.1",
+    "@hookform/resolvers": "^3.3.4",
     "@monaco-editor/react": "^4.5.1",
     "@reduxjs/toolkit": "^1.9.5",
     "@uiw/codemirror-extensions-langs": "^4.21.7",
@@ -23,6 +24,7 @@
     "react-avatar": "^5.0.3",
     "react-dom": "^18.2.0",
     "react-feather": "^2.0.10",
+    "react-hook-form": "^7.51.3",
     "react-hot-toast": "^2.4.1",
     "react-icons": "^4.10.1",
     "react-markdown": "^8.0.7",
@@ -33,7 +35,8 @@
     "remark-gfm": "^3.0.1",
     "socket.io-client": "^4.7.2",
     "use-debounce": "^9.0.4",
-    "uuid": "^9.0.0"
+    "uuid": "^9.0.0",
+    "zod": "^3.23.0"
   },
   "devDependencies": {
     "@types/react": "^18.2.14",

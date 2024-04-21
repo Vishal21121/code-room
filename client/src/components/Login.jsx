@@ -7,6 +7,9 @@ import { setAccessToken, setUserData } from '../features/authentication/userData
 import { useNavigate } from 'react-router-dom'
 import { useLoginMutation } from '../features/authentication/authApiSlice'
 import collab from "../assets/collab.svg"
+import {useForm} from "react-hook-form"
+import {z} from "zod"
+import {zodResolver} from "@hookform/resolvers/zod"
 
 const Login = () => {
     const dispatch = useDispatch()
@@ -16,11 +19,27 @@ const Login = () => {
         password: ""
     })
     const [login, { isLoading }] = useLoginMutation()
-    const loginUser = async () => {
+    const loginSchema = z.object({
+        email: z.string({
+            invalid_type_error:"Please provide a valid email id",
+            required_error:"Please provide a Email id"
+        }).email(),
+        password:z.string({
+            invalid_type_error:"Password must be of minimum 8 characters",
+            required_error:"Please provide a password"
+        }).min(8)
+    })
+    const {register,handleSubmit, formState:{errors}} = useForm({
+        resolver: zodResolver(loginSchema)
+    })
+
+    
+    
+    const loginUser = async (data) => {
         const toastId = toast.loading("Logging in...")
         try {
             // The unwrap() method is used to extract the payload of a fulfilled action if it was resolved successfully, or throw an error with the rejected value if it was not.
-            const userData = await login({ email: userDetails.email, password: userDetails.password }).unwrap()
+            const userData = await login(data).unwrap()
             dispatch(setAccessToken(userData?.data?.accessToken))
             dispatch(setUserData(userData))
             toast.dismiss(toastId)
@@ -51,10 +70,11 @@ const Login = () => {
         }
     }
 
-    const handleSubmit = async (e) => {
-        e.preventDefault()
+
+    const submitHandler = async (data) => {
+        console.log(data)
         console.log(userDetails);
-        await loginUser()
+        await loginUser(data)
     }
 
     return (
@@ -62,7 +82,7 @@ const Login = () => {
             <p className='text-gray-300 text-[2.5rem] absolute right-0 top-56 left-[42rem] font-bold xs:hidden'>Let's Code</p>
             <img src={collab} alt="" className='w-1/2 xs:hidden' />
             <div className="lg:mt-14 p-10 xs:w-full rounded-lg border-8 border-solid border-[#223243] shadow-3xl">
-                <div className="flex justify-center items-center flex-col gap-4">
+                <form className="flex justify-center items-center flex-col gap-4" onSubmit={handleSubmit(submitHandler)}>
                     <h2 className="text-gray-300 text-xl font-semibold tracking-widest">Sign up</h2>
                     <div className="relative w-[300px]">
                         <input
@@ -71,9 +91,13 @@ const Login = () => {
                             className="pt-3 pr-4 pb-3 pl-12 w-full bg-[#223243] text-gray-300 font-light rounded-3xl text-lg shadow-lg duration-500 outline-none border border-solid border-[#0000001a] placeholder:text-base placeholder:font-light focus:ring-2 focus:ring-orange-500"
                             placeholder='Email'
                             onChange={(e) => setUserDetails(prev => ({ ...prev, email: e.target.value }))}
+                            {...register("email")}
                         />
                         <Mail className="relative bottom-[40px] left-5 w-6 py-[2px] pr-2 text-[#FF6C00] border-r border-solid border-r-[#FF6C00]" />
                     </div>
+                    {
+                        errors.email && <div className='text-red-500 text-sm'>{errors.email.message}</div>
+                    }
                     <div className="relative w-[300px]">
                         <input
                             type="password"
@@ -81,14 +105,18 @@ const Login = () => {
                             className="pt-3 pr-4 pb-3 pl-12 w-full bg-[#223243] text-gray-300 font-light rounded-3xl text-lg shadow-lg duration-500 outline-none border border-solid border-[#0000001a] placeholder:text-base placeholder:font-light focus:ring-2 focus:ring-orange-500"
                             placeholder='Password'
                             onChange={(e) => setUserDetails(prev => ({ ...prev, password: e.target.value }))}
+                            {...register("password")}
                         />
                         <Lock className="relative bottom-[40px] left-5 w-6 py-[2px] pr-2 text-[#FF6C00] border-r border-solid border-r-[#FF6C00]" />
                     </div>
+                    {
+                        errors.password && <div className='text-red-500 text-sm'>{errors.password.message}</div>
+                    }
                     <div className="relative w-[300px] flex flex-col justify-center">
-                        <input type="submit" value="Login" className="pt-2 pr-4 pb-2 pl-4 w-full rounded-3xl text-lg shadow-lg duration-500 outline-none ring-2 ring-[#FF6C00] text-white py-[10px] px-2 font-medium cursor-pointer hover:shadow-4xl" onClick={handleSubmit} />
+                        <input type="submit" value="Login" className="pt-2 pr-4 pb-2 pl-4 w-full rounded-3xl text-lg shadow-lg duration-500 outline-none ring-2 ring-[#FF6C00] text-white py-[10px] px-2 font-medium cursor-pointer hover:shadow-4xl" />
                         <p className='w-full mt-4 ml-16 text-gray-400'>Don't have a account? <Link to="/signin" className="hover:text-white">Sign in</Link></p>
                     </div>
-                </div>
+                </form>
             </div>
         </div>
     )
