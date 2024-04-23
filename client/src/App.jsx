@@ -5,6 +5,8 @@ import { Toaster } from 'react-hot-toast'
 import Signin from './components/Signin'
 import RoomJoin from './components/RoomJoin'
 import { SpeedInsights } from '@vercel/speed-insights/react';
+import PrivateRoute from './components/PrivateRoute'
+import PublicRoute from './components/PublicRoute'
 
 function App() {
 
@@ -25,10 +27,10 @@ function App() {
           reverseOrder={false}
         />
         <Routes>
-          <Route path='/room/:roomId' element={<LandingPage />} />
-          <Route path='/signin' element={<Signin />} />
-          <Route path='/' element={<Login />} />
-          <Route path='/createroom' element={<RoomJoin />} />
+          <Route path='/room/:roomId' element={<PrivateRoute>{<LandingPage/>}</PrivateRoute>}/> 
+          <Route path='/signin' element={<PublicRoute><Signin /></PublicRoute>} />
+          <Route path='/' element={<PublicRoute><Login /></PublicRoute>} />
+          <Route path='/createroom' element={<PrivateRoute>{<RoomJoin/>}</PrivateRoute>} />
         </Routes>
       </BrowserRouter>
       <SpeedInsights />
