@@ -11,6 +11,9 @@ import cookieParser from "cookie-parser"
 import ACTIONS from "./util/Actions.js"
 import path from "path"
 import { fileURLToPath } from "url";
+import Docker from "dockerode";
+import { WriteStream } from "fs"
+
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -57,6 +60,58 @@ function getAllConnectedClients(roomId) {
     );
 }
 
+const spinContainer = async(socket)=>{
+    const docker = new Docker();
+    try {
+      docker
+        .createContainer({
+          Image: "ubuntu:latest",
+          AttachStdin: true,
+          AttachStdout: true,
+          AttachStderr: true,
+          Tty: true,
+          Cmd: ["sh", "-c", "tail -f /dev/null"],
+          OpenStdin: true,
+        })
+        .then(function (container) {
+          container.start(async function (data) {
+            console.log("data", data);
+            const exec = await container.exec({
+              Cmd: ["/bin/bash"],
+              AttachStderr: true,
+              AttachStdout: true,
+              AttachStdin: true,
+              Tty: true,
+            });
+            exec.start({ hijack: true, stdin: true }, function (err, stream) {
+              if (err) {
+                console.log("err", err);
+                return;
+              }
+              stream.on("data",(chunk)=>{
+                console.log("chunk", chunk);
+                socket.emit("data", chunk);
+              })
+              // process.stdin.setEncoding("utf8");
+              // process.stdin.pipe(stream);
+              socket.on("data", (data) => {
+                console.log("data",data)
+                stream.write(data);
+              });
+              stream.on("end", function (data) {
+                console.log("stream ended",terminalOutput,data)
+                process.stdin.setRawMode(false);
+                process.stdin.resume();
+              });
+            });
+          });
+        });
+      console.log(`container started`);
+    } catch (error) {
+      console.log("error",error);
+    }
+}
+
 io.on("connection", (socket) => {
     // console.log(socket.id);
     socket.on(ACTIONS.JOIN, ({ roomId, username }) => {
@@ -73,6 +128,7 @@ io.on("connection", (socket) => {
             });
         });
     })
+    spinContainer(socket)
 
     socket.on(ACTIONS.BOARD_CHANGE, ({ roomId, elements }) => {
         // console.log({ elements });
@@ -102,6 +158,7 @@ io.on("connection", (socket) => {
         delete userSocketMap[socket.id];
         socket.leave();
     });
+    
 })
 
 
