@@ -26,7 +26,7 @@ const Terminal = ({ output }) => {
     terminalInstance.current = new xtermTerminal({
       // convertEol: true,
       theme: {
-        background: "#44475c"
+        background: "#161a2a"
       },
     });
     terminalInstance.current.loadAddon(new WebLinksAddon());
@@ -72,32 +72,7 @@ const Terminal = ({ output }) => {
 
 
   return (
-    // <div className='box-border bg-[#161a2a] p-4 relative bottom-72 flex flex-col w-[100%] z-10 h-[40vh]' id='terminal' ref={terminalEl}>
-    //    <div className='flex '>
-    //     <button className={`text-white mx-4 ${!outputShow ? "underline underline-offset-8" : ""}`} onClick={() => setOutputShow(false)}>Problem</button>
-    //     <button className={`text-white mx-4 ${outputShow ? "underline underline-offset-8" : ""}`} id='termEl' onClick={() => setOutputShow(true)}>Terminal</button>
-    //     <X className='text-white absolute right-10 cursor-pointer' onClick={closeTerminal} />
-    //   </div> 
-    //    {
-    //     !outputShow ? (
-    //       <div className='flex flex-col mt-4 mx-4 gap-1 overflow-auto'>
-    //         {
-    //           problems.map((el) => (
-    //             <div className='flex gap-1'>
-    //               <HiOutlineXCircle size={24} className='text-red-500' />
-    //               <p className='text-gray-300'>{el}</p>
-    //             </div>
-    //           ))
-    //         }
-    //       </div>
-    //     ) : <pre className='text-gray-300 mt-4 mx-4 overflow-auto'>{output}</pre>
-    //   } 
-    // </div>
-    <div
-      className="box-border bg-[#2D3032] p-4 relative bottom-72 flex flex-col w-[100%] z-10 h-[40vh] terminal overflow-auto shrink-0" 
-      ref={terminalEl}
-      id="terminal"
-    >
+    <div className='box-border bg-[#161a2a] p-4 relative bottom-72 flex flex-col w-[100%] z-10 h-[40vh] overflow-auto' id='terminal' ref={terminalEl}>
     </div>
   )
 }

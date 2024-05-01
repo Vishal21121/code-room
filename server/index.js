@@ -60,12 +60,16 @@ function getAllConnectedClients(roomId) {
     );
 }
 
-const spinContainer = async(socket)=>{
+// TODO: NOT A GOOD WAY
+let containerInfo = {} // storing user's container information
+
+
+const spinContainer = async(socket,socketId)=>{
     const docker = new Docker();
     try {
       docker
         .createContainer({
-          Image: "ubuntu:latest",
+          Image: "node:alpine3.19",
           AttachStdin: true,
           AttachStdout: true,
           AttachStderr: true,
@@ -74,10 +78,11 @@ const spinContainer = async(socket)=>{
           OpenStdin: true,
         })
         .then(function (container) {
+          containerInfo[socketId] = { container, id: container.id };
           container.start(async function (data) {
             console.log("data", data);
             const exec = await container.exec({
-              Cmd: ["/bin/bash"],
+              Cmd: ["/bin/sh"],
               AttachStderr: true,
               AttachStdout: true,
               AttachStdin: true,
@@ -92,16 +97,9 @@ const spinContainer = async(socket)=>{
                 console.log("chunk", chunk);
                 socket.emit("data", chunk);
               })
-              // process.stdin.setEncoding("utf8");
-              // process.stdin.pipe(stream);
               socket.on("data", (data) => {
                 console.log("data",data)
                 stream.write(data);
-              });
-              stream.on("end", function (data) {
-                console.log("stream ended",terminalOutput,data)
-                process.stdin.setRawMode(false);
-                process.stdin.resume();
               });
             });
           });
@@ -127,8 +125,8 @@ io.on("connection", (socket) => {
                 socketId: socket.id,
             });
         });
+        spinContainer(socket, socket.id);
     })
-    spinContainer(socket)
 
     socket.on(ACTIONS.BOARD_CHANGE, ({ roomId, elements }) => {
         // console.log({ elements });
@@ -157,6 +155,8 @@ io.on("connection", (socket) => {
         });
         delete userSocketMap[socket.id];
         socket.leave();
+        const {container,id} = containerInfo[socket.id]
+        container?.stop(id)
     });
     
 })
