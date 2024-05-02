@@ -5,6 +5,8 @@ import { HiOutlineXCircle } from "react-icons/hi2";
 import { Terminal as xtermTerminal } from "xterm"
 import 'xterm/css/xterm.css';
 import { WebLinksAddon } from '@xterm/addon-web-links';
+import { FitAddon } from 'xterm-addon-fit';
+
 
 
 
@@ -15,6 +17,7 @@ const Terminal = ({ output }) => {
   const terminalInstance = useRef(null)
   const socketio = useSelector((state) => state.socket.socket)
   const terminalStarted = useRef(false)
+  const fitAddon = new FitAddon();
 
   const closeTerminal = (e) => {
     e.preventDefault()
@@ -30,8 +33,13 @@ const Terminal = ({ output }) => {
       },
     });
     terminalInstance.current.loadAddon(new WebLinksAddon());
+    terminalInstance.current.loadAddon(fitAddon);
     console.log({ terminalInstance: terminalInstance.current });
     terminalInstance.current.open(terminalEl.current)
+    const resizeObserver = new ResizeObserver(() => {
+      fitAddon.fit();
+    });
+    resizeObserver.observe(document.querySelector('.terminal'));
   }
 
   useEffect(() => {
@@ -48,6 +56,9 @@ const Terminal = ({ output }) => {
           terminalInstance.current.write(e.key)
         }
       })
+      window.addEventListener('resize', () => {
+        fitAddon.fit();
+      });
     }
     terminalInstance.current.focus()
 
@@ -72,7 +83,7 @@ const Terminal = ({ output }) => {
 
 
   return (
-    <div className='box-border bg-[#161a2a] p-4 relative bottom-72 flex flex-col w-[100%] z-10 h-[40vh] overflow-auto' id='terminal' ref={terminalEl}>
+    <div className='bg-[#161a2a] pl-4 relative bottom-[280px] flex flex-col w-[100%] z-10 h-[40vh] terminal' id='terminal' ref={terminalEl}>
     </div>
   )
 }
