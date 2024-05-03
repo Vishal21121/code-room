@@ -83,7 +83,7 @@ const Terminal = ({ output }) => {
 
 
   return (
-    <div className='bg-[#161a2a] pl-4 relative bottom-[280px] flex flex-col w-[100%] z-10 h-[40vh] terminal' id='terminal' ref={terminalEl}>
+    <div className='bg-[#161a2a] pl-4 relative bottom-[280px] left-[364px] flex flex-col w-1/2 z-50 h-[40vh] terminal' id='terminal' ref={terminalEl}>
     </div>
   )
 }

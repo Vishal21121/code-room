@@ -3,6 +3,7 @@ import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 import Terminal from './Terminal';
 import CodeEditor from './CodeEditor';
+import FileExplorer from './FileExplorer';
 
 
 const IDE = () => {
@@ -76,7 +77,11 @@ const IDE = () => {
     return (
         <>
             <div className='h-screen overflow-hidden w-full'>
-                <div className="mx-auto bg-[#3A424D] h-[100vh] flex flex-col box-border">
+                <div className='w-full flex'>
+                <div className='w-1/4 bg-white'>
+                    <FileExplorer/>
+                </div>
+                <div className="w-1/2 bg-[#3A424D] h-[100vh] flex flex-col box-border ">
                     <div className='flex h-[100%]'>
                         <div className='flex flex-col box-border w-[100%] '>
                             <div className="flex justify-center flex-col">
@@ -84,6 +89,7 @@ const IDE = () => {
                             </div>
                         </div>
                     </div>
+                </div>
                 </div>
                 <Terminal output={output} />
             </div>
