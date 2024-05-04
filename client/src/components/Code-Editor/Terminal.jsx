@@ -63,7 +63,7 @@ const Terminal = ({ output }) => {
     terminalInstance.current.focus()
 
     terminalInstance.current.onData((data)=>{
-      socketio.emit("data",data)
+      socketio?.emit("data",data)
     })
     
     socketio?.on("data", (data) => {
@@ -83,7 +83,7 @@ const Terminal = ({ output }) => {
 
 
   return (
-    <div className='bg-[#161a2a] pl-4 relative bottom-[280px] left-[364px] flex flex-col w-1/2 z-50 h-[40vh] terminal' id='terminal' ref={terminalEl}>
+    <div className='bg-[#161a2a] pl-4 relative bottom-[280px] left-[365px] flex flex-col w-1/2 z-50 h-[40vh] terminal' id='terminal' ref={terminalEl}>
     </div>
   )
 }
