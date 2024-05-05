@@ -54,7 +54,7 @@ function ExplorerRenderer({ explorer, handleInsertNode }) {
       <div className="p-1">
         <div
           className={`cursor-pointer mt-1 ${
-            selected === explorer.name ? "bg-gray-300" : "bg-gray-300"
+            selected === explorer.name ? "bg-gray-700" : "bg-gray-300"
           }  flex items-center justify-between p-1 w-80`}
           onClick={() => handleFolderClick(explorer)}
         >
