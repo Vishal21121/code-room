@@ -15,9 +15,12 @@ function FileExplorer() {
 
   return (
     <div className="bg-[#282a36] h-screen border-r boder-gray-300">
-      <div className="flex gap-2 justify-end bg-[#161a2a] p-2">
-        <VscNewFile className="text-xl text-gray-300" />
-        <VscNewFolder className="text-xl text-gray-300" />
+      <div className="bg-[#161a2a] flex p-2 items-center justify-between">
+        <p className="text-md text-gray-300">File explorer</p>
+        <div className="flex gap-2">
+          <VscNewFile className="text-xl text-gray-300" />
+          <VscNewFolder className="text-xl text-gray-300" />
+        </div>
       </div>
       <ExplorerRenderer
         explorer={explorerData}

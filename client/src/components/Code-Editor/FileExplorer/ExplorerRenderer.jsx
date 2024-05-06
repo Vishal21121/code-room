@@ -53,9 +53,7 @@ function ExplorerRenderer({ explorer, handleInsertNode }) {
     return (
       <div className="p-1">
         <div
-          className={`cursor-pointer mt-1 ${
-            selected === explorer.name ? "bg-gray-700" : "bg-gray-300"
-          }  flex items-center justify-between p-1 w-80`}
+          className={`cursor-pointer mt-1 bg-gray-300 flex items-center justify-between p-1 w-80`}
           onClick={() => handleFolderClick(explorer)}
         >
           <div className="my-0 mx-1 flex items-center">
@@ -84,7 +82,7 @@ function ExplorerRenderer({ explorer, handleInsertNode }) {
         <div
           className={`${
             expand ? "block" : "hidden"
-          } pl-4 border-l-2 border-black`}
+          } pl-4 border-l-2 border-gray-300`}
         >
           {showInput.visible && (
             <div className="flex gap-1 items-center">
@@ -109,7 +107,11 @@ function ExplorerRenderer({ explorer, handleInsertNode }) {
       </div>
     );
   } else {
-    return <span className="mt-1 pl-8 flex flex-col">📃{explorer?.name}</span>;
+    return (
+      <span className="mt-1 pl-8 flex flex-col text-gray-300">
+        📃{explorer?.name}
+      </span>
+    );
   }
 }
 
