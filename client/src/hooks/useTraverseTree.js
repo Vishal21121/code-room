@@ -15,7 +15,28 @@ const useTraverseTree = () => {
     );
     return { ...tree, items: latestNode };
   }
-  return { insertNode };
+
+  function showInputHandler(tree, folderId) {
+    if (tree.id === folderId && tree.isFolder) {
+      tree.isInputVisible = true;
+      tree.isExpanded = true;
+      return tree;
+    }
+    tree.items?.map((el) => showInputHandler(el, folderId));
+    return tree;
+  }
+
+  function expandFolder(tree, folderId) {
+    if (tree.id === folderId && tree.isFolder) {
+      tree.isExpanded = !tree.isExpanded;
+      console.log("got", tree.isExpanded);
+      return tree;
+    }
+    tree.items?.map((el) => expandFolder(el, folderId));
+    return tree;
+  }
+
+  return { insertNode, showInputHandler, expandFolder };
 };
 
 export default useTraverseTree;
