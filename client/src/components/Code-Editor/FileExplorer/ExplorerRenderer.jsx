@@ -44,8 +44,12 @@ function ExplorerRenderer({
   const onAddNewFolder = (e) => {
     if (e.keyCode === 13 && e.target.value) {
       // add logic
-      handleInsertNode(explorer.id, e.target.value, showInput.isFolder);
-      setShowInput({ ...showInput, visible: false });
+      handleInsertNode(
+        explorer.id,
+        e.target.value,
+        explorer.inputStat.isFolder
+      );
+      hideInputHandler(explorer.id);
     }
   };
 

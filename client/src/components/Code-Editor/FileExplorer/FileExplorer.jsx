@@ -38,11 +38,11 @@ function FileExplorer() {
         <p className="text-md text-gray-300">File explorer</p>
         <div className="flex gap-2">
           <VscNewFile
-            className="text-xl text-gray-300"
+            className="text-xl text-gray-300 cursor-pointer"
             onClick={() => handleInputInsertion(false)}
           />
           <VscNewFolder
-            className="text-xl text-gray-300"
+            className="text-xl text-gray-300 cursor-pointer"
             onClick={() => handleInputInsertion(true)}
           />
         </div>
