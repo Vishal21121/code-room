@@ -6,11 +6,17 @@ import { VscNewFile, VscNewFolder } from "react-icons/vsc";
 
 function FileExplorer() {
   const [explorerData, setExplorerData] = useState(explorer);
-  const { insertNode, expandFolder } = useTraverseTree();
+  const [selectedId, setSelectedId] = useState(null);
+  const { insertNode, expandFolder, showInput, hideInput } = useTraverseTree();
 
   const handleInsertNode = (folderId, item, isFolder) => {
     const finalTree = insertNode(explorerData, folderId, item, isFolder);
     setExplorerData(finalTree);
+  };
+
+  const handleInputInsertion = (isFolder) => {
+    const tree = showInput(explorerData, selectedId, isFolder);
+    setExplorerData(tree);
   };
 
   const handleFolderExpand = (folderId) => {
@@ -19,19 +25,34 @@ function FileExplorer() {
     setExplorerData(tree);
   };
 
+  const hideInputHandler = (folderId) => {
+    console.log("hideInputHandler called");
+    const tree = hideInput(explorerData, folderId);
+    console.log(tree);
+    setExplorerData(tree);
+  };
+
   return (
     <div className="bg-[#282a36] h-screen border-r boder-gray-300">
       <div className="bg-[#161a2a] flex p-2 items-center justify-between">
         <p className="text-md text-gray-300">File explorer</p>
         <div className="flex gap-2">
-          <VscNewFile className="text-xl text-gray-300" />
-          <VscNewFolder className="text-xl text-gray-300" />
+          <VscNewFile
+            className="text-xl text-gray-300"
+            onClick={() => handleInputInsertion(false)}
+          />
+          <VscNewFolder
+            className="text-xl text-gray-300"
+            onClick={() => handleInputInsertion(true)}
+          />
         </div>
       </div>
       <ExplorerRenderer
         explorer={explorerData}
         handleInsertNode={handleInsertNode}
         handleFolderExpand={handleFolderExpand}
+        setSelectedId={setSelectedId}
+        hideInputHandler={hideInputHandler}
       />
     </div>
   );

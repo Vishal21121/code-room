@@ -11,7 +11,13 @@ import {
   VscFolder,
 } from "react-icons/vsc";
 
-function ExplorerRenderer({ explorer, handleInsertNode, handleFolderExpand }) {
+function ExplorerRenderer({
+  explorer,
+  handleInsertNode,
+  handleFolderExpand,
+  setSelectedId,
+  hideInputHandler,
+}) {
   // const [expand, setExpand] = useState(false);
   const [showInput, setShowInput] = useState({
     visible: false,
@@ -45,8 +51,7 @@ function ExplorerRenderer({ explorer, handleInsertNode, handleFolderExpand }) {
 
   const handleFolderClick = (explorer) => {
     handleFolderExpand(explorer.id);
-    setSelected(explorer.name);
-    console.log(explorer.name);
+    setSelectedId(explorer.id);
   };
 
   if (explorer?.isFolder) {
@@ -84,14 +89,16 @@ function ExplorerRenderer({ explorer, handleInsertNode, handleFolderExpand }) {
             explorer.isExpanded ? "block" : "hidden"
           } pl-4 border-l-2 border-gray-300`}
         >
-          {showInput.visible && (
+          {explorer.inputStat.visible && (
             <div className="flex gap-1 items-center">
-              <span className="mt-1">{showInput.isFolder ? "📁" : "📃"}</span>
+              <span className="mt-1">
+                {explorer.inputStat.isFolder ? "📁" : "📃"}
+              </span>
               <input
                 className="p-1 mt-2 flex border border-gray-300 items-center justify-between cursor-pointer"
                 type="text"
                 autoFocus={true}
-                onBlur={() => setShowInput({ ...showInput, visible: false })}
+                onBlur={() => hideInputHandler(explorer.id)}
                 onKeyDown={onAddNewFolder}
               />
             </div>
@@ -102,6 +109,8 @@ function ExplorerRenderer({ explorer, handleInsertNode, handleFolderExpand }) {
               key={el.id}
               handleInsertNode={handleInsertNode}
               handleFolderExpand={handleFolderExpand}
+              setSelectedId={setSelectedId}
+              hideInputHandler={hideInputHandler}
             />
           ))}
         </div>
