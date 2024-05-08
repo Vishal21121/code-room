@@ -3,13 +3,7 @@ import {
   MdOutlineKeyboardArrowDown,
   MdOutlineKeyboardArrowRight,
 } from "react-icons/md";
-import {
-  VscNewFile,
-  VscNewFolder,
-  VscCollapseAll,
-  VscFolderOpened,
-  VscFolder,
-} from "react-icons/vsc";
+import { VscFolderOpened, VscFolder, VscFile } from "react-icons/vsc";
 
 function ExplorerRenderer({
   explorer,
@@ -60,46 +54,39 @@ function ExplorerRenderer({
 
   if (explorer?.isFolder) {
     return (
-      <div className="p-1">
+      <div>
         <div
-          className={`cursor-pointer mt-1 bg-gray-300 flex items-center justify-between p-1 w-80`}
+          className={`cursor-pointer mt-1 flex items-center justify-between w-80`}
           onClick={() => handleFolderClick(explorer)}
         >
           <div className="my-0 mx-1 flex items-center">
             {explorer.isExpanded ? (
-              <MdOutlineKeyboardArrowDown className="text-xl" />
+              <MdOutlineKeyboardArrowDown className="text-xl text-gray-300" />
             ) : (
-              <MdOutlineKeyboardArrowRight className="text-xl" />
+              <MdOutlineKeyboardArrowRight className="text-xl text-gray-300" />
             )}
-            📁{explorer?.name}
-          </div>
-          <div className="flex gap-2">
-            <button>
-              <VscNewFile
-                className="text-xl"
-                onClick={(e) => handleNewFolder(e, false)}
-              />
-            </button>
-            <button>
-              <VscNewFolder
-                className="text-xl"
-                onClick={(e) => handleNewFolder(e, true)}
-              />
-            </button>
+            <div className="flex items-center gap-1">
+              {explorer.isExpanded ? (
+                <VscFolderOpened className="text-gray-300" />
+              ) : (
+                <VscFolder className="text-gray-300" />
+              )}
+              <span className="text-gray-300">{explorer?.name}</span>
+            </div>
           </div>
         </div>
         <div
           className={`${
             explorer.isExpanded ? "block" : "hidden"
-          } pl-4 border-l-2 border-gray-300`}
+          } pl-4 border-l border-gray-300 text-gray-300`}
         >
           {explorer.inputStat.visible && (
             <div className="flex gap-1 items-center">
-              <span className="mt-1">
-                {explorer.inputStat.isFolder ? "📁" : "📃"}
+              <span className="">
+                {explorer.inputStat.isFolder ? <VscFolder /> : <VscFile />}
               </span>
               <input
-                className="p-1 mt-2 flex border border-gray-300 items-center justify-between cursor-pointer"
+                className="flex items-center justify-between cursor-pointer bg-gray-700 outline-none text-gray-300 p-1 rounded-md"
                 type="text"
                 autoFocus={true}
                 onBlur={() => hideInputHandler(explorer.id)}
