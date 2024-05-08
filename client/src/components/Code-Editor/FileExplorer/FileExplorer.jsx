@@ -6,11 +6,17 @@ import { VscNewFile, VscNewFolder } from "react-icons/vsc";
 
 function FileExplorer() {
   const [explorerData, setExplorerData] = useState(explorer);
-  const { insertNode } = useTraverseTree();
+  const { insertNode, expandFolder } = useTraverseTree();
 
   const handleInsertNode = (folderId, item, isFolder) => {
     const finalTree = insertNode(explorerData, folderId, item, isFolder);
     setExplorerData(finalTree);
+  };
+
+  const handleFolderExpand = (folderId) => {
+    const tree = expandFolder(explorerData, folderId);
+    console.log("folder", tree);
+    setExplorerData(tree);
   };
 
   return (
@@ -25,6 +31,7 @@ function FileExplorer() {
       <ExplorerRenderer
         explorer={explorerData}
         handleInsertNode={handleInsertNode}
+        handleFolderExpand={handleFolderExpand}
       />
     </div>
   );

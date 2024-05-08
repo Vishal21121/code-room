@@ -22,18 +22,18 @@ const useTraverseTree = () => {
       tree.isExpanded = true;
       return tree;
     }
-    tree.items?.map((el) => showInputHandler(el, folderId));
-    return tree;
+    const newItem = tree.items?.map((el) => showInputHandler(el, folderId));
+    return { ...tree, items: newItem };
   }
 
   function expandFolder(tree, folderId) {
+    console.log("got", tree, "folder Id", folderId);
     if (tree.id === folderId && tree.isFolder) {
-      tree.isExpanded = !tree.isExpanded;
-      console.log("got", tree.isExpanded);
-      return tree;
+      return { ...tree, isExpanded: !tree.isExpanded };
     }
-    tree.items?.map((el) => expandFolder(el, folderId));
-    return tree;
+    const newItems = tree.items.map((el) => expandFolder(el, folderId));
+    console.log(newItems);
+    return { ...tree, items: newItems };
   }
 
   return { insertNode, showInputHandler, expandFolder };

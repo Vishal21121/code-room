@@ -11,8 +11,8 @@ import {
   VscFolder,
 } from "react-icons/vsc";
 
-function ExplorerRenderer({ explorer, handleInsertNode }) {
-  const [expand, setExpand] = useState(false);
+function ExplorerRenderer({ explorer, handleInsertNode, handleFolderExpand }) {
+  // const [expand, setExpand] = useState(false);
   const [showInput, setShowInput] = useState({
     visible: false,
     isFolder: null,
@@ -44,8 +44,8 @@ function ExplorerRenderer({ explorer, handleInsertNode }) {
   };
 
   const handleFolderClick = (explorer) => {
+    handleFolderExpand(explorer.id);
     setSelected(explorer.name);
-    setExpand(!expand);
     console.log(explorer.name);
   };
 
@@ -57,7 +57,7 @@ function ExplorerRenderer({ explorer, handleInsertNode }) {
           onClick={() => handleFolderClick(explorer)}
         >
           <div className="my-0 mx-1 flex items-center">
-            {expand ? (
+            {explorer.isExpanded ? (
               <MdOutlineKeyboardArrowDown className="text-xl" />
             ) : (
               <MdOutlineKeyboardArrowRight className="text-xl" />
@@ -81,7 +81,7 @@ function ExplorerRenderer({ explorer, handleInsertNode }) {
         </div>
         <div
           className={`${
-            expand ? "block" : "hidden"
+            explorer.isExpanded ? "block" : "hidden"
           } pl-4 border-l-2 border-gray-300`}
         >
           {showInput.visible && (
@@ -101,6 +101,7 @@ function ExplorerRenderer({ explorer, handleInsertNode }) {
               explorer={el}
               key={el.id}
               handleInsertNode={handleInsertNode}
+              handleFolderExpand={handleFolderExpand}
             />
           ))}
         </div>
