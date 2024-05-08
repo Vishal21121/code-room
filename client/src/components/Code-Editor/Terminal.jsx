@@ -56,25 +56,30 @@ const Terminal = ({ output }) => {
       window.addEventListener("resize", () => {
         fitAddon.fit();
       });
+      terminalInstance.current.focus();
     }
-    terminalInstance.current.focus();
-
-    terminalInstance.current.onData((data) => {
-      socketio?.emit("data", data);
-    });
-
-    socketio?.on("data", (data) => {
-      if (terminalInstance.current) {
-        let decoder = new TextDecoder();
-        let encodedData = decoder.decode(new Uint8Array(data));
-        terminalInstance.current.write(encodedData);
-        console.log("encodedData", encodedData);
-      } else {
-        console.error("Terminal instance is not initialized");
-      }
-    });
+    if (socketio && terminalInstance.current) {
+      terminalInstance.current.onData((data) => {
+        console.log("terminal change", data);
+        socketio?.emit("data", data);
+      });
+      socketio?.on("data", (data) => {
+        if (terminalInstance.current) {
+          let decoder = new TextDecoder();
+          let encodedData = decoder.decode(new Uint8Array(data));
+          terminalInstance.current.write(encodedData);
+          console.log("encodedData", encodedData);
+        } else {
+          console.error("Terminal instance is not initialized");
+        }
+      });
+    }
     return () => {
       onKeyHandler?.dispose();
+      socketio?.off("data");
+      window.removeEventListener("resize", () => {
+        fitAddon.fit();
+      });
     };
   }, [socketio]);
 

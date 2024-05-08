@@ -67,7 +67,7 @@ const spinContainer = async (socket, socketId) => {
   try {
     docker
       .createContainer({
-        Image: "node:alpine3.19",
+        Image: "my-react-image:0.0.1.RELEASE",
         AttachStdin: true,
         AttachStdout: true,
         AttachStderr: true,
@@ -78,7 +78,6 @@ const spinContainer = async (socket, socketId) => {
       .then(function (container) {
         containerInfo[socketId] = { container, id: container.id };
         container.start(async function (data) {
-          console.log("data", data);
           const exec = await container.exec({
             Cmd: ["/bin/sh"],
             AttachStderr: true,
@@ -92,7 +91,7 @@ const spinContainer = async (socket, socketId) => {
               return;
             }
             stream.on("data", (chunk) => {
-              console.log("chunk", chunk);
+              console.log("data from container", chunk);
               socket.emit("data", chunk);
             });
             socket.on("data", (data) => {
