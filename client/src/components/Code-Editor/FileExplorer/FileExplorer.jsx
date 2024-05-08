@@ -7,7 +7,8 @@ import { VscNewFile, VscNewFolder } from "react-icons/vsc";
 function FileExplorer() {
   const [explorerData, setExplorerData] = useState(explorer);
   const [selectedId, setSelectedId] = useState(null);
-  const { insertNode, expandFolder, showInput, hideInput } = useTraverseTree();
+  const { insertNode, expandFolder, showInput, hideInput, hightlightSelected } =
+    useTraverseTree();
 
   const handleInsertNode = (folderId, item, isFolder) => {
     const finalTree = insertNode(explorerData, folderId, item, isFolder);
@@ -32,6 +33,12 @@ function FileExplorer() {
     setExplorerData(tree);
   };
 
+  const hightlightSelectedHandlder = (elementId) => {
+    const tree = hightlightSelected(explorerData, elementId);
+    console.log("highlighter", tree);
+    setExplorerData(tree);
+  };
+
   return (
     <div className="bg-[#282a36] h-screen border-r boder-gray-300">
       <div className="bg-[#161a2a] flex p-2 items-center justify-between">
@@ -53,6 +60,7 @@ function FileExplorer() {
         handleFolderExpand={handleFolderExpand}
         setSelectedId={setSelectedId}
         hideInputHandler={hideInputHandler}
+        hightlightSelectedHandlder={hightlightSelectedHandlder}
       />
     </div>
   );

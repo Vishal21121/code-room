@@ -53,14 +53,26 @@ const useTraverseTree = () => {
   function expandFolder(tree, folderId) {
     console.log("got", tree, "folder Id", folderId);
     if (tree.id === folderId && tree.isFolder) {
-      return { ...tree, isExpanded: !tree.isExpanded };
+      return { ...tree, isExpanded: !tree.isExpanded, isSelected: true };
+    } else {
+      tree.isSelected = false;
+      const newItems = tree.items.map((el) => expandFolder(el, folderId));
+      console.log(newItems);
+      return { ...tree, items: newItems };
     }
-    const newItems = tree.items.map((el) => expandFolder(el, folderId));
-    console.log(newItems);
-    return { ...tree, items: newItems };
   }
 
-  return { insertNode, showInput, hideInput, expandFolder };
+  function hightlightSelected(tree, elementId) {
+    if (tree.id === elementId) {
+      return { ...tree, isSelected: true };
+    } else {
+      tree.isSelected = false;
+      const items = tree.items.map((el) => hightlightSelected(el, elementId));
+      return { ...tree, items };
+    }
+  }
+
+  return { insertNode, showInput, hideInput, expandFolder, hightlightSelected };
 };
 
 export default useTraverseTree;

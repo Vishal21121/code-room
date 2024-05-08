@@ -7,6 +7,7 @@ const explorer = {
     isFolder: null,
   },
   isExpanded: false,
+  isSelected: false,
   items: [
     {
       id: "2",
@@ -17,6 +18,7 @@ const explorer = {
         isFolder: null,
       },
       isExpanded: false,
+      isSelected: false,
       items: [
         {
           id: "3",
@@ -27,6 +29,7 @@ const explorer = {
             isFolder: null,
           },
           isExpanded: false,
+          isSelected: false,
           items: [
             {
               id: "4",
@@ -37,6 +40,7 @@ const explorer = {
                 isFolder: null,
               },
               isExpanded: null,
+              isSelected: false,
               items: [],
             },
             {
@@ -48,6 +52,7 @@ const explorer = {
                 isFolder: null,
               },
               isExpanded: null,
+              isSelected: false,
               items: [],
             },
           ],
@@ -61,6 +66,7 @@ const explorer = {
             isFolder: null,
           },
           isExpanded: null,
+          isSelected: false,
           items: [],
         },
       ],
@@ -74,6 +80,7 @@ const explorer = {
         isFolder: null,
       },
       isExpanded: false,
+      isSelected: false,
       items: [
         {
           id: "8",
@@ -84,6 +91,7 @@ const explorer = {
             isFolder: null,
           },
           isExpanded: null,
+          isSelected: false,
           items: [],
         },
         {
@@ -95,6 +103,7 @@ const explorer = {
             isFolder: null,
           },
           isExpanded: null,
+          isSelected: false,
           items: [],
         },
         {
@@ -106,6 +115,7 @@ const explorer = {
             isFolder: null,
           },
           isExpanded: null,
+          isSelected: false,
           items: [],
         },
       ],
@@ -119,6 +129,7 @@ const explorer = {
         isFolder: null,
       },
       isExpanded: null,
+      isSelected: false,
       items: [],
     },
   ],

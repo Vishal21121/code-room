@@ -11,6 +11,7 @@ function ExplorerRenderer({
   handleFolderExpand,
   setSelectedId,
   hideInputHandler,
+  hightlightSelectedHandlder,
 }) {
   // const [expand, setExpand] = useState(false);
   const [showInput, setShowInput] = useState({
@@ -50,16 +51,21 @@ function ExplorerRenderer({
   const handleFolderClick = (explorer) => {
     handleFolderExpand(explorer.id);
     setSelectedId(explorer.id);
+    // hightlightSelectedHandlder(explorer.id);
   };
 
   if (explorer?.isFolder) {
     return (
-      <div>
+      <div className="w-full">
         <div
-          className={`cursor-pointer mt-1 flex items-center justify-between w-80`}
+          className={`cursor-pointer mt-1 flex items-center justify-between w-full`}
           onClick={() => handleFolderClick(explorer)}
         >
-          <div className="my-0 mx-1 flex items-center">
+          <div
+            className={`my-0 flex items-center hover:bg-gray-700 w-full ${
+              explorer.isSelected ? "bg-gray-700" : ""
+            }`}
+          >
             {explorer.isExpanded ? (
               <MdOutlineKeyboardArrowDown className="text-xl text-gray-300" />
             ) : (
@@ -102,6 +108,7 @@ function ExplorerRenderer({
               handleFolderExpand={handleFolderExpand}
               setSelectedId={setSelectedId}
               hideInputHandler={hideInputHandler}
+              hightlightSelectedHandlder={hightlightSelectedHandlder}
             />
           ))}
         </div>
@@ -109,7 +116,12 @@ function ExplorerRenderer({
     );
   } else {
     return (
-      <span className="mt-1 pl-8 flex flex-col text-gray-300">
+      <span
+        className={`mt-1 pl-8 flex flex-col text-gray-300 cursor-pointer hover:bg-gray-700 ${
+          explorer.isSelected ? "bg-gray-700" : ""
+        }`}
+        onClick={() => hightlightSelectedHandlder(explorer.id)}
+      >
         📃{explorer?.name}
       </span>
     );
