@@ -12,7 +12,7 @@ import ACTIONS from "./util/Actions.js";
 import path from "path";
 import { fileURLToPath } from "url";
 import Docker from "dockerode";
-import { WriteStream } from "fs";
+import { createWriteStream } from "fs";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -72,8 +72,19 @@ const spinContainer = async (socket, socketId) => {
         AttachStdout: true,
         AttachStderr: true,
         Tty: true,
-        Cmd: ["sh", "-c", "tail -f /dev/null"],
         OpenStdin: true,
+        ExposedPorts: {
+          "5173/tcp": {},
+        },
+        HostConfig: {
+          PortBindings: {
+            "5173/tcp": [
+              {
+                HostPort: "3000",
+              },
+            ],
+          },
+        },
       })
       .then(function (container) {
         containerInfo[socketId] = { container, id: container.id };
