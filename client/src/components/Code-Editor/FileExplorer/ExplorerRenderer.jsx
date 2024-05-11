@@ -92,7 +92,7 @@ function ExplorerRenderer({
                 {explorer.inputStat.isFolder ? <VscFolder /> : <VscFile />}
               </span>
               <input
-                className="flex items-center justify-between cursor-pointer bg-gray-700 outline-none text-gray-300 p-1 rounded-md"
+                className="flex items-center justify-between cursor-pointer bg-gray-700 outline-none text-gray-300 p-1 rounded-md border"
                 type="text"
                 autoFocus={true}
                 onBlur={() => hideInputHandler(explorer.id)}

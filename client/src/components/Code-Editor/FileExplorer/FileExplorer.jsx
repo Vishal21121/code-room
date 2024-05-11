@@ -2,13 +2,19 @@ import React, { useEffect, useState } from "react";
 import explorer from "../../../util/folderData.js";
 import ExplorerRenderer from "./ExplorerRenderer";
 import useTraverseTree from "../../../hooks/useTraverseTree.js";
-import { VscNewFile, VscNewFolder } from "react-icons/vsc";
+import { VscCollapseAll, VscNewFile, VscNewFolder } from "react-icons/vsc";
 
 function FileExplorer() {
   const [explorerData, setExplorerData] = useState(explorer);
   const [selectedId, setSelectedId] = useState(null);
-  const { insertNode, expandFolder, showInput, hideInput, hightlightSelected } =
-    useTraverseTree();
+  const {
+    insertNode,
+    expandFolder,
+    showInput,
+    hideInput,
+    hightlightSelected,
+    collapseAll,
+  } = useTraverseTree();
 
   const handleInsertNode = (folderId, item, isFolder) => {
     const finalTree = insertNode(explorerData, folderId, item, isFolder);
@@ -39,19 +45,37 @@ function FileExplorer() {
     setExplorerData(tree);
   };
 
+  const handleCollapseAll = () => {
+    const tree = collapseAll(explorerData);
+    setExplorerData(tree);
+  };
+
   return (
     <div className="bg-[#282a36] h-screen border-r boder-gray-300">
       <div className="bg-[#161a2a] flex p-2 items-center justify-between">
         <p className="text-md text-gray-300">File explorer</p>
         <div className="flex gap-2">
-          <VscNewFile
-            className="text-xl text-gray-300 cursor-pointer"
-            onClick={() => handleInputInsertion(false)}
-          />
-          <VscNewFolder
-            className="text-xl text-gray-300 cursor-pointer"
-            onClick={() => handleInputInsertion(true)}
-          />
+          <div className="tooltip tooltip-bottom" data-tip="New File...">
+            <VscNewFile
+              className="text-xl text-gray-300 cursor-pointer"
+              onClick={() => handleInputInsertion(false)}
+            />
+          </div>
+          <div className="tooltip tooltip-bottom" data-tip="New Folder...">
+            <VscNewFolder
+              className="text-xl text-gray-300 cursor-pointer"
+              onClick={() => handleInputInsertion(true)}
+            />
+          </div>
+          <div
+            className="tooltip tooltip-bottom"
+            data-tip="Collapse Folders in Explorer"
+          >
+            <VscCollapseAll
+              className="text-xl text-gray-300 cursor-pointer"
+              onClick={handleCollapseAll}
+            />
+          </div>
         </div>
       </div>
       <ExplorerRenderer
