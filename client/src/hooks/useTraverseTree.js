@@ -72,7 +72,23 @@ const useTraverseTree = () => {
     }
   }
 
-  return { insertNode, showInput, hideInput, expandFolder, hightlightSelected };
+  function collapseAll(tree) {
+    const items = tree.items.map((el) => collapseAll(el));
+    if (tree.isFolder) {
+      return { ...tree, isExpanded: false, items };
+    } else {
+      return { ...tree, items };
+    }
+  }
+
+  return {
+    insertNode,
+    showInput,
+    hideInput,
+    expandFolder,
+    hightlightSelected,
+    collapseAll,
+  };
 };
 
 export default useTraverseTree;
