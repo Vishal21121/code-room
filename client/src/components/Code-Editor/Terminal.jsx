@@ -6,8 +6,9 @@ import { Terminal as xtermTerminal } from "xterm";
 import "xterm/css/xterm.css";
 import { WebLinksAddon } from "@xterm/addon-web-links";
 import { FitAddon } from "xterm-addon-fit";
+import { classAdder } from "../../util/classAdder";
 
-const Terminal = ({ output }) => {
+const Terminal = ({ isTerminalDragging, terminalHorizontal }) => {
   const problems = useSelector((state) => state.problems.problems);
   const [outputShow, setOutputShow] = useState(true);
   const terminalEl = useRef(null);
@@ -85,8 +86,9 @@ const Terminal = ({ output }) => {
 
   return (
     <div
-      className="bg-[#161a2a] pl-4 relative bottom-[280px] left-[365px] flex flex-col w-1/2 z-50 h-[40vh] terminal"
+      className={classAdder("bg-[#161a2a] pl-4 relative box-border z-30")}
       id="terminal"
+      style={{ height: terminalHorizontal }}
       ref={terminalEl}
     ></div>
   );

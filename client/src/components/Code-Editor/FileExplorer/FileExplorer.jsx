@@ -3,8 +3,9 @@ import explorer from "../../../util/folderData.js";
 import ExplorerRenderer from "./ExplorerRenderer";
 import useTraverseTree from "../../../hooks/useTraverseTree.js";
 import { VscCollapseAll, VscNewFile, VscNewFolder } from "react-icons/vsc";
+import { classAdder } from "../../../util/classAdder.js";
 
-function FileExplorer() {
+function FileExplorer({ isFileDragging, fileWidth }) {
   const [explorerData, setExplorerData] = useState(explorer);
   const [selectedId, setSelectedId] = useState(null);
   const {
@@ -51,8 +52,14 @@ function FileExplorer() {
   };
 
   return (
-    <div className="bg-[#282a36] h-screen border-r boder-gray-300">
-      <div className="bg-[#161a2a] flex p-2 items-center justify-between">
+    <div
+      className={classAdder(
+        "bg-[#282a36] h-screen shrink-0",
+        isFileDragging && "dragging"
+      )}
+      style={{ width: fileWidth }}
+    >
+      <div className="bg-[#161a2a] flex p-2 items-center justify-between h-12">
         <p className="text-md text-gray-300">File explorer</p>
         <div className="flex gap-2">
           <div className="tooltip tooltip-bottom" data-tip="New File...">

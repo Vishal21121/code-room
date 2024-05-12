@@ -4,9 +4,43 @@ import { useNavigate } from "react-router-dom";
 import Terminal from "./Terminal";
 import CodeEditor from "./CodeEditor";
 import FileExplorer from "./FileExplorer/FileExplorer";
+import { useResizable } from "react-resizable-layout";
+import { classAdder } from "../../util/classAdder";
+import Splitter from "./Splitter";
 
 const IDE = () => {
   const [output, setOutput] = useState("");
+  const {
+    isDragging: isTerminalDragging,
+    position: terminalHorizontal,
+    separatorProps: terminalDragBarProps,
+  } = useResizable({
+    axis: "y",
+    initial: 230,
+    min: 0,
+    reverse: true,
+  });
+  const {
+    isDragging: isFileDragging,
+    position: fileWidth,
+    separatorProps: fileDragBarProps,
+  } = useResizable({
+    axis: "x",
+    initial: 300,
+    min: 200,
+    max: 500,
+  });
+  const {
+    isDragging: isDisplayDragging,
+    position: displayWidth,
+    separatorProps: widthDragBarProps,
+  } = useResizable({
+    axis: "x",
+    initial: 300,
+    min: 200,
+    reverse: true,
+    // max: 600,
+  });
 
   const handleSubmit = async (code, language, version) => {
     console.log({ language, version });
@@ -74,23 +108,35 @@ const IDE = () => {
 
   return (
     <>
-      <div className="h-screen overflow-hidden w-full">
-        <div className="w-full flex">
-          <div className="w-1/4 bg-white">
-            <FileExplorer />
+      <div className="flex grow w-full h-screen overflow-hidden ">
+        <FileExplorer isFileDragging={isFileDragging} fileWidth={fileWidth} />
+        <Splitter isDragging={isFileDragging} {...fileDragBarProps} />
+        <div className="flex flex-col justify-center h-full w-full">
+          <div className="flex grow h-[60%]">
+            <CodeEditor handleSubmit={handleSubmit} />
+            <div className="bg-red-500 shrink-0 w-1/2">Display</div>
           </div>
-          <div className="w-1/2 bg-[#3A424D] h-[100vh] flex flex-col box-border ">
-            <div className="flex h-[100%]">
-              <div className="flex flex-col box-border w-[100%] ">
-                <div className="flex justify-center flex-col">
-                  <CodeEditor handleSubmit={handleSubmit} />
-                </div>
-              </div>
-            </div>
-          </div>
+          <Splitter
+            dir={"horizontal"}
+            isDragging={isTerminalDragging}
+            {...terminalDragBarProps}
+          />
+          <Terminal
+            output={output}
+            isTerminalDragging={isTerminalDragging}
+            terminalHorizontal={terminalHorizontal}
+          />
         </div>
-        <Terminal output={output} />
       </div>
+
+      {/* <div className="h-screen flex flex-col overflow-hidden">
+        <div className="flex-grow">
+          <div className="bg-[#3A424D] flex-grow">
+          </div>
+          
+        </div>
+        
+      </div> */}
     </>
   );
 };
