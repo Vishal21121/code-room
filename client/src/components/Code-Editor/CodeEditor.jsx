@@ -168,7 +168,7 @@ const CodeEditor = ({ handleSubmit }) => {
         /> */}
       </div>
       <Editor
-        width="50vw"
+        width="38vw"
         value={code}
         defaultLanguage={language}
         onValidate={handleEditorValidation}
