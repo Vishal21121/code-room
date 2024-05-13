@@ -108,10 +108,16 @@ const spinContainer = async (socket, socketId) => {
               console.log("data received", data);
               stream.write(data);
             });
+            socket.on("spin:app", ({ data }) => {
+              console.log("spin app", data);
+              stream.write(data + "\n");
+              socket.emit("app:started");
+            });
+            console.log(`container started`);
+            socket.emit("container:started", { data: container.id });
           });
         });
       });
-    console.log(`container started`);
   } catch (error) {
     console.log("error", error);
   }

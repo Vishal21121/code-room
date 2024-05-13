@@ -25,7 +25,7 @@ const Terminal = ({ isTerminalDragging, terminalHorizontal }) => {
 
   const terminalSetup = () => {
     terminalInstance.current = new xtermTerminal({
-      // convertEol: true,
+      convertEol: true,
       theme: {
         background: "#161a2a",
       },
@@ -74,10 +74,18 @@ const Terminal = ({ isTerminalDragging, terminalHorizontal }) => {
           console.error("Terminal instance is not initialized");
         }
       });
+      socketio?.on("container:started", ({ data }) => {
+        console.log("container started", data);
+        socketio?.emit("spin:app", { data: "npm run dev" });
+      });
+      socketio?.on("app:started", () => {
+        console.log("app started");
+      });
     }
     return () => {
       onKeyHandler?.dispose();
       socketio?.off("data");
+      socketio?.off("container:started");
       window.removeEventListener("resize", () => {
         fitAddon.fit();
       });
