@@ -8,7 +8,7 @@ import { WebLinksAddon } from "@xterm/addon-web-links";
 import { FitAddon } from "xterm-addon-fit";
 import { classAdder } from "../../util/classAdder";
 
-const Terminal = ({ isTerminalDragging, terminalHorizontal }) => {
+const Terminal = ({ isTerminalDragging, terminalHorizontal, iframeEl }) => {
   const problems = useSelector((state) => state.problems.problems);
   const [outputShow, setOutputShow] = useState(true);
   const terminalEl = useRef(null);
@@ -85,6 +85,7 @@ const Terminal = ({ isTerminalDragging, terminalHorizontal }) => {
     return () => {
       onKeyHandler?.dispose();
       socketio?.off("data");
+      socketio?.off("container:started");
       socketio?.off("container:started");
       window.removeEventListener("resize", () => {
         fitAddon.fit();
