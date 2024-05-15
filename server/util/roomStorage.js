@@ -1,7 +1,10 @@
 import fsPromises from "fs/promises";
 import fsextra from "fs-extra";
 import path from "path";
+import fs from "fs";
 import { fileURLToPath } from "url";
+import { v4 as uuidv4 } from "uuid";
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -9,10 +12,12 @@ const createFolderWithRoomName = async (roomName) => {
   const oldPath = path.join(__dirname, "../.././", "templates/react-vite");
   const newPath = path.join(__dirname, "../.././", "rooms", `${roomName}`);
   try {
-    await fsPromises.mkdir(newPath);
-    //   copy the template in that
-    await fsextra.copy(oldPath, newPath);
-    console.log("created folder");
+    if (!fs.existsSync(newPath)) {
+      await fsPromises.mkdir(newPath);
+      //   copy the template in that
+      await fsextra.copy(oldPath, newPath);
+      console.log("created folder");
+    }
   } catch (error) {
     throw error;
   }
@@ -42,7 +47,7 @@ const readFolder = async (folderPath) => {
         );
         if (stats.isFile()) {
           items.push({
-            id: new Date().getTime(),
+            id: uuidv4(),
             name: element,
             isFolder: false,
             inputStat: {
@@ -55,7 +60,7 @@ const readFolder = async (folderPath) => {
           });
         } else {
           items.push({
-            id: new Date().getTime(),
+            id: uuidv4(),
             name: element,
             isFolder: true,
             inputStat: {
@@ -78,7 +83,7 @@ const readFolder = async (folderPath) => {
       const stats = await fsPromises.stat(path.join(__dirname, element));
       if (stats.isFile()) {
         treeELement.items.push({
-          id: new Date().getTime(),
+          id: uuidv4(),
           name: element,
           isFolder: false,
           inputStat: {
@@ -91,7 +96,7 @@ const readFolder = async (folderPath) => {
         });
       } else {
         treeELement.items.push({
-          id: new Date().getTime(),
+          id: uuidv4(),
           name: element,
           isFolder: true,
           inputStat: {

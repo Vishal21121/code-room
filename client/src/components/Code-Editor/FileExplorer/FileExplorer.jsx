@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
-import explorer from "../../../util/folderData.js";
 import ExplorerRenderer from "./ExplorerRenderer";
 import useTraverseTree from "../../../hooks/useTraverseTree.js";
 import { VscCollapseAll, VscNewFile, VscNewFolder } from "react-icons/vsc";
 import { classAdder } from "../../../util/classAdder.js";
+import { useDispatch, useSelector } from "react-redux";
+import { setFileData } from "../../../features/editor/fileExplorerSlice.js";
 
 function FileExplorer({ isFileDragging, fileWidth }) {
-  const [explorerData, setExplorerData] = useState(explorer);
+  const explorerData = useSelector((state) => state.fileExplorer.fileData);
+  const dispatch = useDispatch();
   const [selectedId, setSelectedId] = useState(null);
   const {
     insertNode,
@@ -19,36 +21,36 @@ function FileExplorer({ isFileDragging, fileWidth }) {
 
   const handleInsertNode = (folderId, item, isFolder) => {
     const finalTree = insertNode(explorerData, folderId, item, isFolder);
-    setExplorerData(finalTree);
+    dispatch(setFileData(finalTree));
   };
 
   const handleInputInsertion = (isFolder) => {
     const tree = showInput(explorerData, selectedId, isFolder);
-    setExplorerData(tree);
+    dispatch(setFileData(tree));
   };
 
   const handleFolderExpand = (folderId) => {
     const tree = expandFolder(explorerData, folderId);
     console.log("folder", tree);
-    setExplorerData(tree);
+    dispatch(setFileData(tree));
   };
 
   const hideInputHandler = (folderId) => {
     console.log("hideInputHandler called");
     const tree = hideInput(explorerData, folderId);
     console.log(tree);
-    setExplorerData(tree);
+    dispatch(setFileData(tree));
   };
 
   const hightlightSelectedHandlder = (elementId) => {
     const tree = hightlightSelected(explorerData, elementId);
     console.log("highlighter", tree);
-    setExplorerData(tree);
+    dispatch(setFileData(tree));
   };
 
   const handleCollapseAll = () => {
     const tree = collapseAll(explorerData);
-    setExplorerData(tree);
+    dispatch(setFileData(tree));
   };
 
   return (

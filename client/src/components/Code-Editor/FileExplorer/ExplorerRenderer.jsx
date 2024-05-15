@@ -100,21 +100,22 @@ function ExplorerRenderer({
               />
             </div>
           )}
-          {explorer.items.map((el) => (
-            <ExplorerRenderer
-              explorer={el}
-              key={el.id}
-              handleInsertNode={handleInsertNode}
-              handleFolderExpand={handleFolderExpand}
-              setSelectedId={setSelectedId}
-              hideInputHandler={hideInputHandler}
-              hightlightSelectedHandlder={hightlightSelectedHandlder}
-            />
-          ))}
+          {explorer.items.length > 0 &&
+            explorer.items.map((el) => (
+              <ExplorerRenderer
+                explorer={el}
+                key={el.id}
+                handleInsertNode={handleInsertNode}
+                handleFolderExpand={handleFolderExpand}
+                setSelectedId={setSelectedId}
+                hideInputHandler={hideInputHandler}
+                hightlightSelectedHandlder={hightlightSelectedHandlder}
+              />
+            ))}
         </div>
       </div>
     );
-  } else {
+  } else if (explorer && !explorer.isFolder) {
     return (
       <span
         className={`mt-1 pl-8 flex flex-col text-gray-300 cursor-pointer hover:bg-gray-700 ${

@@ -51,13 +51,13 @@ const useTraverseTree = () => {
   }
 
   function expandFolder(tree, folderId) {
-    console.log("got", tree, "folder Id", folderId);
     if (tree.id === folderId && tree.isFolder) {
       return { ...tree, isExpanded: !tree.isExpanded, isSelected: true };
     } else {
       tree.isSelected = false;
-      const newItems = tree.items.map((el) => expandFolder(el, folderId));
-      console.log(newItems);
+      const newItems =
+        tree.items.length > 0 &&
+        tree.items.map((el) => expandFolder(el, folderId));
       return { ...tree, items: newItems };
     }
   }
@@ -67,13 +67,16 @@ const useTraverseTree = () => {
       return { ...tree, isSelected: true };
     } else {
       tree.isSelected = false;
-      const items = tree.items.map((el) => hightlightSelected(el, elementId));
+      const items =
+        tree.items.length > 0 &&
+        tree.items.map((el) => hightlightSelected(el, elementId));
       return { ...tree, items };
     }
   }
 
   function collapseAll(tree) {
-    const items = tree.items.map((el) => collapseAll(el));
+    const items =
+      tree.items.length > 0 && tree.items.map((el) => collapseAll(el));
     if (tree.isFolder) {
       return { ...tree, isExpanded: false, items };
     } else {

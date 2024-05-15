@@ -307,6 +307,7 @@ export const updateAdmin = async (req, res) => {
 
 export const createFolderWithRoomName = async (req, res) => {
   const { roomName } = req.body;
+  console.log(roomName);
   if (!roomName) {
     return res.status(400).json({
       status: "failure",
@@ -318,6 +319,37 @@ export const createFolderWithRoomName = async (req, res) => {
   }
   try {
     await createFolder(roomName);
+    const treeStructure = await readFolder(`../.././rooms/${roomName}`);
+    return res.status(200).json({
+      status: "success",
+      data: {
+        statusCode: 200,
+        value: treeStructure,
+      },
+    });
+  } catch (error) {
+    return res.status(500).json({
+      status: "failure",
+      data: {
+        statusCode: 500,
+        message: error || "Internal server error",
+      },
+    });
+  }
+};
+
+export const getRoomFiles = async (req, res) => {
+  const { roomName } = req.query;
+  if (!roomName) {
+    return res.status(400).json({
+      status: "failure",
+      data: {
+        statusCode: 400,
+        message: "Provide the room name",
+      },
+    });
+  }
+  try {
     const treeStructure = await readFolder(`../.././rooms/${roomName}`);
     return res.status(200).json({
       status: "success",
