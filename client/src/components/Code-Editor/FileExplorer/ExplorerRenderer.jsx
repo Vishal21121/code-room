@@ -4,6 +4,19 @@ import {
   MdOutlineKeyboardArrowRight,
 } from "react-icons/md";
 import { VscFolderOpened, VscFolder, VscFile } from "react-icons/vsc";
+import react from "../../../assets/icons/react.svg";
+import javascript from "../../../assets/icons/javascript.svg";
+import typescript from "../../../assets/icons/typescript.svg";
+import html from "../../../assets/icons/html.svg";
+import markdown from "../../../assets/icons/markdown.svg";
+import css from "../../../assets/icons/css.svg";
+import react_ts from "../../../assets/icons/react_ts.svg";
+import git from "../../../assets/icons/git.svg";
+import nodejs from "../../../assets/icons/nodejs.svg";
+import vite from "../../../assets/icons/vite.svg";
+import jsMap from "../../../assets/icons/javascript-map.svg";
+import eslint from "../../../assets/icons/eslint.svg";
+import { fileIconFinder } from "../../../util/fileIconFinder";
 
 function ExplorerRenderer({
   explorer,
@@ -13,32 +26,25 @@ function ExplorerRenderer({
   hideInputHandler,
   hightlightSelectedHandlder,
 }) {
-  // const [expand, setExpand] = useState(false);
-  const [showInput, setShowInput] = useState({
-    visible: false,
-    isFolder: null,
-  });
-  const [selected, setSelected] = useState(null);
+  const [fileIcon, setFileIcon] = useState();
 
-  const handleNewFolder = (e, isFolder) => {
-    e.stopPropagation();
-    setExpand(true);
-    if (isFolder) {
-      setShowInput({
-        visible: true,
-        isFolder: true,
-      });
-    } else {
-      setShowInput({
-        visible: true,
-        isFolder: false,
-      });
-    }
+  const fileMap = {
+    react: react,
+    javascript: javascript,
+    typescript: typescript,
+    html: html,
+    markdown: markdown,
+    css: css,
+    react_ts: react_ts,
+    git: git,
+    nodejs: nodejs,
+    vite: vite,
+    "javascript-map": jsMap,
+    eslint: eslint,
   };
 
   const onAddNewFolder = (e) => {
     if (e.keyCode === 13 && e.target.value) {
-      // add logic
       handleInsertNode(
         explorer.id,
         e.target.value,
@@ -53,6 +59,13 @@ function ExplorerRenderer({
     setSelectedId(explorer.id);
     // hightlightSelectedHandlder(explorer.id);
   };
+
+  useEffect(() => {
+    if (!explorer?.isFolder) {
+      const icon = fileIconFinder(explorer?.name);
+      setFileIcon(fileMap[icon]);
+    }
+  }, []);
 
   if (explorer?.isFolder) {
     return (
@@ -117,14 +130,19 @@ function ExplorerRenderer({
     );
   } else if (explorer && !explorer.isFolder) {
     return (
-      <span
-        className={`mt-1 pl-8 flex flex-col text-gray-300 cursor-pointer hover:bg-gray-700 ${
+      <div
+        className={`mt-1 pl-8 flex gap-1 items-center text-gray-300 cursor-pointer hover:bg-gray-700 ${
           explorer.isSelected ? "bg-gray-700" : ""
         }`}
         onClick={() => hightlightSelectedHandlder(explorer.id)}
       >
-        📃{explorer?.name}
-      </span>
+        {fileIcon ? (
+          <img src={fileIcon && fileIcon} alt="" className="w-4" />
+        ) : (
+          <VscFile />
+        )}
+        <span>{explorer?.name}</span>
+      </div>
     );
   }
 }
