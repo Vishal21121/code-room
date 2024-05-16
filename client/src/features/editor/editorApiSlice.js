@@ -21,7 +21,8 @@ export const editorApiSlice = apiSlice.injectEndpoints({
       }),
     }),
     getFiles: builder.query({
-      query: ({ roomName }) => `/room/get-room-files?roomName=${roomName}`,
+      query: ({ roomName, path, isFolder }) =>
+        `/room/get-room-files?roomName=${roomName}&path=${path}&isFolder=${isFolder}`,
       keepUnusedDataFor: 5,
     }),
   }),

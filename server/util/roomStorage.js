@@ -25,64 +25,14 @@ const createFolderWithRoomName = async (roomName) => {
 
 const readFolder = async (folderPath) => {
   try {
-    const treeELement = {
-      id: "1",
-      name: "root",
-      isFolder: true,
-      inputStat: {
-        visible: false,
-        isFolder: null,
-      },
-      isExpanded: false,
-      isSelected: false,
-      items: [],
-    };
     const items = [];
-    // if reading content of a sub-folder
-    if (folderPath) {
-      const data = await fsPromises.readdir(path.join(__dirname, folderPath));
-      const promises = data.map(async (element) => {
-        const stats = await fsPromises.stat(
-          path.join(__dirname, folderPath, element)
-        );
-        if (stats.isFile()) {
-          items.push({
-            id: uuidv4(),
-            name: element,
-            isFolder: false,
-            inputStat: {
-              visible: null,
-              isFolder: null,
-            },
-            isExpanded: null,
-            isSelected: false,
-            items: [],
-          });
-        } else {
-          items.push({
-            id: uuidv4(),
-            name: element,
-            isFolder: true,
-            inputStat: {
-              visible: false,
-              isFolder: null,
-            },
-            isExpanded: false,
-            isSelected: false,
-            items: [],
-          });
-        }
-      });
-      await Promise.all(promises);
-      treeELement.items = items;
-      return treeELement;
-    }
-    // if reading content of a root-folder
-    const data = await fsPromises.readdir(path.join(__dirname));
+    const data = await fsPromises.readdir(path.join(__dirname, folderPath));
     const promises = data.map(async (element) => {
-      const stats = await fsPromises.stat(path.join(__dirname, element));
+      const stats = await fsPromises.stat(
+        path.join(__dirname, folderPath, element)
+      );
       if (stats.isFile()) {
-        treeELement.items.push({
+        items.push({
           id: uuidv4(),
           name: element,
           isFolder: false,
@@ -95,7 +45,7 @@ const readFolder = async (folderPath) => {
           items: [],
         });
       } else {
-        treeELement.items.push({
+        items.push({
           id: uuidv4(),
           name: element,
           isFolder: true,
@@ -110,7 +60,8 @@ const readFolder = async (folderPath) => {
       }
     });
     await Promise.all(promises);
-    return treeELement;
+    // treeELement.items = items;
+    return items;
   } catch (error) {
     throw error;
   }

@@ -13,7 +13,7 @@ import {
   getRoomsWithUser,
   updateAdmin,
   createFolderWithRoomName,
-  getRoomFiles,
+  readContent,
 } from "../controllers/room.controllers.js";
 import { verifyJWT } from "../middleware/auth.middleware.js";
 const router = express.Router();
@@ -31,6 +31,6 @@ router
   .route("/update-admin")
   .patch(verifyJWT, adminUpdateValidator(), validation, updateAdmin);
 router.route("/create-room-folder").post(verifyJWT, createFolderWithRoomName);
-router.route("/get-room-files").get(verifyJWT, getRoomFiles);
+router.route("/get-room-files").get(verifyJWT, readContent);
 
 export default router;

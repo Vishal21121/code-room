@@ -338,24 +338,28 @@ export const createFolderWithRoomName = async (req, res) => {
   }
 };
 
-export const getRoomFiles = async (req, res) => {
-  const { roomName } = req.query;
-  if (!roomName) {
+export const readContent = async (req, res) => {
+  const { roomName, path, isFolder } = req.query;
+  if (!roomName || !path || !isFolder) {
     return res.status(400).json({
       status: "failure",
       data: {
         statusCode: 400,
-        message: "Provide the room name",
+        message: "Please provide proper roomName,path and isFolder property",
       },
     });
   }
   try {
-    const treeStructure = await readFolder(`../.././rooms/${roomName}`);
+    let data;
+    if (isFolder) {
+      data = await readFolder(`../.././rooms/${roomName}/${path}`);
+    }
+    // TODO: complete the readFile part
     return res.status(200).json({
       status: "success",
       data: {
         statusCode: 200,
-        value: treeStructure,
+        value: data,
       },
     });
   } catch (error) {

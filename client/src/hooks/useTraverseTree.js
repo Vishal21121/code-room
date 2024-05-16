@@ -47,12 +47,31 @@ const useTraverseTree = () => {
     return { ...tree, items: newItem };
   }
 
-  function expandFolder(tree, folderId) {
+  function expandFolder(tree, folderId, path = []) {
     if (tree.id === folderId && tree.isFolder) {
-      return { ...tree, isExpanded: !tree.isExpanded, isSelected: true };
+      return {
+        tree: {
+          ...tree,
+          isExpanded: !tree.isExpanded,
+          isSelected: true,
+        },
+        path: [...path],
+      };
     } else {
-      const newItems = tree.items?.map((el) => expandFolder(el, folderId));
-      return { ...tree, isSelected: false, items: newItems };
+      const newItems = tree.items?.map((el) =>
+        expandFolder(el, folderId, [...path, el.name])
+      );
+      let pathResults = newItems && newItems.map((item) => item.path);
+      let finalPath =
+        pathResults.length > 0 ? pathResults.find((el) => el?.length > 0) : [];
+      return {
+        tree: {
+          ...tree,
+          isSelected: false,
+          items: newItems.map((item) => item.tree),
+        },
+        path: finalPath,
+      };
     }
   }
 

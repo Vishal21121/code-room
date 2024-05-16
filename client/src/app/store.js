@@ -9,6 +9,7 @@ import roomReducer from "../features/room/roomSlice";
 import { apiSlice } from "./api/apiSlice";
 import notesReducer from "../features/notes/notesSlice";
 import botReducer from "../features/chat-bot/botSlice";
+import editorReducer from "../features/editor/editorSlice";
 import fileExplorerReducer from "../features/editor/fileExplorerSlice";
 
 const store = configureStore({
@@ -23,6 +24,7 @@ const store = configureStore({
     room: roomReducer,
     notes: notesReducer,
     bot: botReducer,
+    editor: editorReducer,
     fileExplorer: fileExplorerReducer,
   },
   // for redux toolkit query to cache our query
