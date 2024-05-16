@@ -8,6 +8,7 @@ import { setFileData } from "../../../features/editor/fileExplorerSlice.js";
 
 function FileExplorer({ isFileDragging, fileWidth }) {
   const explorerData = useSelector((state) => state.fileExplorer.fileData);
+  console.log("explorer Data", explorerData);
   const dispatch = useDispatch();
   const [selectedId, setSelectedId] = useState(null);
   const {
@@ -22,6 +23,7 @@ function FileExplorer({ isFileDragging, fileWidth }) {
   const handleInsertNode = (folderId, item, isFolder) => {
     const finalTree = insertNode(explorerData, folderId, item, isFolder);
     dispatch(setFileData(finalTree));
+    return finalTree;
   };
 
   const handleInputInsertion = (isFolder) => {
@@ -31,20 +33,16 @@ function FileExplorer({ isFileDragging, fileWidth }) {
 
   const handleFolderExpand = (folderId) => {
     const tree = expandFolder(explorerData, folderId);
-    console.log("folder", tree);
     dispatch(setFileData(tree));
   };
 
-  const hideInputHandler = (folderId) => {
-    console.log("hideInputHandler called");
+  const hideInputHandler = (explorerData, folderId) => {
     const tree = hideInput(explorerData, folderId);
-    console.log(tree);
     dispatch(setFileData(tree));
   };
 
   const hightlightSelectedHandlder = (elementId) => {
     const tree = hightlightSelected(explorerData, elementId);
-    console.log("highlighter", tree);
     dispatch(setFileData(tree));
   };
 

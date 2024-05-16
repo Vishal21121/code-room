@@ -45,12 +45,12 @@ function ExplorerRenderer({
 
   const onAddNewFolder = (e) => {
     if (e.keyCode === 13 && e.target.value) {
-      handleInsertNode(
+      const tree = handleInsertNode(
         explorer.id,
         e.target.value,
         explorer.inputStat.isFolder
       );
-      hideInputHandler(explorer.id);
+      hideInputHandler(tree, explorer.id);
     }
   };
 

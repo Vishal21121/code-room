@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from "uuid";
 const useTraverseTree = () => {
   function insertNode(tree, folderId, item, isFolder) {
     if (tree.id === folderId && tree.isFolder) {
-      tree.items.push({
+      const newItem = {
         id: uuidv4(),
         name: item,
         isFolder,
@@ -13,11 +13,12 @@ const useTraverseTree = () => {
         },
         isExpanded: false,
         items: [],
-      });
-      return tree;
+      };
+      const newItems = [...tree.items, newItem];
+      let finalTree = { ...tree, items: newItems };
+      return finalTree;
     }
-    let latestNode = [];
-    latestNode = tree.items.map((el) =>
+    const latestNode = tree.items.map((el) =>
       insertNode(el, folderId, item, isFolder)
     );
     return { ...tree, items: latestNode };
@@ -25,8 +26,6 @@ const useTraverseTree = () => {
 
   function showInput(tree, folderId, isFolder) {
     if (tree.id === folderId && tree.isFolder) {
-      // console.log("showInput", folderId, isFolder);
-      // console.log(tree.inputStat);
       return {
         ...tree,
         inputStat: { visible: true, isFolder: isFolder },
@@ -38,9 +37,7 @@ const useTraverseTree = () => {
   }
 
   function hideInput(tree, folderId) {
-    console.log(folderId);
     if (tree.id === folderId && tree.isFolder) {
-      console.log("hideInput", tree.inputStat.visible);
       return {
         ...tree,
         inputStat: { ...tree.inputStat, visible: false },
@@ -54,9 +51,7 @@ const useTraverseTree = () => {
     if (tree.id === folderId && tree.isFolder) {
       return { ...tree, isExpanded: !tree.isExpanded, isSelected: true };
     } else {
-      const newItems =
-        tree.items.length > 0 &&
-        tree.items.map((el) => expandFolder(el, folderId));
+      const newItems = tree.items?.map((el) => expandFolder(el, folderId));
       return { ...tree, isSelected: false, items: newItems };
     }
   }
@@ -65,9 +60,7 @@ const useTraverseTree = () => {
     if (tree.id === elementId) {
       return { ...tree, isSelected: true };
     } else {
-      const items =
-        tree.items.length > 0 &&
-        tree.items.map((el) => hightlightSelected(el, elementId));
+      const items = tree.items?.map((el) => hightlightSelected(el, elementId));
       return { ...tree, isSelected: false, items };
     }
   }
