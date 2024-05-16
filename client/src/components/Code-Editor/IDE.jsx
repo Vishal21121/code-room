@@ -7,9 +7,11 @@ import FileExplorer from "./FileExplorer/FileExplorer";
 import { useResizable } from "react-resizable-layout";
 import { classAdder } from "../../util/classAdder";
 import Splitter from "./Splitter";
+import { useSelector } from "react-redux";
 
 const IDE = () => {
   const [output, setOutput] = useState("");
+  const showOutputPanel = useSelector((state) => state.editor.outPanel);
   const {
     isDragging: isTerminalDragging,
     position: terminalHorizontal,
@@ -114,7 +116,16 @@ const IDE = () => {
         <div className="flex flex-col justify-center h-full w-full">
           <div className="flex grow h-[60%]">
             <CodeEditor handleSubmit={handleSubmit} />
-            <div className="bg-red-500 shrink-0 w-1/2">Display</div>
+            <div className="bg-red-500 shrink-0 w-1/2">
+              {showOutputPanel ? (
+                <iframe
+                  src="http://localhost:3000"
+                  className="w-full h-full"
+                ></iframe>
+              ) : (
+                ""
+              )}
+            </div>
           </div>
           <Splitter
             dir={"horizontal"}

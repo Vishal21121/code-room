@@ -17,6 +17,7 @@ import {
 } from "../features/editor/editorApiSlice";
 import BeatLoader from "react-spinners/BeatLoader";
 import { setFileData } from "../features/editor/fileExplorerSlice";
+import { setOutputPanel } from "../features/editor/editorSlice";
 
 const RoomJoin = () => {
   const [roomName, setRoomName] = useState("");
@@ -36,20 +37,20 @@ const RoomJoin = () => {
 
   const errorCodeResponse = async (data) => {
     console.log("data: ", data?.data?.data?.statusCode);
-    // if (data?.data?.data?.statusCode === 422) {
-    //   toast.error(Object.values(data.data.data.value[0])[0]);
-    // } else if (data.data.data.statusCode === 403) {
-    //   toast.error("Please enter another room name");
-    //   return;
-    // } else if (data.data.data.statusCode === 500) {
-    //   toast.error(`Failed to ${createOrJoin.toLowerCase()} a new room`);
-    //   return;
-    // } else if (data.data.data.statusCode === 404) {
-    //   toast.error("Room does not exist");
-    // } else if (data.data.data.statusCode === 400) {
-    //   console.log("inside 400");
-    //   toast.error(`you have already joined this room`);
-    // }
+    if (data?.data?.data?.statusCode === 422) {
+      toast.error(Object.values(data.data.data.value[0])[0]);
+    } else if (data.data.data.statusCode === 403) {
+      toast.error("Please enter another room name");
+      return;
+    } else if (data.data.data.statusCode === 500) {
+      toast.error(`Failed to ${createOrJoin.toLowerCase()} a new room`);
+      return;
+    } else if (data.data.data.statusCode === 404) {
+      toast.error("Room does not exist");
+    } else if (data.data.data.statusCode === 400) {
+      console.log("inside 400");
+      toast.error(`you have already joined this room`);
+    }
   };
 
   const successCodeResponse = async (response) => {
@@ -154,6 +155,10 @@ const RoomJoin = () => {
     toast.success(`${createOrJoin}ed a new room`);
     navigate(`/room/${elementId}`);
   };
+
+  useEffect(() => {
+    dispatch(setOutputPanel(false));
+  }, []);
 
   return (
     <div className="bg-[#22272e] h-screen w-screen flex items-center text-center">

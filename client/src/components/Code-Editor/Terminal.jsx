@@ -1,12 +1,13 @@
 import React, { useState, useRef, useEffect } from "react";
 import { X } from "react-feather";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { HiOutlineXCircle } from "react-icons/hi2";
 import { Terminal as xtermTerminal } from "xterm";
 import "xterm/css/xterm.css";
 import { WebLinksAddon } from "@xterm/addon-web-links";
 import { FitAddon } from "xterm-addon-fit";
 import { classAdder } from "../../util/classAdder";
+import { setOutputPanel } from "../../features/editor/editorSlice";
 
 const Terminal = ({ isTerminalDragging, terminalHorizontal, iframeEl }) => {
   const problems = useSelector((state) => state.problems.problems);
@@ -16,6 +17,7 @@ const Terminal = ({ isTerminalDragging, terminalHorizontal, iframeEl }) => {
   const socketio = useSelector((state) => state.socket.socket);
   const terminalStarted = useRef(false);
   const fitAddon = new FitAddon();
+  const dispatch = useDispatch();
 
   const closeTerminal = (e) => {
     e.preventDefault();
@@ -80,6 +82,9 @@ const Terminal = ({ isTerminalDragging, terminalHorizontal, iframeEl }) => {
       });
       socketio?.on("app:started", () => {
         console.log("app started");
+        setTimeout(() => {
+          dispatch(setOutputPanel(true));
+        }, 5000);
       });
     }
     return () => {

@@ -173,6 +173,7 @@ io.on("connection", (socket) => {
     if (containerInfo[socket.id]) {
       const { container, id } = containerInfo[socket.id];
       container?.stop(id);
+      delete containerInfo[socket.id];
     }
   });
 });

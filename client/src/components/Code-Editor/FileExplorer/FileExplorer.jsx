@@ -8,7 +8,6 @@ import { setFileData } from "../../../features/editor/fileExplorerSlice.js";
 
 function FileExplorer({ isFileDragging, fileWidth }) {
   const explorerData = useSelector((state) => state.fileExplorer.fileData);
-  console.log("explorer Data", explorerData);
   const dispatch = useDispatch();
   const [selectedId, setSelectedId] = useState(null);
   const {
