@@ -5,9 +5,12 @@ import { VscCollapseAll, VscNewFile, VscNewFolder } from "react-icons/vsc";
 import { classAdder } from "../../../util/classAdder.js";
 import { useDispatch, useSelector } from "react-redux";
 import { setFileData } from "../../../features/editor/fileExplorerSlice.js";
+import { useLazyGetFilesQuery } from "../../../features/editor/editorApiSlice.js";
 
 function FileExplorer({ isFileDragging, fileWidth }) {
   const explorerData = useSelector((state) => state.fileExplorer.fileData);
+  const room = useSelector((state) => state.room.room);
+  const [getFiles] = useLazyGetFilesQuery();
   const dispatch = useDispatch();
   const [selectedId, setSelectedId] = useState(null);
   const {
@@ -17,6 +20,7 @@ function FileExplorer({ isFileDragging, fileWidth }) {
     hideInput,
     hightlightSelected,
     collapseAll,
+    renderFolderContent,
   } = useTraverseTree();
 
   const handleInsertNode = (folderId, item, isFolder) => {
@@ -30,10 +34,26 @@ function FileExplorer({ isFileDragging, fileWidth }) {
     dispatch(setFileData(tree));
   };
 
-  const handleFolderExpand = (folderId) => {
+  const handleFolderExpand = async (folderId) => {
     const { tree, path } = expandFolder(explorerData, folderId);
     dispatch(setFileData(tree));
-    console.log("path returned", path);
+    let pathJoined = path.join("/");
+
+    // TODO: getFile is getting called everytime so optimisations are to be added:
+    // 1. call only when we want to expand the folder
+    try {
+      const response = await getFiles({
+        roomName: room.name,
+        path: pathJoined,
+        isFolder: true,
+      }).unwrap();
+      let folderContent = response.data.value;
+      const renderedTree = renderFolderContent(tree, folderId, folderContent);
+      console.log(renderedTree);
+      dispatch(setFileData(renderedTree));
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const hideInputHandler = (explorerData, folderId) => {
@@ -85,14 +105,16 @@ function FileExplorer({ isFileDragging, fileWidth }) {
           </div>
         </div>
       </div>
-      <ExplorerRenderer
-        explorer={explorerData}
-        handleInsertNode={handleInsertNode}
-        handleFolderExpand={handleFolderExpand}
-        setSelectedId={setSelectedId}
-        hideInputHandler={hideInputHandler}
-        hightlightSelectedHandlder={hightlightSelectedHandlder}
-      />
+      <div className="h-[92vh] overflow-auto">
+        <ExplorerRenderer
+          explorer={explorerData}
+          handleInsertNode={handleInsertNode}
+          handleFolderExpand={handleFolderExpand}
+          setSelectedId={setSelectedId}
+          hideInputHandler={hideInputHandler}
+          hightlightSelectedHandlder={hightlightSelectedHandlder}
+        />
+      </div>
     </div>
   );
 }

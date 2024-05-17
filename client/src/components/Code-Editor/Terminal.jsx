@@ -84,7 +84,7 @@ const Terminal = ({ isTerminalDragging, terminalHorizontal, iframeEl }) => {
         console.log("app started");
         setTimeout(() => {
           dispatch(setOutputPanel(true));
-        }, 5000);
+        }, 3000);
       });
     }
     return () => {

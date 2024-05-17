@@ -85,11 +85,23 @@ const useTraverseTree = () => {
   }
 
   function collapseAll(tree) {
-    const items =
-      tree.items.length > 0 && tree.items.map((el) => collapseAll(el));
+    const items = tree.items?.map((el) => collapseAll(el));
     if (tree.isFolder) {
       return { ...tree, isExpanded: false, items };
     } else {
+      return { ...tree, items };
+    }
+  }
+
+  function renderFolderContent(tree, elementId, folderItems) {
+    console.log(tree);
+    if (tree.id === elementId && tree.isFolder) {
+      console.log("entered", folderItems);
+      return { ...tree, items: folderItems };
+    } else {
+      const items = tree.items?.map((el) =>
+        renderFolderContent(el, elementId, folderItems)
+      );
       return { ...tree, items };
     }
   }
@@ -101,6 +113,7 @@ const useTraverseTree = () => {
     expandFolder,
     hightlightSelected,
     collapseAll,
+    renderFolderContent,
   };
 };
 

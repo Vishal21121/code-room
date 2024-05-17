@@ -16,6 +16,7 @@ import nodejs from "../../../assets/icons/nodejs.svg";
 import vite from "../../../assets/icons/vite.svg";
 import jsMap from "../../../assets/icons/javascript-map.svg";
 import eslint from "../../../assets/icons/eslint.svg";
+import svg from "../../../assets/icons/svg.svg";
 import { fileIconFinder } from "../../../util/fileIconFinder";
 
 function ExplorerRenderer({
@@ -41,6 +42,7 @@ function ExplorerRenderer({
     vite: vite,
     "javascript-map": jsMap,
     eslint: eslint,
+    svg: svg,
   };
 
   const onAddNewFolder = (e) => {

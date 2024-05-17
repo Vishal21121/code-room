@@ -169,6 +169,7 @@ const RoomJoin = () => {
     rootElement.items = response.data.value;
     dispatch(setFileData(rootElement));
     dispatch(setAccess(admin));
+    dispatch(setRoom(room));
     toast.success(`${createOrJoin}ed a new room`);
     navigate(`/room/${elementId}`);
   };

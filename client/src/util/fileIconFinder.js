@@ -81,6 +81,7 @@ const fileIconsObject = [
       ".eslintrc.cjs",
     ],
   },
+  { icon: "svg", extensions: ["svg"] },
 ];
 
 export const fileIconFinder = (fileName) => {
