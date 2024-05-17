@@ -75,12 +75,37 @@ const useTraverseTree = () => {
     }
   }
 
-  function hightlightSelected(tree, elementId) {
-    if (tree.id === elementId) {
-      return { ...tree, isSelected: true };
+  function hightlightSelected(tree, elementId, path = [], fileName = "") {
+    if (tree.id === elementId && !tree.isFolder) {
+      return {
+        tree: { ...tree, isSelected: true },
+        path: [...path],
+        filename: fileName,
+      };
     } else {
-      const items = tree.items?.map((el) => hightlightSelected(el, elementId));
-      return { ...tree, isSelected: false, items };
+      const newItems = tree.items?.map((el) =>
+        hightlightSelected(el, elementId, [...path, el.name], el.name)
+      );
+      let ansElement =
+        newItems.length > 0 &&
+        newItems?.find((el) => el?.path?.length > path.length);
+      let finalPath, fileName;
+      if (!ansElement) {
+        finalPath = [];
+        fileName = "";
+      } else {
+        fileName = ansElement.filename;
+        finalPath = ansElement.path;
+      }
+      return {
+        tree: {
+          ...tree,
+          isSelected: false,
+          items: newItems.map((item) => item.tree),
+        },
+        path: finalPath,
+        filename: fileName,
+      };
     }
   }
 
@@ -94,7 +119,6 @@ const useTraverseTree = () => {
   }
 
   function renderFolderContent(tree, elementId, folderItems) {
-    console.log(tree);
     if (tree.id === elementId && tree.isFolder) {
       console.log("entered", folderItems);
       return { ...tree, items: folderItems };

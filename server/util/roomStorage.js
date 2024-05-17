@@ -67,4 +67,16 @@ const readFolder = async (folderPath) => {
   }
 };
 
-export { createFolderWithRoomName, readFolder };
+const readFileContent = async (filePath) => {
+  try {
+    const data = await fsPromises.readFile(
+      path.join(__dirname, filePath),
+      "utf-8"
+    );
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export { createFolderWithRoomName, readFolder, readFileContent };

@@ -2,6 +2,7 @@ import { Room } from "../models/room.models.js";
 import mongoose from "mongoose";
 import {
   createFolderWithRoomName as createFolder,
+  readFileContent,
   readFolder,
 } from ".././util/roomStorage.js";
 
@@ -351,10 +352,11 @@ export const readContent = async (req, res) => {
   }
   try {
     let data;
-    if (isFolder) {
+    if (isFolder === "true") {
       data = await readFolder(`../.././rooms/${roomName}/${path}`);
+    } else {
+      data = await readFileContent(`../.././rooms/${roomName}/${path}`);
     }
-    // TODO: complete the readFile part
     return res.status(200).json({
       status: "success",
       data: {

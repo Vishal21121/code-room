@@ -3,16 +3,23 @@
 @tailwind utilities;
 
 
+/* This will apply to both horizontal and vertical scrollbars */
 ::-webkit-scrollbar {
+    height: 8px;
     width: 8px;
 }
 
+/* This will apply to the horizontal scrollbar thumb */
 ::-webkit-scrollbar-thumb {
     background: #3a424d;
     border-radius: 20px;
-    width: 1px;
+    height: 1px;
 }
 
+/* This will apply to the horizontal scrollbar track */
+::-webkit-scrollbar-track {
+    background: #0c131c
+}
 .markdown>* {
     all: revert;
 }

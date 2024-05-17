@@ -6,6 +6,8 @@ import { classAdder } from "../../../util/classAdder.js";
 import { useDispatch, useSelector } from "react-redux";
 import { setFileData } from "../../../features/editor/fileExplorerSlice.js";
 import { useLazyGetFilesQuery } from "../../../features/editor/editorApiSlice.js";
+import { languageFind } from "../../../util/fileIconFinder.js";
+import { setOpenFiles } from "../../../features/editor/editorSlice.js";
 
 function FileExplorer({ isFileDragging, fileWidth }) {
   const explorerData = useSelector((state) => state.fileExplorer.fileData);
@@ -61,9 +63,32 @@ function FileExplorer({ isFileDragging, fileWidth }) {
     dispatch(setFileData(tree));
   };
 
-  const hightlightSelectedHandlder = (elementId) => {
-    const tree = hightlightSelected(explorerData, elementId);
+  const hightlightSelectedHandlder = async (elementId) => {
+    const { tree, filename, path } = hightlightSelected(
+      explorerData,
+      elementId
+    );
     dispatch(setFileData(tree));
+    console.log("hightlightSelected", filename, path);
+    let pathJoined = path.join("/");
+    try {
+      const response = await getFiles({
+        roomName: room.name,
+        path: pathJoined,
+        isFolder: false,
+      }).unwrap();
+      const data = response.data.value;
+      console.log("fileContent", data);
+      const language = languageFind(filename.split(".")[1]);
+      const fileObject = {
+        filename,
+        language,
+        code: data,
+      };
+      dispatch(setOpenFiles(fileObject));
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const handleCollapseAll = () => {

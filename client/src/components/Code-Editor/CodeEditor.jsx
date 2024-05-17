@@ -18,12 +18,16 @@ import {
   useLazyGetCodeQuery,
   useUpdateCodeMutation,
 } from "../../features/editor/editorApiSlice";
+import { VscChromeClose } from "react-icons/vsc";
+import { removeFile, setCurrentFile } from "../../features/editor/editorSlice";
+import WelcomeEditor from "./WelcomeEditor";
 
 const CodeEditor = ({ handleSubmit }) => {
   const socketio = useSelector((state) => state.socket.socket);
+  const currentFile = useSelector((state) => state.editor.currentFile);
+  console.log("currentFile", currentFile);
   const { roomId } = useParams();
   const editorRef = useRef(null);
-  const [code, setCode] = useState("");
   const dispatch = useDispatch();
   const userData = useSelector((state) => state.userData.userData);
   const userName = userData.data.loggedInUser.username;
@@ -36,6 +40,8 @@ const CodeEditor = ({ handleSubmit }) => {
   console.log({ roomId });
   const [getCode] = useLazyGetCodeQuery({ roomId });
   const [updateCode] = useUpdateCodeMutation();
+  const openFiles = useSelector((state) => state.editor.openedFiles);
+  console.log("openFiles", openFiles);
 
   const sendCode = async (code, language, version) => {
     const body = {
@@ -136,53 +142,66 @@ const CodeEditor = ({ handleSubmit }) => {
     await sendCode(code, e.target.value, el.version, true);
   };
 
+  const closeFile = (fileName) => {
+    dispatch(removeFile(fileName));
+  };
+
   return (
-    <div className="flex-col">
-      <div className="flex bg-[#161a2a] h-12 items-center">
-        {accessedUser != userName ? (
+    <div className="flex-col w-[38vw]">
+      <div
+        className={`flex bg-[#161a2a] h-12 items-center overflow-x-scroll box-border ${
+          openFiles.length > 0 ? "block" : "hidden"
+        }`}
+      >
+        {/* TODO: this is for showing who has permission show it in People section */}
+        {/* {accessedUser != userName ? (
           <div className="flex gap-1">
             <p className="text-white mx-4">Permission:</p>
             <Avatar name={accessedUser} size={30} round="14px" />
           </div>
         ) : (
           ""
-        )}
-        <div className="flex gap-2 items-center mx-2">
-          <select
-            className="px-4 py-1 rounded-lg text-md outline-none bg-gray-700 text-white text-center"
-            onChange={langChange}
-            id="select"
-          >
-            {languages.map(({ name }, i) => (
-              <option className="hover:bg-gray-300" key={i}>
-                {name}
-              </option>
-            ))}
-          </select>
-        </div>
-        {/* <Play
-          className="absolute right-10 my-[11px] text-white cursor-pointer"
-          onClick={() => {
-            handleSubmit(editorRef.current.getValue(), language, version);
-          }}
-        /> */}
+        )} */}
+        {openFiles &&
+          openFiles.map((el) => (
+            <div className="flex items-center p-2 border-r gap-1">
+              <button
+                onClick={() => {
+                  dispatch(setCurrentFile(el));
+                }}
+                className="bg-[#161a2a] h-full text-gray-300 w-fit"
+              >
+                {el?.filename}
+              </button>
+              <button
+                onClick={() => closeFile(el.filename)}
+                className="bg-[#161a2a] h-full text-gray-300 text-center"
+              >
+                <VscChromeClose />
+              </button>
+            </div>
+          ))}
       </div>
-      <Editor
-        width="38vw"
-        value={code}
-        defaultLanguage={language}
-        onValidate={handleEditorValidation}
-        onMount={handleEditorDidMount}
-        onChange={handleChange}
-        language={language}
-        options={{
-          wordWrap: true,
-          codeLens: true,
-          dragAndDrop: false,
-          mouseWheelZoom: true,
-          readOnly: readOnly,
-        }}
-      />
+      {Object.keys(currentFile).length === 0 ? (
+        <WelcomeEditor />
+      ) : (
+        <Editor
+          width="38vw"
+          value={currentFile?.code || ""}
+          defaultLanguage={language}
+          onValidate={handleEditorValidation}
+          onMount={handleEditorDidMount}
+          onChange={handleChange}
+          language={currentFile?.language || ""}
+          options={{
+            wordWrap: true,
+            codeLens: true,
+            dragAndDrop: false,
+            mouseWheelZoom: true,
+            readOnly: readOnly,
+          }}
+        />
+      )}
     </div>
   );
 };
