@@ -9,6 +9,7 @@ import { classAdder } from "../../util/classAdder";
 import Splitter from "./Splitter";
 import { useSelector } from "react-redux";
 import { MoonLoader } from "react-spinners";
+import { BsBoxArrowUpRight } from "react-icons/bs";
 
 const IDE = () => {
   const [output, setOutput] = useState("");
@@ -121,6 +122,11 @@ const IDE = () => {
             <div className="mockup-browser bg-base-300 w-1/2 h-full">
               <div className="mockup-browser-toolbar">
                 <div className="input">http://localhost:3000</div>
+                <div className="tooltip tooltip-bottom" data-tip="new tab">
+                  <a href="http://localhost:3000" target="_blank">
+                    <BsBoxArrowUpRight className="cursor-pointer" />
+                  </a>
+                </div>
               </div>
               <div className="flex justify-center items-center bg-base-200 shrink-0 h-full">
                 {showOutputPanel ? (
