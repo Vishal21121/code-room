@@ -8,6 +8,7 @@ import { useResizable } from "react-resizable-layout";
 import { classAdder } from "../../util/classAdder";
 import Splitter from "./Splitter";
 import { useSelector } from "react-redux";
+import { MoonLoader } from "react-spinners";
 
 const IDE = () => {
   const [output, setOutput] = useState("");
@@ -121,14 +122,14 @@ const IDE = () => {
               <div className="mockup-browser-toolbar">
                 <div className="input">http://localhost:3000</div>
               </div>
-              <div className="flex justify-center bg-base-200 shrink-0 h-full">
+              <div className="flex justify-center items-center bg-base-200 shrink-0 h-full">
                 {showOutputPanel ? (
                   <iframe
                     src="http://localhost:3000"
                     className="w-full h-full"
                   ></iframe>
                 ) : (
-                  ""
+                  <MoonLoader color="#36d7b7" />
                 )}
               </div>
             </div>

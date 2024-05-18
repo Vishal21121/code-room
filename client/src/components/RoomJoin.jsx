@@ -146,7 +146,7 @@ const RoomJoin = () => {
   const enterRoom = async (e) => {
     let rootElement = {
       id: "1",
-      name: "root",
+      name: "code",
       isFolder: true,
       inputStat: {
         visible: false,

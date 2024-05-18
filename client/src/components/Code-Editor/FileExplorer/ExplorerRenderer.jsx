@@ -4,20 +4,11 @@ import {
   MdOutlineKeyboardArrowRight,
 } from "react-icons/md";
 import { VscFolderOpened, VscFolder, VscFile } from "react-icons/vsc";
-import react from "../../../assets/icons/react.svg";
-import javascript from "../../../assets/icons/javascript.svg";
-import typescript from "../../../assets/icons/typescript.svg";
-import html from "../../../assets/icons/html.svg";
-import markdown from "../../../assets/icons/markdown.svg";
-import css from "../../../assets/icons/css.svg";
-import react_ts from "../../../assets/icons/react_ts.svg";
-import git from "../../../assets/icons/git.svg";
-import nodejs from "../../../assets/icons/nodejs.svg";
-import vite from "../../../assets/icons/vite.svg";
-import jsMap from "../../../assets/icons/javascript-map.svg";
-import eslint from "../../../assets/icons/eslint.svg";
-import svg from "../../../assets/icons/svg.svg";
-import { fileIconFinder } from "../../../util/fileIconFinder";
+import { fileIconFinder, folderIconFinder } from "../../../util/iconFinder";
+import {
+  rerturnFolderIconFromName,
+  returnIconFromName,
+} from "../../../util/iconsImport";
 
 function ExplorerRenderer({
   explorer,
@@ -28,22 +19,7 @@ function ExplorerRenderer({
   hightlightSelectedHandlder,
 }) {
   const [fileIcon, setFileIcon] = useState();
-
-  const fileMap = {
-    react: react,
-    javascript: javascript,
-    typescript: typescript,
-    html: html,
-    markdown: markdown,
-    css: css,
-    react_ts: react_ts,
-    git: git,
-    nodejs: nodejs,
-    vite: vite,
-    "javascript-map": jsMap,
-    eslint: eslint,
-    svg: svg,
-  };
+  const [folderIcon, setFolderIcon] = useState();
 
   const onAddNewFolder = (e) => {
     if (e.keyCode === 13 && e.target.value) {
@@ -64,8 +40,13 @@ function ExplorerRenderer({
 
   useEffect(() => {
     if (!explorer?.isFolder) {
-      const icon = fileIconFinder(explorer?.name);
-      setFileIcon(fileMap[icon]);
+      const iconName = fileIconFinder(explorer?.name);
+      const icon = returnIconFromName(iconName);
+      setFileIcon(icon);
+    } else {
+      const folderIconName = folderIconFinder(explorer?.name);
+      const folderIconGot = rerturnFolderIconFromName(folderIconName);
+      setFolderIcon(folderIconGot);
     }
   }, []);
 
@@ -87,8 +68,8 @@ function ExplorerRenderer({
               <MdOutlineKeyboardArrowRight className="text-xl text-gray-300" />
             )}
             <div className="flex items-center gap-1">
-              {explorer.isExpanded ? (
-                <VscFolderOpened className="text-gray-300" />
+              {folderIcon ? (
+                <img src={folderIcon && folderIcon} alt="" className="w-4" />
               ) : (
                 <VscFolder className="text-gray-300" />
               )}

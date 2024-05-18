@@ -168,6 +168,119 @@ const langObject = [
   { language: "svg", extensions: ["svg"] },
 ];
 
+const folderIconObject = [
+  {
+    name: "folder-robot",
+    folderNames: ["bot", "robot"],
+  },
+  {
+    name: "folder-src",
+    folderNames: ["src", "srcs", "source", "sources", "code"],
+  },
+  {
+    name: "folder-dist",
+    folderNames: ["dist", "out", "build", "release", "bin"],
+  },
+  {
+    name: "folder-css",
+    folderNames: ["css", "stylesheet", "stylesheets", "style", "styles"],
+  },
+  {
+    name: "folder-images",
+    folderNames: [
+      "images",
+      "image",
+      "imgs",
+      "img",
+      "icons",
+      "icon",
+      "icos",
+      "ico",
+      "figures",
+      "figure",
+      "figs",
+      "fig",
+      "screenshot",
+      "screenshots",
+      "screengrab",
+      "screengrabs",
+      "pic",
+      "pics",
+      "picture",
+      "pictures",
+      "photo",
+      "photos",
+      "photograph",
+      "photographs",
+    ],
+  },
+  {
+    name: "folder-scripts",
+    folderNames: ["script", "scripts", "scripting"],
+  },
+  { name: "folder-node", folderNames: ["node_modules"] },
+  {
+    name: "folder-javascript",
+    folderNames: ["js", "javascript", "javascripts"],
+  },
+  { name: "folder-json", folderNames: ["json", "jsons"] },
+  { name: "folder-github", folderNames: ["github"] },
+  { name: "folder-gitlab", folderNames: ["gitlab"] },
+  { name: "folder-vscode", folderNames: ["vscode", "vscode-test"] },
+  {
+    name: "folder-views",
+    folderNames: [
+      "view",
+      "views",
+      "screen",
+      "screens",
+      "page",
+      "pages",
+      "public_html",
+      "html",
+    ],
+  },
+  {
+    name: "folder-components",
+    folderNames: ["components", "widget", "widgets", "fragments"],
+  },
+  {
+    name: "folder-public",
+    folderNames: [
+      "public",
+      "www",
+      "wwwroot",
+      "web",
+      "website",
+      "site",
+      "browser",
+      "browsers",
+    ],
+  },
+  {
+    name: "folder-resource",
+    folderNames: [
+      "resource",
+      "resources",
+      "res",
+      "asset",
+      "assets",
+      "static",
+      "report",
+      "reports",
+    ],
+  },
+  {
+    name: "folder-hook",
+    folderNames: ["hook", "hooks", "trigger", "triggers"],
+  },
+  {
+    name: "folder-utils",
+    folderNames: ["util", "utils", "utility", "utilities"],
+  },
+  { name: "folder-app", folderNames: ["app", "apps"] },
+];
+
 export const fileIconFinder = (fileName) => {
   const fileExtension = fileName.split(".")[1];
   const iconName = fileIconsObject.find((el) => {
@@ -186,4 +299,12 @@ export const languageFind = (fileExtension) => {
   return language;
 };
 
-console.log(languageFind("htmx"));
+export const folderIconFinder = (folderName) => {
+  const folderElement = folderIconObject.find((folder) =>
+    folder.folderNames.includes(folderName)
+  );
+  return folderElement?.name || null;
+};
+
+// console.log(languageFind("htmx"));
+// console.log(folderIconFinder("app"));

@@ -149,7 +149,7 @@ const CodeEditor = ({ handleSubmit }) => {
   return (
     <div className="flex-col w-[38vw]">
       <div
-        className={`flex bg-[#161a2a] h-12 items-center overflow-x-scroll box-border ${
+        className={`flex bg-[#161a2a] h-12 w-full items-center overflow-x-auto box-border ${
           openFiles.length > 0 ? "block" : "hidden"
         }`}
       >
@@ -164,21 +164,29 @@ const CodeEditor = ({ handleSubmit }) => {
         )} */}
         {openFiles &&
           openFiles.map((el) => (
-            <div className="flex items-center p-2 border-r gap-1">
+            <div className="flex items-center p-2 border-r  gap-1 h-full">
               <button
                 onClick={() => {
                   dispatch(setCurrentFile(el));
                 }}
-                className="bg-[#161a2a] h-full text-gray-300 w-fit"
+                className={`${
+                  currentFile.filename === el?.filename
+                    ? "text-gray-300 border-gray-700"
+                    : ""
+                } bg-[#161a2a] max-h-full w-fit`}
               >
                 {el?.filename}
               </button>
-              <button
-                onClick={() => closeFile(el.filename)}
-                className="bg-[#161a2a] h-full text-gray-300 text-center"
-              >
-                <VscChromeClose />
-              </button>
+              {currentFile.filename === el?.filename ? (
+                <button
+                  onClick={() => closeFile(el.filename)}
+                  className="bg-[#161a2a] h-full text-gray-300 text-center"
+                >
+                  <VscChromeClose />
+                </button>
+              ) : (
+                ""
+              )}
             </div>
           ))}
       </div>

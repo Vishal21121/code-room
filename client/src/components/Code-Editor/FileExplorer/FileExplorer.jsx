@@ -6,7 +6,7 @@ import { classAdder } from "../../../util/classAdder.js";
 import { useDispatch, useSelector } from "react-redux";
 import { setFileData } from "../../../features/editor/fileExplorerSlice.js";
 import { useLazyGetFilesQuery } from "../../../features/editor/editorApiSlice.js";
-import { languageFind } from "../../../util/fileIconFinder.js";
+import { languageFind } from "../../../util/iconFinder.js";
 import { setOpenFiles } from "../../../features/editor/editorSlice.js";
 
 function FileExplorer({ isFileDragging, fileWidth }) {
@@ -51,7 +51,6 @@ function FileExplorer({ isFileDragging, fileWidth }) {
       }).unwrap();
       let folderContent = response.data.value;
       const renderedTree = renderFolderContent(tree, folderId, folderContent);
-      console.log(renderedTree);
       dispatch(setFileData(renderedTree));
     } catch (error) {
       console.log(error);
@@ -69,7 +68,6 @@ function FileExplorer({ isFileDragging, fileWidth }) {
       elementId
     );
     dispatch(setFileData(tree));
-    console.log("hightlightSelected", filename, path);
     let pathJoined = path.join("/");
     try {
       const response = await getFiles({
@@ -78,7 +76,6 @@ function FileExplorer({ isFileDragging, fileWidth }) {
         isFolder: false,
       }).unwrap();
       const data = response.data.value;
-      console.log("fileContent", data);
       const language = languageFind(filename.split(".")[1]);
       const fileObject = {
         filename,
