@@ -74,12 +74,18 @@ const spinContainer = async (socket, socketId) => {
         OpenStdin: true,
         ExposedPorts: {
           "5173/tcp": {},
+          "21121/tcp": {},
         },
         HostConfig: {
           PortBindings: {
             "5173/tcp": [
               {
                 HostPort: "3000",
+              },
+            ],
+            "21121/tcp": [
+              {
+                HostPort: "21121",
               },
             ],
           },
