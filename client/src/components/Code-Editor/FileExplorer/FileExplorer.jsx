@@ -81,6 +81,7 @@ function FileExplorer({ isFileDragging, fileWidth }) {
         filename,
         language,
         code: data,
+        path: path,
       };
       dispatch(setOpenFiles(fileObject));
     } catch (error) {

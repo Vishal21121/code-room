@@ -25,7 +25,7 @@ import WelcomeEditor from "./WelcomeEditor";
 const CodeEditor = ({ handleSubmit }) => {
   const socketio = useSelector((state) => state.socket.socket);
   const currentFile = useSelector((state) => state.editor.currentFile);
-  console.log("currentFile", currentFile);
+  console.log("currentFile", currentFile?.path);
   const { roomId } = useParams();
   const editorRef = useRef(null);
   const dispatch = useDispatch();
@@ -41,7 +41,6 @@ const CodeEditor = ({ handleSubmit }) => {
   const [getCode] = useLazyGetCodeQuery({ roomId });
   const [updateCode] = useUpdateCodeMutation();
   const openFiles = useSelector((state) => state.editor.openedFiles);
-  console.log("openFiles", openFiles);
 
   const sendCode = async (code, language, version) => {
     const body = {
@@ -59,6 +58,28 @@ const CodeEditor = ({ handleSubmit }) => {
     console.log(data);
   };
   const debouncedSendCode = useDebouncedCallback(sendCode, 500);
+
+  const updateContainerFile = async (filePath, fileContent) => {
+    try {
+      const response = await fetch("http://localhost:21121/writeFile", {
+        method: "PATCH",
+        mode: "cors",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          filePath,
+          fileContent,
+        }),
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const debouncedUpdateContainerFile = useDebouncedCallback(
+    updateContainerFile,
+    500
+  );
 
   const viewModeSetter = () => {
     console.log("accessedUser", accessedUser);
@@ -97,6 +118,10 @@ const CodeEditor = ({ handleSubmit }) => {
       userName,
     });
     debouncedSendCode(editorRef.current.getValue(), language, version, true);
+    debouncedUpdateContainerFile(
+      currentFile?.path,
+      editorRef.current.getValue()
+    );
   };
 
   const fetchCode = async () => {
